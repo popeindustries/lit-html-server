@@ -1,0 +1,25 @@
+{
+  "env": {
+    "es6": true,
+    "mocha": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "prettier"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": ["error", { "ignoreRestSiblings": true }],
+    "sort-imports": [
+      "warn",
+      { "ignoreCase": true, "memberSyntaxSortOrder": ["none", "all", "multiple", "single"] }
+    ]
+  }
+}
