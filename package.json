@@ -1,19 +1,22 @@
 {
   "name": "@popeindustries/lit-html-server",
   "version": "1.0.0",
-  "description": "lit-html template rendering on the server",
+  "description": "Render lit-html templates on the server",
   "main": "index.js",
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",
   "private": false,
-  "dependencies": {},
+  "dependencies": {
+    "stream-template": "0.0.10"
+  },
   "devDependencies": {
     "babel-eslint": "^8.2.6",
     "chai": "^4.1.2",
     "eslint": "^5.3.0",
     "eslint-config-prettier": "^3.0.1",
     "eslint-plugin-prettier": "^2.6.2",
+    "get-stream": "^4.0.0",
     "husky": "^0.14.3",
     "lint-staged": "^7.2.2",
     "mocha": "^5.2.0",
