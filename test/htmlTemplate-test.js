@@ -14,21 +14,24 @@ describe.only('htmlTemplate()', () => {
         'hello foo, you are 2 right true'
       );
     });
-    it('should return a stream when using Promise interpolation types', async () => {
+    it('should return a string when interpolating null values', () => {
+      expect(htmlTemplate`hello ${null}, you are ${undefined} right ${true}`).to.equal(
+        'hello null, you are undefined right true'
+      );
+    });
+    it('should return a string when interpolating Array values', () => {
+      expect(htmlTemplate`hello ${[1, 2, 3]}`).to.equal('hello 123');
+    });
+    it.only('should return a string when interpolating Iterator values', () => {
+      expect(htmlTemplate`hello ${[1, 2, 3].values()}`).to.equal('hello 123');
+    });
+    it.skip('should return a stream when using Promise values', async () => {
       expect(await getStream(htmlTemplate`hello ${Promise.resolve('foo')}`)).to.equal('hello foo');
     });
-    it('should return a stream when nesting templates using Promise interpolation types', async () => {
+    it.skip('should return a stream when nesting templates using Promise values', async () => {
       expect(
         await getStream(htmlTemplate`hello ${htmlTemplate`${Promise.resolve('foo')}`}`)
       ).to.equal('hello foo');
-    });
-    it('should return a stream when using Buffer interpolation types', async () => {
-      expect(await getStream(htmlTemplate`hello ${Buffer.from('foo')}`)).to.equal('hello foo');
-    });
-    it('should return a stream when nesting templates using Buffer interpolation types', async () => {
-      expect(await getStream(htmlTemplate`hello ${htmlTemplate`${Buffer.from('foo')}`}`)).to.equal(
-        'hello foo'
-      );
     });
   });
 
@@ -36,8 +39,8 @@ describe.only('htmlTemplate()', () => {
     it('should return a string when interpolating element attribute values', () => {
       expect(htmlTemplate`<a href="${'www.nrk.no'}">`).to.equal('<a href="www.nrk.no">');
     });
-    it('should return a string when interpolating element tag name', () => {
-      expect(htmlTemplate`<${'a'} href="www.nrk.no">`).to.equal('<a href="www.nrk.no">');
+    it('should return a string when interpolating multi-part element attribute values', () => {
+      expect(htmlTemplate`<a class="${'one'}-${'two'}">`).to.equal('<a class="one-two">');
     });
     it('should return a string with attribute when interpolating special truthy boolean attribute values', () => {
       expect(htmlTemplate`<a ?enabled=${true}>`).to.equal('<a enabled>');
@@ -59,16 +62,16 @@ describe.only('htmlTemplate()', () => {
       expect(htmlTemplate`<a href=${'www.nrk.no'}>`).to.equal('<a href="www.nrk.no">');
     });
     it('should return a string when interpolating multiple attribute values', () => {
-      expect(htmlTemplate`<a href="${'www.nrk.no'}" ?enabled=${true} class="link"></a>`).to.equal(
-        '<a href="www.nrk.no" enabled class="link"></a>'
-      );
+      expect(
+        htmlTemplate`<a href="${'www.nrk.no'}" ?enabled=${true} class="link ${'one'} ${'two'}"></a>`
+      ).to.equal('<a href="www.nrk.no" enabled class="link one two"></a>');
     });
     it('should return a string when interpolating multiple attribute values in different elements', () => {
       expect(
         htmlTemplate`<a href="${'www.nrk.no'}"><span ?enabled=${true} class="link"></span></a>`
       ).to.equal('<a href="www.nrk.no"><span enabled class="link"></span></a>');
     });
-    it('should return a string when interpolating mixed attribute/text values', async () => {
+    it.skip('should return a stream when interpolating mixed attribute/text values', async () => {
       expect(
         await getStream(
           htmlTemplate`<a href="${'www.nrk.no'}"><span>${Promise.resolve(
