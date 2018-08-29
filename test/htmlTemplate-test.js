@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const getStream = require('get-stream');
 const htmlTemplate = require('../lib/htmlTemplate.js');
 
-describe.only('htmlTemplate()', () => {
+describe('htmlTemplate()', () => {
   describe('text mode', () => {
     it('should return a string when interpolating primitive values', () => {
       expect(htmlTemplate`hello ${'foo'}, you are ${2} right ${true}`).to.equal(
@@ -25,10 +25,10 @@ describe.only('htmlTemplate()', () => {
     it('should return a string when interpolating Iterator values', () => {
       expect(htmlTemplate`hello ${[1, 2, 3]}`).to.equal('hello 123');
     });
-    it.skip('should return a stream when using Promise values', async () => {
+    it('should return a stream when using Promise values', async () => {
       expect(await getStream(htmlTemplate`hello ${Promise.resolve('foo')}`)).to.equal('hello foo');
     });
-    it.skip('should return a stream when nesting templates using Promise values', async () => {
+    it('should return a stream when nesting templates using Promise values', async () => {
       expect(
         await getStream(htmlTemplate`hello ${htmlTemplate`${Promise.resolve('foo')}`}`)
       ).to.equal('hello foo');
@@ -42,19 +42,19 @@ describe.only('htmlTemplate()', () => {
     it('should return a string when interpolating multi-part element attribute values', () => {
       expect(htmlTemplate`<a class="${'one'}-${'two'}">`).to.equal('<a class="one-two">');
     });
-    it('should return a string with attribute when interpolating special truthy boolean attribute values', () => {
+    it('should return a string with attribute when interpolating truthy boolean attribute bindings', () => {
       expect(htmlTemplate`<a ?enabled=${true}>`).to.equal('<a enabled>');
       expect(htmlTemplate`<a ?enabled="${true}">`).to.equal('<a enabled>');
     });
-    it('should return a string without attribute when interpolating special falsy boolean attribute values', () => {
+    it('should return a string without attribute when interpolating falsy boolean attribute bindings', () => {
       expect(htmlTemplate`<a ?enabled=${false}>`).to.equal('<a >');
       expect(htmlTemplate`<a ?enabled="${false}">`).to.equal('<a >');
     });
-    it('should return a string without attribute when interpolating special property attribute values', () => {
+    it('should return a string without attribute when interpolating property attribute bindings', () => {
       expect(htmlTemplate`<a .enabled=${false}>`).to.equal('<a >');
       expect(htmlTemplate`<a .enabled="${false}">`).to.equal('<a >');
     });
-    it('should return a string without attribute when interpolating special event handler attribute values', () => {
+    it('should return a string without attribute when interpolating event handler attribute bindings', () => {
       expect(htmlTemplate`<a @click=${(evt) => console.log(evt)}>`).to.equal('<a >');
       expect(htmlTemplate`<a @click="${(evt) => console.log(evt)}">`).to.equal('<a >');
     });
@@ -71,7 +71,7 @@ describe.only('htmlTemplate()', () => {
         htmlTemplate`<a href="${'www.nrk.no'}"><span ?enabled=${true} class="link"></span></a>`
       ).to.equal('<a href="www.nrk.no"><span enabled class="link"></span></a>');
     });
-    it.skip('should return a stream when interpolating mixed attribute/text values', async () => {
+    it('should return a stream when interpolating mixed attribute/text values', async () => {
       expect(
         await getStream(
           htmlTemplate`<a href="${'www.nrk.no'}"><span>${Promise.resolve(
