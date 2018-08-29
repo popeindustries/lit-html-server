@@ -1,4 +1,4 @@
-[![NPM Version](https://img.shields.io/npm/v/@popeindustries/lit-html-server.svg?style=flat)](https://npmjs.org/package/@popeindustries/lit-html-server)
+[![NPM Version](https://img.shields.io/npm/v/popeindustries/lit-html-server.svg?style=flat)](https://npmjs.org/package/@popeindustries/lit-html-server)
 [![Build Status](https://img.shields.io/travis/popeindustries/lit-html-server.svg?style=flat)](https://travis-ci.org/popeindustries/lit-html-server)
 
 # lit-html-server
@@ -49,3 +49,7 @@ const { render } = require('lit-html-server');
 // Returns a Node.js Readable stream
 render(layout({ title: 'Home', api: '/api/home' }));
 ```
+
+## Thanks
+
+Thanks to [Thomas Parslow](https://github.com/almost) for the [stream-template](https://github.com/almost/stream-template) library that was the basis for this streaming implementation, and thanks to [Justin Fagnani](https://github.com/justinfagnani) the [team](https://github.com/Polymer/lit-html/graphs/contributors) behind the **lit-html** project!
