@@ -1,4 +1,4 @@
-[![NPM Version](https://img.shields.io/npm/v/popeindustries/lit-html-server.svg?style=flat)](https://npmjs.org/package/@popeindustries/lit-html-server)
+[![NPM Version](https://img.shields.io/npm/v/@popeindustries/lit-html-server.svg?style=flat)](https://npmjs.org/package/@popeindustries/lit-html-server)
 [![Build Status](https://img.shields.io/travis/popeindustries/lit-html-server.svg?style=flat)](https://travis-ci.org/popeindustries/lit-html-server)
 
 # lit-html-server
@@ -10,13 +10,13 @@ Render [**lit-html**](https://polymer.github.io/lit-html/) templates on the serv
 Install with `npm/yarn`:
 
 ```bash
-$ npm install --save lit-html-server
+$ npm install --save @popeindustries/lit-html-server
 ```
 
 ...write your **lit-html** template:
 
 ```js
-const { html } = require('lit-html-server');
+const { html } = require('@popeindustries/lit-html-server');
 
 function layout(data) {
   return html`<!DOCTYPE html>
