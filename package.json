@@ -1,6 +1,6 @@
 {
   "name": "@popeindustries/lit-html-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Render lit-html templates on the server",
   "keywords": [
     "html template",
@@ -14,7 +14,6 @@
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",
-  "private": false,
   "dependencies": {
     "he": "^1.1.1",
     "readable-stream": "^3.0.2"
