@@ -97,7 +97,7 @@ describe('streamTemplate()', () => {
     const out = streamTemplate`Well ${array}?`;
     out.pipe(
       concat((output) => {
-        expect(output.toString()).to.equal("Well hello there world, how's it going?");
+        expect(output.toString()).to.equal('Well hello there world, how&#x27;s it going?');
         done();
       })
     );

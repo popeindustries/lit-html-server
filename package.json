@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "he": "^1.1.1",
     "readable-stream": "^3.0.2",
     "stream-template": "0.0.10"
   },
