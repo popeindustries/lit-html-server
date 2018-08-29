@@ -37,7 +37,7 @@ async function body(apiPath) {
 
   return html`<h1>${data.title}</h1>
     <x-widget ?enabled=${data.hasWidget}></x-widget>
-    <p class=${data.invertedText ? 'negative' : ''}>${data.text}</p>`;
+    <p class="${data.invertedText ? 'negative' : ''}">${data.text}</p>`;
 }
 ```
 
