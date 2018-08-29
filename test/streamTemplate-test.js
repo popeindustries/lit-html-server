@@ -11,8 +11,21 @@ function makeStream() {
 }
 
 describe('streamTemplate()', () => {
-  it('should interpolate string values', async () => {
-    expect(await getStream(streamTemplate`hello ${'there'}`)).to.equal('hello there');
+  it('should interpolate primitive values', async () => {
+    expect(await getStream(streamTemplate`hello ${'there'} ${1} ${true}`)).to.equal(
+      'hello there 1 true'
+    );
+  });
+  it('should interpolate null interpolations', (done) => {
+    const name = 'tom';
+    const test = undefined;
+    const out = streamTemplate`Hello ${name}, welcome to the ${test} ${null} test`;
+    out.pipe(
+      concat((output) => {
+        expect(output.toString()).to.equal('Hello tom, welcome to the undefined null test');
+        done();
+      })
+    );
   });
   it('should interpolate stream values', (done) => {
     const stream1 = makeStream();
@@ -130,16 +143,5 @@ describe('streamTemplate()', () => {
       expect(err.message).to.equal('destroyed');
       done();
     });
-  });
-  it('should handle null interpolations', (done) => {
-    const name = 'tom';
-    const test = undefined;
-    const out = streamTemplate`Hello ${name}, welcome to the ${test} ${null} test`;
-    out.pipe(
-      concat((output) => {
-        expect(output.toString()).to.equal('Hello tom, welcome to the undefined null test');
-        done();
-      })
-    );
   });
 });
