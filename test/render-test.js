@@ -5,7 +5,7 @@ const { expect } = require('chai');
 const getStream = require('get-stream');
 
 describe('render()', () => {
-  it.only('should return a Readable stream when rendering a synchronous template', async () => {
+  it('should return a Readable stream when rendering a synchronous template', async () => {
     const template = html`<h1>Some ${'title'}</h1>`;
     expect(await getStream(render(template))).to.equal('<h1>Some title</h1>');
   });
