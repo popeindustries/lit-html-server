@@ -1,3 +1,5 @@
+'use strict';
+
 const { expect } = require('chai');
 const getStream = require('get-stream');
 const htmlTemplate = require('../lib/htmlTemplate.js');

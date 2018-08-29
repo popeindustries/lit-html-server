@@ -1,3 +1,5 @@
+'use strict';
+
 const concat = require('concat-stream');
 const { expect } = require('chai');
 const getStream = require('get-stream');
