@@ -24,7 +24,7 @@ describe('streamTemplate()', () => {
     const out = streamTemplate`Hello ${name}, welcome to the ${test} ${null} test`;
     out.pipe(
       concat((output) => {
-        expect(output.toString()).to.equal('Hello tom, welcome to the undefined null test');
+        expect(output.toString()).to.equal('Hello tom, welcome to the  null test');
         done();
       })
     );

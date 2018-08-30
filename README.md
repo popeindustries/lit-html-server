@@ -5,6 +5,8 @@
 
 Render [**lit-html**](https://polymer.github.io/lit-html/) templates on the server as Node.js streams. Supports all **lit-html** types and special attribute bindings.
 
+> Although based on **lit-html** semantics, **lit-html-server** is a great general purpose HTML template streaming library. Tagged template literals are a native JavaScript feature, and the HTML rendered is 100% standard markup, with no special syntax or client-side runtime dependencies.
+
 ## Usage
 
 Install with `npm/yarn`:
@@ -44,12 +46,20 @@ async function body(apiPath) {
 ...and render:
 
 ```js
-const { render } = require('lit-html-server');
+const { render } = require('@popeindustries/lit-html-server');
 
-// Returns a Node.js Readable stream
+// Returns a Node.js Readable stream which can be piped to `response`
 render(layout({ title: 'Home', api: '/api/home' }));
 ```
 
-## Thanks
+## TODO
 
-Thanks to [Thomas Parslow](https://github.com/almost) for the [stream-template](https://github.com/almost/stream-template) library that was the basis for this streaming implementation, and thanks to [Justin Fagnani](https://github.com/justinfagnani) the [team](https://github.com/Polymer/lit-html/graphs/contributors) behind the **lit-html** project!
+- [x] html escape values
+- [x] handle special attribute bindings (`?.@`)
+- [x] add missing attribute quotes
+- [ ] support sync/async iterators
+- [ ] port default directives
+
+## Thanks!
+
+Thanks to [Thomas Parslow](https://github.com/almost) for the [stream-template](https://github.com/almost/stream-template) library that was the basis for this streaming implementation, and thanks to [Justin Fagnani](https://github.com/justinfagnani) and the [team](https://github.com/Polymer/lit-html/graphs/contributors) behind the **lit-html** project!

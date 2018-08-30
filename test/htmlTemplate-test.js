@@ -18,7 +18,7 @@ describe('htmlTemplate()', () => {
     });
     it('should return a string when interpolating null values', () => {
       expect(htmlTemplate`hello ${null}, you are ${undefined} right ${true}`).to.equal(
-        '<!-- lit-html-server -->hello null, you are undefined right true'
+        '<!-- lit-html-server -->hello null, you are  right true'
       );
     });
     it('should return a string when interpolating Array values', () => {
@@ -36,8 +36,8 @@ describe('htmlTemplate()', () => {
 
   describe('attribute mode', () => {
     it('should return a string when interpolating element attribute values', () => {
-      expect(htmlTemplate`<a href="${'www.nrk.no'}">`).to.equal(
-        '<!-- lit-html-server --><a href="www.nrk.no">'
+      expect(htmlTemplate`<a href="${'www.nrk.no'}" something="${undefined}">`).to.equal(
+        '<!-- lit-html-server --><a href="www.nrk.no" something="undefined">'
       );
     });
     it('should return a string when interpolating multi-part element attribute values', () => {
