@@ -1,6 +1,5 @@
 'use strict';
 
-const concat = require('concat-stream');
 const { expect } = require('chai');
 const getStream = require('get-stream');
 const { Readable } = require('readable-stream');
@@ -18,44 +17,27 @@ describe('streamTemplate()', () => {
       'hello there 1 true'
     );
   });
-  it('should interpolate null interpolations', (done) => {
-    const name = 'tom';
-    const test = undefined;
-    const out = streamTemplate`Hello ${name}, welcome to the ${test} ${null} test`;
-    out.pipe(
-      concat((output) => {
-        expect(output.toString()).to.equal('Hello tom, welcome to the  null test');
-        done();
-      })
-    );
+  it('should interpolate null interpolations', async () => {
+    expect(
+      await getStream(streamTemplate`Hello ${'there'}, welcome to the ${undefined} ${null} test`)
+    ).to.equal('Hello there, welcome to the  null test');
   });
-  it('should interpolate stream values', (done) => {
+  it('should interpolate stream values', async () => {
     const stream1 = makeStream();
     const stream2 = makeStream();
-    const out = streamTemplate`First ${stream1} then ${stream2}!`;
-    out.pipe(
-      concat(function(output) {
-        expect(output.toString()).to.equal('First bread and cheese then wine and more cheese!');
-        done();
-      })
-    );
     stream2.push('wine', 'utf8');
     stream1.push('bread', 'utf8');
     stream2.push(' and more cheese', 'utf8');
     stream2.push(null);
     stream1.push(' and cheese', 'utf8');
     stream1.push(null);
+    expect(await getStream(streamTemplate`First ${stream1} then ${stream2}!`)).to.equal(
+      'First bread and cheese then wine and more cheese!'
+    );
   });
-  it('should wait for all data from a stream', (done) => {
+  it('should wait for all data from a stream', async () => {
     const stream1 = makeStream();
     stream1.push('a', 'utf8');
-    const out = streamTemplate`${stream1}`;
-    out.pipe(
-      concat((output) => {
-        expect(output.toString()).to.equal('abcd');
-        done();
-      })
-    );
     stream1.push('b', 'utf8');
     setImmediate(() => {
       stream1.push('c', 'utf8');
@@ -64,31 +46,20 @@ describe('streamTemplate()', () => {
         stream1.push(null);
       }, 20);
     });
+    expect(await getStream(streamTemplate`${stream1}`)).to.equal('abcd');
   });
-  it('should intepolate promises returning strings', (done) => {
+  it('should intepolate promises returning strings', async () => {
     const promise = Promise.resolve('hello');
-    const out = streamTemplate`${promise} world`;
-    out.pipe(
-      concat((output) => {
-        expect(output.toString()).to.equal('hello world');
-        done();
-      })
-    );
+    expect(await getStream(streamTemplate`${promise} world`)).to.equal('hello world');
   });
-  it('should interpolate promises returning streams', (done) => {
+  it('should interpolate promises returning streams', async () => {
     const stream1 = makeStream();
     const promise = Promise.resolve(stream1);
-    const out = streamTemplate`${promise} world`;
-    out.pipe(
-      concat((output) => {
-        expect(output.toString()).to.equal('hello world');
-        done();
-      })
-    );
     stream1.push('hello');
     stream1.push(null);
+    expect(await getStream(streamTemplate`${promise} world`)).to.equal('hello world');
   });
-  it('should interpolate arrays', (done) => {
+  it('should interpolate arrays', async () => {
     const stream1 = makeStream();
     const stream2 = makeStream();
     stream1.push('there ');
@@ -96,12 +67,8 @@ describe('streamTemplate()', () => {
     stream1.push(null);
     stream2.push(null);
     const array = ['hello ', Promise.resolve(stream1), stream2, [", how's ", 'it ', 'going']];
-    const out = streamTemplate`Well ${array}?`;
-    out.pipe(
-      concat((output) => {
-        expect(output.toString()).to.equal('Well hello there world, how&#x27;s it going?');
-        done();
-      })
+    expect(await getStream(streamTemplate`Well ${array}?`)).to.equal(
+      'Well hello there world, how&#x27;s it going?'
     );
   });
   it('should concatenate multiple strings together and emit as a single chunk', (done) => {
