@@ -71,6 +71,18 @@ describe('streamTemplate()', () => {
       'Well hello there world, how&#x27;s it going?'
     );
   });
+  it('should interpolate sync iterators', async () => {
+    const stream1 = makeStream();
+    const stream2 = makeStream();
+    stream1.push('there ');
+    stream2.push('world');
+    stream1.push(null);
+    stream2.push(null);
+    const array = ['hello ', Promise.resolve(stream1), stream2, [", how's ", 'it ', 'going']];
+    expect(await getStream(streamTemplate`Well ${array.values()}?`)).to.equal(
+      'Well hello there world, how&#x27;s it going?'
+    );
+  });
   it('should concatenate multiple strings together and emit as a single chunk', (done) => {
     const promise = Promise.resolve('d');
     const out = streamTemplate`a ${'b'} c ${promise} e ${['f', ' g']}`;

@@ -57,7 +57,8 @@ render(layout({ title: 'Home', api: '/api/home' }));
 - [x] html escape values
 - [x] handle special attribute bindings (`?.@`)
 - [x] add missing attribute quotes
-- [ ] support sync/async iterators
+- [x] support sync iterators
+- [ ] support async iterators
 - [ ] port default directives
 
 ## Thanks!

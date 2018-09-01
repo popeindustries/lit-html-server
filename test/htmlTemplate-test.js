@@ -24,6 +24,11 @@ describe('htmlTemplate()', () => {
     it('should return a string when interpolating Array values', () => {
       expect(htmlTemplate`hello ${[1, 2, 3]}`).to.equal('<!-- lit-html-server -->hello 123');
     });
+    it('should return a string when interpolating sync iterator values', () => {
+      expect(htmlTemplate`hello ${[1, 2, 3].values()}`).to.equal(
+        '<!-- lit-html-server -->hello 123'
+      );
+    });
     it('should return a stream when using Promise values', async () => {
       expect(await getStream(htmlTemplate`hello ${Promise.resolve('foo')}`)).to.equal('hello foo');
     });
