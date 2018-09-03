@@ -58,8 +58,8 @@ render(layout({ title: 'Home', api: '/api/home' }));
 - [x] handle special attribute bindings (`?.@`)
 - [x] add missing attribute quotes
 - [x] support sync iterators
-- [ ] support async iterators
 - [ ] port default directives
+- [ ] ~~support async iterators~~ (wait until no longer experimental)
 
 ## Thanks!
 
