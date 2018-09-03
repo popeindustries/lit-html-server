@@ -25,7 +25,7 @@ describe('htmlTemplate()', () => {
       expect(htmlTemplate`hello ${[1, 2, 3]}`).to.equal('<!-- lit-html-server -->hello 123');
     });
     it('should return a string when interpolating sync iterator values', () => {
-      expect(htmlTemplate`hello ${[1, 2, 3][Symbol.iterator]()}`).to.equal(
+      expect(htmlTemplate`hello ${new Set([1, 2, 3])}`).to.equal(
         '<!-- lit-html-server -->hello 123'
       );
     });
