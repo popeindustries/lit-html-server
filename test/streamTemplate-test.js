@@ -79,7 +79,7 @@ describe('streamTemplate()', () => {
     stream1.push(null);
     stream2.push(null);
     const array = ['hello ', Promise.resolve(stream1), stream2, [", how's ", 'it ', 'going']];
-    expect(await getStream(streamTemplate`Well ${array.values()}?`)).to.equal(
+    expect(await getStream(streamTemplate`Well ${array[Symbol.iterator]()}?`)).to.equal(
       'Well hello there world, how&#x27;s it going?'
     );
   });
