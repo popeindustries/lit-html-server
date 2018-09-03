@@ -5,6 +5,7 @@ const { Readable } = require('readable-stream');
 const { removeHeader } = require('./lib/string.js');
 
 module.exports = {
+  directive,
   html: htmlTemplate,
   render,
   svg: htmlTemplate
@@ -34,4 +35,14 @@ function render(template) {
   }
 
   return template;
+}
+
+/**
+ * Define new directive for 'fn'
+ * @param {function} fn
+ * @returns {function}
+ */
+function directive(fn) {
+  fn.isDirective = true;
+  return fn;
 }
