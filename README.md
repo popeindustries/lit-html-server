@@ -148,7 +148,9 @@ Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-htm
 
 ```js
 const guard = require('@popeindustries/lit-html-server/directives/guard.js');
-html`<div>${guard(items, () => items.map((item) => html`${item}`))}</div>`;
+html`<div>
+  ${guard(items, () => items.map((item) => html`${item}`))}
+</div>`;
 ```
 
 - `ifDefined(value)`: sets the attribute if the value is defined and removes the attribute if the value is undefined
@@ -171,14 +173,17 @@ html`<ul>
 
 ```js
 const unsafe = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
-html`<div>${unsafe('<span>dangerous!</span>')}</div>`;
+html`<div>
+  ${unsafe('<span>dangerous!</span>')}
+</div>`;
 ```
 
 - `until(promise, defaultContent)`: no-op since only one render pass (renders `defaultContent`)
 
 ```js
 const until = require('@popeindustries/lit-html-server/directives/until.js');
-html`<p>${until(fetch('content.txt').then((r) => r.text()), html`<span>Loading...</span>`)}
+html`<p>
+  ${until(fetch('content.txt').then((r) => r.text()), html`<span>Loading...</span>`)}
 </p>`;
 ```
 
@@ -186,7 +191,8 @@ html`<p>${until(fetch('content.txt').then((r) => r.text()), html`<span>Loading..
 
 ```js
 const when = require('@popeindustries/lit-html-server/directives/when.js');
-html`<p>${when(checked, () => html`Checkmark is checked`, () => html`Checkmark is not checked`)}
+html`<p>
+  ${when(checked, () => html`Checkmark is checked`, () => html`Checkmark is not checked`)}
 </p>`;
 ```
 
