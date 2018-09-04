@@ -80,7 +80,7 @@ html`<h1>Hello ${name}</h1>`;
 - attribute:
 
 ```js
-html`<div id=${id}></div`;
+html`<div id=${id}></div>`;
 //=> <div id="main"></div>
 ```
 
@@ -102,7 +102,8 @@ html`<input .value=${value}>`;
 - event handler (attribute markup removed):
 
 ```js
-html`<button @click=${(e) => console.log('clicked')}>Click Me</button>`;
+const fn = (e) => console.log('clicked');
+html`<button @click=${fn}>Click Me</button>`;
 //=> <button >Click Me</button>
 ```
 
@@ -135,7 +136,8 @@ html`<p>total = ${new Set(items)}</p>`;
 - Promises:
 
 ```js
-html`<p>The response is ${fetch('sample.txt').then((r) => r.text())}.</p>`;
+const promise = fetch('sample.txt').then((r) => r.text());
+html`<p>The response is ${promise}.</p>`;
 ```
 
 ## Thanks!
