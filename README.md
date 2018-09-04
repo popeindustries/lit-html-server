@@ -140,6 +140,56 @@ const promise = fetch('sample.txt').then((r) => r.text());
 html`<p>The response is ${promise}.</p>`;
 ```
 
+### Directives
+
+Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server context):
+
+- `guard(expression, valueFn)`: no-op since re-rendering does not apply (renders result of `valueFn`)
+
+```js
+const guard = require('@popeindustries/lit-html-server/directives/guard.js');
+html`<div>${guard(items, () => items.map((item) => html`${item}`))}</div>`;
+```
+
+- `ifDefined(value)`: sets the attribute if the value is defined and removes the attribute if the value is undefined
+
+```js
+const ifDefined = require('@popeindustries/lit-html-server/directives/if-defined.js');
+html`<div class=${ifDefined(className)}></div>`;
+```
+
+- `repeat(items, keyfn, template))`: no-op since re-rendering does not apply (maps `items` over `template`)
+
+```js
+const repeat = require('@popeindustries/lit-html-server/directives/repeat.js');
+html`<ul>
+  ${repeat(items, (i) => i.id, (i, index) => html`<li>${index}: ${i.name}</li>`)}
+</ul>`;
+```
+
+- `unsafe(value)`: skip HTML escaping of `value`
+
+```js
+const unsafe = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
+html`<div>${unsafe('<span>dangerous!</span>')}</div>`;
+```
+
+- `until(promise, defaultContent)`: no-op since only one render pass (renders `defaultContent`)
+
+```js
+const until = require('@popeindustries/lit-html-server/directives/until.js');
+html`<p>${until(fetch('content.txt').then((r) => r.text()), html`<span>Loading...</span>`)}
+</p>`;
+```
+
+- `when(condition, trueTemplate, falseTemplate)`: switches between two templates based on the given condition (does not cache templates)
+
+```js
+const when = require('@popeindustries/lit-html-server/directives/when.js');
+html`<p>${when(checked, () => html`Checkmark is checked`, () => html`Checkmark is not checked`)}
+</p>`;
+```
+
 ## Thanks!
 
 Thanks to [Thomas Parslow](https://github.com/almost) for the [stream-template](https://github.com/almost/stream-template) library that was the basis for this streaming implementation, and thanks to [Justin Fagnani](https://github.com/justinfagnani) and the [team](https://github.com/Polymer/lit-html/graphs/contributors) behind the **lit-html** project!
