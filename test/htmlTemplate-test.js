@@ -41,8 +41,8 @@ describe('htmlTemplate()', () => {
 
   describe('attribute mode', () => {
     it('should return a string when interpolating element attribute values', () => {
-      expect(htmlTemplate`<a href="${'www.nrk.no'}" something="${undefined}">`).to.equal(
-        '<!-- lit-html-server --><a href="www.nrk.no" something="undefined">'
+      expect(htmlTemplate`<a href="${'www.google.com'}" something="${undefined}">`).to.equal(
+        '<!-- lit-html-server --><a href="www.google.com" something="undefined">'
       );
     });
     it('should return a string when interpolating multi-part element attribute values', () => {
@@ -71,30 +71,32 @@ describe('htmlTemplate()', () => {
       );
     });
     it('should return a string with quoted attribute when interpolating element attribute value missing quotes', () => {
-      expect(htmlTemplate`<a href=${'www.nrk.no'}>`).to.equal(
-        '<!-- lit-html-server --><a href="www.nrk.no">'
+      expect(htmlTemplate`<a href=${'www.google.com'}>`).to.equal(
+        '<!-- lit-html-server --><a href="www.google.com">'
       );
     });
     it('should return a string when interpolating multiple attribute values', () => {
       expect(
-        htmlTemplate`<a href="${'www.nrk.no'}" ?enabled=${true} class="link ${'one'} ${'two'}"></a>`
-      ).to.equal('<!-- lit-html-server --><a href="www.nrk.no" enabled class="link one two"></a>');
+        htmlTemplate`<a href="${'www.google.com'}" ?enabled=${true} class="link ${'one'} ${'two'}"></a>`
+      ).to.equal(
+        '<!-- lit-html-server --><a href="www.google.com" enabled class="link one two"></a>'
+      );
     });
     it('should return a string when interpolating multiple attribute values in different elements', () => {
       expect(
-        htmlTemplate`<a href="${'www.nrk.no'}"><span ?enabled=${true} class="link"></span></a>`
+        htmlTemplate`<a href="${'www.google.com'}"><span ?enabled=${true} class="link"></span></a>`
       ).to.equal(
-        '<!-- lit-html-server --><a href="www.nrk.no"><span enabled class="link"></span></a>'
+        '<!-- lit-html-server --><a href="www.google.com"><span enabled class="link"></span></a>'
       );
     });
     it('should return a stream when interpolating mixed attribute/text values', async () => {
       expect(
         await getStream(
-          htmlTemplate`<a href="${'www.nrk.no'}"><span>${Promise.resolve(
+          htmlTemplate`<a href="${'www.google.com'}"><span>${Promise.resolve(
             'hi'
           )}</span> <span ?enabled=${true}>${'there'}</span></a>`
         )
-      ).to.equal('<a href="www.nrk.no"><span>hi</span> <span enabled>there</span></a>');
+      ).to.equal('<a href="www.google.com"><span>hi</span> <span enabled>there</span></a>');
     });
     it('should throw when interpolating a non-primitive value', () => {
       let errored = false;
