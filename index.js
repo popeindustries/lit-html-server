@@ -1,5 +1,6 @@
 'use strict';
 
+const getStream = require('get-stream');
 const htmlTemplate = require('./lib/htmlTemplate.js');
 const { Readable } = require('readable-stream');
 const { removeHeader } = require('./lib/string.js');
@@ -8,6 +9,7 @@ module.exports = {
   directive,
   html: htmlTemplate,
   render,
+  renderToString,
   svg: htmlTemplate
 };
 
@@ -35,6 +37,18 @@ function render(template) {
   }
 
   return template;
+}
+
+/**
+ * Render lit-html style HTML 'template' as string (via Promise)
+ * @param {string|Readable} template
+ * @returns {Promise<string>}
+ */
+function renderToString(template) {
+  if (typeof template === 'string') {
+    return Promise.resolve(removeHeader(template));
+  }
+  return getStream(template);
 }
 
 /**
