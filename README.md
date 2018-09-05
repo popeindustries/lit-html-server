@@ -52,6 +52,42 @@ const { render } = require('@popeindustries/lit-html-server');
 render(layout({ title: 'Home', api: '/api/home' }));
 ```
 
+## API
+
+### `html`
+
+The tag function to apply to HTML template literals (also aliased as `svg`)
+
+```js
+const name = 'Bob';
+html`<h1>Hello ${name}!</h1>`;
+```
+
+All template expressions (values interpolated with `${value}`) are escaped for securely including in HTML by default. An `unsafe-html` [directive](#directives) is available to disable escaping:
+
+```js
+const unsafe = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
+html`<div>
+  ${unsafe('<span>dangerous!</span>')}
+</div>`;
+```
+
+### `render(template: string|Readable): Readable`
+
+Returns the result of the template tagged by `html` as a Node.js `Readable` stream of markup.
+
+```js
+render(html`<h1>Hello ${name}!</h1>`).pipe(response);
+```
+
+### `renderToString(template: string|Readable): Promise<string>`
+
+Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup.
+
+```js
+const markup = await renderToString(html`<h1>Hello ${name}!</h1>`);
+```
+
 ## Writing templates
 
 In general, all of the standard **lit-html** rules and semantics apply when rendering templates on the server with **lit-html-server** (read more about [**lit-html**](https://polymer.github.io/lit-html/guide/) and writing templates [here](https://polymer.github.io/lit-html/guide/writing-templates.html)).
@@ -167,15 +203,6 @@ const repeat = require('@popeindustries/lit-html-server/directives/repeat.js');
 html`<ul>
   ${repeat(items, (i) => i.id, (i, index) => html`<li>${index}: ${i.name}</li>`)}
 </ul>`;
-```
-
-- `unsafe(value)`: skip HTML escaping of `value`
-
-```js
-const unsafe = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
-html`<div>
-  ${unsafe('<span>dangerous!</span>')}
-</div>`;
 ```
 
 - `until(promise, defaultContent)`: no-op since only one render pass (renders `defaultContent`)
