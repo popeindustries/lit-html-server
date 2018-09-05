@@ -1,6 +1,6 @@
 'use strict';
 
-const { render, html } = require('../index.js');
+const { directive, html, render } = require('../index.js');
 const { expect } = require('chai');
 const getStream = require('get-stream');
 const guard = require('../directives/guard.js');
@@ -82,6 +82,18 @@ describe('directives', () => {
         () => html`Checkmark is not checked`
       )}</p>`;
       expect(await getStream(render(template))).to.equal('<p>Checkmark is not checked</p>');
+    });
+  });
+
+  describe('custom', () => {
+    it('should allow writing custom directives', async () => {
+      const custom = () => {
+        return directive((part) => {
+          part.setValue("custom's");
+        });
+      };
+      const template = html`<p>${custom()}</p>`;
+      expect(await getStream(render(template))).to.equal('<p>custom&#x27;s</p>');
     });
   });
 });
