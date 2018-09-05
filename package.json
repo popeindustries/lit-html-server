@@ -20,6 +20,7 @@
     "readable-stream": "^3.0.2"
   },
   "devDependencies": {
+    "autocannon": "^2.4.1",
     "babel-eslint": "^9.0.0",
     "chai": "^4.1.2",
     "eslint": "^5.5.0",
@@ -36,6 +37,7 @@
   },
   "scripts": {
     "lint": "eslint './{lib,test}/**/*.js'",
+    "perf": "node test/server.js & PID=$!; autocannon -c 100 -d 5 -p 10 http://localhost:3000 && kill $PID",
     "precommit": "lint-staged",
     "test": "NODE_ENV=test mocha test --reporter spec --bail --timeout 2000"
   }
