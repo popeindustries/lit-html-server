@@ -39,6 +39,6 @@
     "lint": "eslint './{lib,test}/**/*.js'",
     "perf": "node test/server.js & PID=$!; autocannon -c 100 -d 5 -p 10 http://localhost:3000 && kill $PID",
     "precommit": "lint-staged",
-    "test": "NODE_ENV=test mocha test --reporter spec --bail --timeout 2000"
+    "test": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000"
   }
 }
