@@ -47,16 +47,15 @@ function template(data) {
         dignissim sapien. Suspendisse metus felis, volutpat a tempus ut, semper in tortor. Mauris rutrum dui in elit blandit,
         non vestibulum felis cursus. Sed mollis consectetur eros a lobortis. Sed lobortis lorem eu metus auctor tempus. Sed
         faucibus sit amet urna vel accumsan. Cras luctus in lorem ac tempor. Sed ullamcorper consectetur ligula sed malesuada.</p>
-      <p .prop=${data.title} ?visible=${
-    data.isTrue
-  }>${wait(`Fusce hendrerit massa venenatis elit accumsan, id varius elit
-        varius. Fusce semper nisl non ligula faucibus hendrerit. Vestibulum et tellus non metus maximus viverra. Aenean scelerisque
-        lacus urna, tristique varius tortor interdum vel. Ut ac euismod mauris, et pretium dolor. Phasellus mattis, libero
-        quis fermentum tincidunt, massa orci tempor ante, eget tincidunt nunc libero ac eros. Fusce eget imperdiet purus. Sed
-        sem odio, consequat at tellus at, mattis gravida risus. In eu arcu sed sapien condimentum iaculis in in neque. Duis
-        condimentum ante lorem, quis elementum est aliquam ut. Ut imperdiet ex ac urna posuere, quis interdum nisl lacinia.
-        Pellentesque lacus lacus, sodales sed dolor in, imperdiet vulputate dui. Aenean sed leo eu augue semper semper. Donec
-        vulputate massa magna, semper lobortis purus luctus ac.`)}
+      <p .prop=${data.title} ?visible=${data.isTrue}>
+        ${wait(`Fusce hendrerit massa venenatis elit accumsan, id varius elit
+          varius. Fusce semper nisl non ligula faucibus hendrerit. Vestibulum et tellus non metus maximus viverra. Aenean scelerisque
+          lacus urna, tristique varius tortor interdum vel. Ut ac euismod mauris, et pretium dolor. Phasellus mattis, libero
+          quis fermentum tincidunt, massa orci tempor ante, eget tincidunt nunc libero ac eros. Fusce eget imperdiet purus. Sed
+          sem odio, consequat at tellus at, mattis gravida risus. In eu arcu sed sapien condimentum iaculis in in neque. Duis
+          condimentum ante lorem, quis elementum est aliquam ut. Ut imperdiet ex ac urna posuere, quis interdum nisl lacinia.
+          Pellentesque lacus lacus, sodales sed dolor in, imperdiet vulputate dui. Aenean sed leo eu augue semper semper. Donec
+          vulputate massa magna, semper lobortis purus luctus ac.`)}
       </p>
     </main>
   </body>
@@ -68,6 +67,6 @@ function wait(content) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(content);
-    }, Math.random * 200);
+    }, Math.random() * 100);
   });
 }
