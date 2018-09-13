@@ -1,11 +1,13 @@
 'use strict';
 
 const { directive, html, render } = require('../index.js');
+const classMap = require('../directives/classMap.js');
 const { expect } = require('chai');
 const getStream = require('get-stream');
 const guard = require('../directives/guard.js');
 const ifDefined = require('../directives/if-defined.js');
 const repeat = require('../directives/repeat.js');
+const styleMap = require('../directives/styleMap.js');
 const unsafe = require('../directives/unsafe-html.js');
 const until = require('../directives/until.js');
 const when = require('../directives/when.js');
@@ -94,6 +96,73 @@ describe('directives', () => {
       };
       const template = html`<p>${custom()}</p>`;
       expect(await getStream(render(template))).to.equal('<p>custom&#x27;s</p>');
+    });
+  });
+
+  describe('classMap', () => {
+    it('should throw if not used as attribute value', async () => {
+      let errored = false;
+      try {
+        html`<div>${classMap({ red: true })}</div>`;
+      } catch (err) {
+        expect(err).to.exist;
+        errored = true;
+      }
+      expect(errored).to.equal(true);
+    });
+    it('should throw if not used as "class" attribute value', async () => {
+      let errored = false;
+      try {
+        html`<div color=${classMap({ red: true })}></div>`;
+      } catch (err) {
+        expect(err).to.exist;
+        errored = true;
+      }
+      expect(errored).to.equal(true);
+    });
+    it('should include class name if truthy', async () => {
+      const template = html`<div class=${classMap({ red: true })}></div>`;
+      expect(await getStream(render(template))).to.equal('<div class="red"></div>');
+    });
+    it('should include class names if truthy', async () => {
+      const template = html`<div class=${classMap({ red: true, blue: true })}></div>`;
+      expect(await getStream(render(template))).to.equal('<div class="red blue"></div>');
+    });
+    it('should ignore class names if falsey', async () => {
+      const template = html`<div class=${classMap({ red: false, blue: true })}></div>`;
+      expect(await getStream(render(template))).to.equal('<div class="blue"></div>');
+    });
+  });
+
+  describe('styleMap', () => {
+    it('should throw if not used as attribute value', async () => {
+      let errored = false;
+      try {
+        html`<div>${styleMap({ color: 'red' })}</div>`;
+      } catch (err) {
+        expect(err).to.exist;
+        errored = true;
+      }
+      expect(errored).to.equal(true);
+    });
+    it('should throw if not used as "style" attribute value', async () => {
+      let errored = false;
+      try {
+        html`<div class=${styleMap({ color: 'red' })}></div>`;
+      } catch (err) {
+        expect(err).to.exist;
+        errored = true;
+      }
+      expect(errored).to.equal(true);
+    });
+    it('should include style properties', async () => {
+      const template = html`<div style=${styleMap({
+        color: 'red',
+        border: '1px solid black'
+      })}></div>`;
+      expect(await getStream(render(template))).to.equal(
+        '<div style="color: red; border: 1px solid black"></div>'
+      );
     });
   });
 });
