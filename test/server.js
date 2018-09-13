@@ -68,6 +68,6 @@ function wait(content) {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(content);
-    }, Math.random * 2000);
+    }, Math.random * 200);
   });
 }
