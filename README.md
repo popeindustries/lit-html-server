@@ -223,6 +223,20 @@ html`<p>
 </p>`;
 ```
 
+- `classMap(classInfo)`: applies css classes to the `class` attribute. 'classInfo' keys are added as class names if values are truthy
+
+```js
+const classMap = require('@popeindustries/lit-html-server/directives/classMap.js');
+html`<div class=${classMap({ red: true })}></div>`;
+```
+
+- `styleMap(styleInfo)`: applies css properties to the `style` attribute. 'styleInfo' keys and values are added as style properties
+
+```js
+const styleMap = require('@popeindustries/lit-html-server/directives/styleMap.js');
+html`<div style=${styleMap({ color: 'red' })}></div>`;
+```
+
 ## Thanks!
 
 Thanks to [Thomas Parslow](https://github.com/almost) for the [stream-template](https://github.com/almost/stream-template) library that was the basis for this streaming implementation, and thanks to [Justin Fagnani](https://github.com/justinfagnani) and the [team](https://github.com/Polymer/lit-html/graphs/contributors) behind the **lit-html** project!
