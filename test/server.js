@@ -6,6 +6,7 @@ const http = require('http');
 http
   .createServer((req, res) => {
     const d = new Date();
+    res.writeHead(200);
     render(template({ title: d.toISOString(), isTrue: Math.random() > 0.5 })).pipe(res);
   })
   .listen(3000);
