@@ -15,22 +15,22 @@
   "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",
   "dependencies": {
-    "get-stream": "^4.0.0",
-    "he": "^1.1.1",
-    "readable-stream": "^3.0.2"
+    "get-stream": "^4.1.0",
+    "he": "^1.2.0",
+    "readable-stream": "^3.0.6"
   },
   "devDependencies": {
-    "autocannon": "^2.4.1",
-    "babel-eslint": "^9.0.0",
-    "chai": "^4.1.2",
-    "eslint": "^5.5.0",
-    "eslint-config-prettier": "^3.0.1",
-    "eslint-plugin-prettier": "^2.6.2",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.2.2",
-    "lit-html": "^0.11.0",
+    "autocannon": "^3.1.0",
+    "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
+    "eslint": "^5.7.0",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "husky": "^1.1.2",
+    "lint-staged": "^7.3.0",
+    "lit-html": "^0.12.0",
     "mocha": "^5.2.0",
-    "prettier": "^1.14.2"
+    "prettier": "^1.14.3"
   },
   "engines": {
     "node": ">=8"
