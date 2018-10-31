@@ -1,6 +1,6 @@
 'use strict';
 
-const { directive } = require('../index.js');
+const { directive } = require('../lib/directive.js');
 
 /**
  * Switch between two templates based on a given 'condition'.

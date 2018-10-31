@@ -11,6 +11,7 @@
     "template"
   ],
   "main": "index.js",
+  "browser": "browser.js",
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",

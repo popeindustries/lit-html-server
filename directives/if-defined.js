@@ -1,6 +1,6 @@
 'use strict';
 
-const { directive } = require('../index.js');
+const { directive } = require('../lib/directive.js');
 const { NULL_ATTRIBUTE } = require('../lib/string.js');
 
 /**

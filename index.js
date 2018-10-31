@@ -1,9 +1,13 @@
 'use strict';
 
+const asyncHtmlTemplate = require('./lib/streamHtmlTemplate.js');
+const { directive } = require('./lib/directive.js');
 const getStream = require('get-stream');
-const htmlTemplate = require('./lib/htmlTemplate.js');
+const htmlTemplateFactory = require('./lib/htmlTemplate.js');
 const { Readable } = require('readable-stream');
 const { removeHeader } = require('./lib/string.js');
+
+const htmlTemplate = htmlTemplateFactory(asyncHtmlTemplate);
 
 module.exports = {
   directive,
@@ -49,14 +53,4 @@ function renderToString(template) {
     return Promise.resolve(removeHeader(template));
   }
   return getStream(template);
-}
-
-/**
- * Define new directive for 'fn'
- * @param {function} fn
- * @returns {function}
- */
-function directive(fn) {
-  fn.isDirective = true;
-  return fn;
 }
