@@ -52,7 +52,7 @@ const { render } = require('@popeindustries/lit-html-server');
 render(layout({ title: 'Home', api: '/api/home' }));
 ```
 
-## API
+## Node API
 
 ### `html`
 
@@ -66,9 +66,9 @@ html`<h1>Hello ${name}!</h1>`;
 All template expressions (values interpolated with `${value}`) are escaped for securely including in HTML by default. An `unsafe-html` [directive](#directives) is available to disable escaping:
 
 ```js
-const unsafe = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
+const { unsafeHTML } = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
 html`<div>
-  ${unsafe('<span>dangerous!</span>')}
+  ${unsafeHTML('<span>dangerous!</span>')}
 </div>`;
 ```
 
@@ -87,6 +87,22 @@ Returns the result of the template tagged by `html` as a Promise which resolves 
 ```js
 const markup = await renderToString(html`<h1>Hello ${name}!</h1>`);
 ```
+
+## Browser API
+
+**lit-html-server** can also be used in a browser context:
+
+```js
+const { html, renderToString } = require('@popeindustries/lit-html-server/browser.js');
+```
+
+### `html`
+
+The tag function to apply to HTML template literals (also aliased as `svg`). See [above](#html).
+
+### `renderToString(template: string|Promise): Promise<string>`
+
+Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup. See [above](#rendertostringtemplate-stringreadable-promisestring).
 
 ## Writing templates
 
