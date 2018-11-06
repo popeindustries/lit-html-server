@@ -1,16 +1,18 @@
 'use strict';
 
+const {
+  classMap,
+  guard,
+  ifDefined,
+  repeat,
+  styleMap,
+  unsafeHTML,
+  until,
+  when
+} = require('../directives/index.js');
 const { directive, html, render } = require('../index.js');
-const classMap = require('../directives/classMap.js');
 const { expect } = require('chai');
 const getStream = require('get-stream');
-const guard = require('../directives/guard.js');
-const ifDefined = require('../directives/if-defined.js');
-const repeat = require('../directives/repeat.js');
-const styleMap = require('../directives/styleMap.js');
-const unsafe = require('../directives/unsafe-html.js');
-const until = require('../directives/until.js');
-const when = require('../directives/when.js');
 
 describe('directives', () => {
   describe('guard', () => {
@@ -54,7 +56,7 @@ describe('directives', () => {
 
   describe('unsafe-html', () => {
     it('should render unescaped value', async () => {
-      const template = html`<p>${unsafe("hey! it's dangerous! <script>boom!</script>")}</p>`;
+      const template = html`<p>${unsafeHTML("hey! it's dangerous! <script>boom!</script>")}</p>`;
       expect(await getStream(render(template))).to.equal(
         "<p>hey! it's dangerous! <script>boom!</script></p>"
       );
