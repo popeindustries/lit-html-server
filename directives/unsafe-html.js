@@ -6,15 +6,13 @@ const { NO_ESCAPE } = require('../lib/string.js');
 module.exports = {
   /**
    * Render unescaped HTML
-   * @param {any} value
-   * @returns {() => void}
+   * @param {string} value
+   * @returns {function}
    */
-  unsafeHTML(value) {
-    return directive((part) => {
-      if (typeof value !== 'string') {
-        throw Error('The `unsafe-html` directive must be used on a string');
-      }
-      part.setValue(`${NO_ESCAPE}${value}`);
-    });
-  }
+  unsafeHTML: directive((value) => (part) => {
+    if (part.isAttribute) {
+      throw Error('unsafeHTML can only be used in text bindings');
+    }
+    part.setValue(`${NO_ESCAPE}${value}`);
+  })
 };

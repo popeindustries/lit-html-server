@@ -7,16 +7,14 @@ module.exports = {
   /**
    * Sets the attribute if 'value' is defined,
    * removes the attribute if undefined.
-   * @param {any} value
-   * @returns {() => void}
+   * @param {*} value
+   * @returns {function}
    */
-  ifDefined(value) {
-    return directive((part) => {
-      if (value === undefined && part.isAttribute) {
-        part.setValue(NULL_ATTRIBUTE);
-        return;
-      }
-      part.setValue(value);
-    });
-  }
+  ifDefined: directive((value) => (part) => {
+    if (value === undefined && part.isAttribute) {
+      part.setValue(NULL_ATTRIBUTE);
+      return;
+    }
+    part.setValue(value);
+  })
 };

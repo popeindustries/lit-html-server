@@ -7,18 +7,18 @@ module.exports = {
    * Loop through 'items' and call 'template'.
    * No concept of efficient re-ordering possible in server context,
    * so this is a simple no-op map operation.
-   * @param {[]} items
-   * @param {(any) => any} [keyFn]
-   * @param {(any, number) => any} template
-   * @returns {() => void}
+   * @param {Array} items
+   * @param {function} [keyFnOrTemplate]
+   * @param {function) => any} template
+   * @returns {function}
    */
-  repeat(items, keyFn, template) {
-    if (arguments.length === 2) {
-      template = keyFn;
+  repeat: directive((items, keyFnOrTemplate, template) => {
+    if (template === undefined) {
+      template = keyFnOrTemplate;
     }
 
-    return directive((part) => {
+    return (part) => {
       part.setValue(items.map((item, index) => template(item, index)));
-    });
-  }
+    };
+  })
 };
