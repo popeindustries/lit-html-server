@@ -12,6 +12,7 @@ const {
 } = require('../directives/index.js');
 const { directive, html, renderToString } = require('../index.js');
 const { expect } = require('chai');
+const { normalizeWhitespace } = require('./utils.js');
 
 describe('directives', () => {
   describe('guard', () => {
@@ -19,14 +20,14 @@ describe('directives', () => {
       const template = html`
         <h1>Some ${guard('title', () => 'title')}</h1>
       `;
-      expect(await renderToString(template)).to.contain('<h1>Some title</h1>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal('<h1>Some title</h1>');
     });
     it('should render a guarded array value', async () => {
       const items = [1, 2, 3];
       const template = html`
         <h1>Some ${guard(items, () => items.map((item) => item))}</h1>
       `;
-      expect(await renderToString(template)).to.contain('<h1>Some 123</h1>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal('<h1>Some 123</h1>');
     });
   });
 
@@ -36,14 +37,16 @@ describe('directives', () => {
       const template = html`
         <div class="${ifDefined(className)}"></div>
       `;
-      expect(await renderToString(template)).to.contain('<div class="hi"></div>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<div class="hi"></div>'
+      );
     });
     it('should not render an attribute value if undefined', async () => {
       const className = undefined;
       const template = html`
         <div class="${ifDefined(className)}"></div>
       `;
-      expect(await renderToString(template)).to.contain('<div ></div>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal('<div ></div>');
     });
   });
 
@@ -58,7 +61,9 @@ describe('directives', () => {
           ${repeat([1, 2, 3], repeater)}
         </ul>
       `;
-      expect(await renderToString(template)).to.contain('<li>0: 1</li>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<ul> <li>0: 1</li> <li>1: 2</li> <li>2: 3</li> </ul>'
+      );
     });
   });
 
@@ -67,7 +72,7 @@ describe('directives', () => {
       const template = html`
         <p>${unsafeHTML("hey! it's dangerous! <script>boom!</script>")}</p>
       `;
-      expect(await renderToString(template)).to.contain(
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
         "<p>hey! it's dangerous! <script>boom!</script></p>"
       );
     });
@@ -87,7 +92,9 @@ describe('directives', () => {
           }
         </p>
       `;
-      expect(await renderToString(template)).to.contain('<span>Loading...</span>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<p> <span>Loading...</span> </p>'
+      );
     });
   });
 
@@ -110,7 +117,9 @@ describe('directives', () => {
           }
         </p>
       `;
-      expect(await renderToString(template)).to.contain('Checkmark is checked');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<p> Checkmark is checked </p>'
+      );
     });
     it('should render the false template when the condition is falsey', async () => {
       const template = html`
@@ -130,7 +139,9 @@ describe('directives', () => {
           }
         </p>
       `;
-      expect(await renderToString(template)).to.contain('Checkmark is not checked');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<p> Checkmark is not checked </p>'
+      );
     });
   });
 
@@ -142,7 +153,7 @@ describe('directives', () => {
       const template = html`
         <p>${custom()}</p>
       `;
-      expect(await renderToString(template)).to.contain('<p>custom&#x27;s</p>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal('<p>custom&#x27;s</p>');
     });
   });
 
@@ -175,19 +186,25 @@ describe('directives', () => {
       const template = html`
         <div class="${classMap({ red: true })}"></div>
       `;
-      expect(await renderToString(template)).to.contain('<div class="red"></div>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<div class="red"></div>'
+      );
     });
     it('should include class names if truthy', async () => {
       const template = html`
         <div class="${classMap({ red: true, blue: true })}"></div>
       `;
-      expect(await renderToString(template)).to.contain('<div class="red blue"></div>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<div class="red blue"></div>'
+      );
     });
     it('should ignore class names if falsey', async () => {
       const template = html`
         <div class="${classMap({ red: false, blue: true })}"></div>
       `;
-      expect(await renderToString(template)).to.contain('<div class="blue"></div>');
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<div class="blue"></div>'
+      );
     });
   });
 
@@ -227,8 +244,8 @@ describe('directives', () => {
           }"
         ></div>
       `;
-      expect(await renderToString(template)).to.contain(
-        'style="color: red; border: 1px solid black"'
+      expect(normalizeWhitespace(await renderToString(template))).to.equal(
+        '<div style="color: red; border: 1px solid black" ></div>'
       );
     });
   });

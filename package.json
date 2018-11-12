@@ -31,6 +31,7 @@
     "lint-staged": "^8.0.4",
     "lit-html": "^0.13.0",
     "mocha": "^5.2.0",
+    "normalize-html-whitespace": "^0.2.0",
     "prettier": "^1.15.2"
   },
   "engines": {
