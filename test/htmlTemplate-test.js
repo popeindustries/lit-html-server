@@ -48,7 +48,7 @@ describe('html()', () => {
         `)
       ).to.equal('<!-- lit-html-server --> hello 123');
     });
-    it('should return a stream when using Promise values', async () => {
+    it('should return a stream when interpolating Promise values', async () => {
       expect(
         normalizeWhitespace(
           await getStream(
@@ -59,16 +59,53 @@ describe('html()', () => {
         )
       ).to.equal('hello foo');
     });
-    it('should return a stream when nesting templates using Promise values', async () => {
+    it('should return a stream when nesting templates interpolating Promise values', async () => {
       expect(
         normalizeWhitespace(
           await getStream(
             html`
-              hello ${Promise.resolve('foo')}
+              hello
+              ${
+                html`
+                  ${Promise.resolve('foo')}
+                `
+              }
             `
           )
         )
       ).to.equal('hello foo');
+    });
+    it('should return a stream when interpolating Array Promise values', async () => {
+      const values = [1, 2, 3];
+      expect(
+        normalizeWhitespace(
+          await getStream(
+            html`
+              hello ${values.map((value) => Promise.resolve(value))}
+            `
+          )
+        )
+      ).to.equal('hello 123');
+    });
+    it('should return a stream when interpolating Array Promise values with nested templates', async () => {
+      const values = [1, 2, 3];
+      expect(
+        normalizeWhitespace(
+          await getStream(
+            html`
+              hello
+              ${
+                values.map(
+                  (value) =>
+                    html`
+                      ${Promise.resolve(value)}
+                    `
+                )
+              }
+            `
+          )
+        )
+      ).to.equal('hello 1 2 3');
     });
   });
 
