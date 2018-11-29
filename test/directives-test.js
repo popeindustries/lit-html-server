@@ -7,8 +7,7 @@ const {
   repeat,
   styleMap,
   unsafeHTML,
-  until,
-  when
+  until
 } = require('../directives/index.js');
 const { directive, html, renderToString } = require('../index.js');
 const { expect } = require('chai');
@@ -94,53 +93,6 @@ describe('directives', () => {
       `;
       expect(normalizeWhitespace(await renderToString(template))).to.equal(
         '<p> <span>Loading...</span> </p>'
-      );
-    });
-  });
-
-  describe('when', () => {
-    it('should render the true template when the condition is truthy', async () => {
-      const template = html`
-        <p>
-          ${
-            when(
-              true,
-              () =>
-                html`
-                  Checkmark is checked
-                `,
-              () =>
-                html`
-                  Checkmark is not checked
-                `
-            )
-          }
-        </p>
-      `;
-      expect(normalizeWhitespace(await renderToString(template))).to.equal(
-        '<p> Checkmark is checked </p>'
-      );
-    });
-    it('should render the false template when the condition is falsey', async () => {
-      const template = html`
-        <p>
-          ${
-            when(
-              false,
-              () =>
-                html`
-                  Checkmark is checked
-                `,
-              () =>
-                html`
-                  Checkmark is not checked
-                `
-            )
-          }
-        </p>
-      `;
-      expect(normalizeWhitespace(await renderToString(template))).to.equal(
-        '<p> Checkmark is not checked </p>'
       );
     });
   });

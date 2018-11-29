@@ -1,10 +1,9 @@
 module.exports = {
-  ...require('./classMap.js'),
+  ...require('./class-map.js'),
   ...require('./guard.js'),
   ...require('./if-defined.js'),
   ...require('./repeat.js'),
-  ...require('./styleMap.js'),
+  ...require('./style-map.js'),
   ...require('./unsafe-html.js'),
-  ...require('./until.js'),
-  ...require('./when.js')
+  ...require('./until.js')
 };
