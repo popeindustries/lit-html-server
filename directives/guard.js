@@ -7,11 +7,11 @@ module.exports = {
    * Guard against re-render.
    * Not possible to compare against previous render in a server context,
    * so this is a no-op.
-   * @param {*} expression
-   * @param {function} valueFn
+   * @param {*} value
+   * @param {function} fn
    * @returns {function}
    */
-  guard: directive((expression, valueFn) => (part) => {
-    part.setValue(valueFn());
+  guard: directive((value, fn) => (part) => {
+    part.setValue(fn());
   })
 };

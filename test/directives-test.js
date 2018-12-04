@@ -78,7 +78,7 @@ describe('directives', () => {
   });
 
   describe('until', () => {
-    it('should render default value', async () => {
+    it('should render a pending value', async () => {
       const template = html`
         <p>
           ${
@@ -94,6 +94,12 @@ describe('directives', () => {
       expect(normalizeWhitespace(await renderToString(template))).to.equal(
         '<p> <span>Loading...</span> </p>'
       );
+    });
+    it('should render a Promise value if no values pending', async () => {
+      const template = html`
+        <p> ${until(Promise.resolve('hi'))} </p>
+      `;
+      expect(normalizeWhitespace(await renderToString(template))).to.equal('<p> hi </p>');
     });
   });
 
