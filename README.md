@@ -19,27 +19,33 @@ $ npm install --save @popeindustries/lit-html-server
 
 ```js
 const { html } = require('@popeindustries/lit-html-server');
+const { classMap } = require('@popeindustries/lit-html-server/directives/class-map.js');
+const { until } = require('@popeindustries/lit-html-server/directives/until.js');
 
 function layout(data) {
-  return html`<!DOCTYPE html>
+  return html`
+    <!DOCTYPE html>
     <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <title>${data.title}</title>
-    </head>
-    <body>
-      ${body(data.api)}
-    </body>
-    </html>`;
+      <head>
+        <meta charset="UTF-8" />
+        <title>${data.title}</title>
+      </head>
+      <body>
+        ${until(body(data.api))}
+      </body>
+    </html>
+  `;
 }
 
 async function body(apiPath) {
   // Some Promise-based request method
   const data = await fetchRemoteData(apiPath);
 
-  return html`<h1>${data.title}</h1>
-    <x-widget ?enabled=${data.hasWidget}></x-widget>
-    <p class="${data.invertedText ? 'negative' : ''}">${data.text}</p>`;
+  return html`
+    <h1>${data.title}</h1>
+    <x-widget ?enabled="${data.hasWidget}"></x-widget>
+    <p class="${classMap({ 'negative': data.invertedText }">${data.text}</p>
+  `;
 }
 ```
 
@@ -60,16 +66,18 @@ The tag function to apply to HTML template literals (also aliased as `svg`)
 
 ```js
 const name = 'Bob';
-html`<h1>Hello ${name}!</h1>`;
+html`
+  <h1>Hello ${name}!</h1>
+`;
 ```
 
 All template expressions (values interpolated with `${value}`) are escaped for securely including in HTML by default. An `unsafe-html` [directive](#directives) is available to disable escaping:
 
 ```js
 const { unsafeHTML } = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
-html`<div>
-  ${unsafeHTML('<span>dangerous!</span>')}
-</div>`;
+html`
+  <div> ${unsafeHTML('<span>dangerous!</span>')} </div>
+`;
 ```
 
 ### `render(template: string|Readable): Readable`
@@ -77,7 +85,11 @@ html`<div>
 Returns the result of the template tagged by `html` as a Node.js `Readable` stream of markup.
 
 ```js
-render(html`<h1>Hello ${name}!</h1>`).pipe(response);
+render(
+  html`
+    <h1>Hello ${name}!</h1>
+  `
+).pipe(response);
 ```
 
 ### `renderToString(template: string|Readable): Promise<string>`
@@ -85,7 +97,11 @@ render(html`<h1>Hello ${name}!</h1>`).pipe(response);
 Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup.
 
 ```js
-const markup = await renderToString(html`<h1>Hello ${name}!</h1>`);
+const markup = await renderToString(
+  html`
+    <h1>Hello ${name}!</h1>
+  `
+);
 ```
 
 ## Browser API
@@ -125,21 +141,27 @@ All of the **lit-html** [expression syntax](https://polymer.github.io/lit-html/g
 - text:
 
 ```js
-html`<h1>Hello ${name}</h1>`;
+html`
+  <h1>Hello ${name}</h1>
+`;
 //=> <h1>Hello Bob</h1>
 ```
 
 - attribute:
 
 ```js
-html`<div id=${id}></div>`;
+html`
+  <div id="${id}"></div>
+`;
 //=> <div id="main"></div>
 ```
 
 - boolean attribute (attribute markup removed with falsey expression values):
 
 ```js
-html`<input type="checkbox" ?checked=${checked}>`;
+html`
+  <input type="checkbox" ?checked="${checked}" />
+`;
 //=> <input type="checkbox" checked> if truthy
 //=> <input type="checkbox" > if falsey
 ```
@@ -147,7 +169,9 @@ html`<input type="checkbox" ?checked=${checked}>`;
 - property (attribute markup removed):
 
 ```js
-html`<input .value=${value}>`;
+html`
+  <input .value="${value}" />
+`;
 //=> <input >
 ```
 
@@ -155,7 +179,9 @@ html`<input .value=${value}>`;
 
 ```js
 const fn = (e) => console.log('clicked');
-html`<button @click=${fn}>Click Me</button>`;
+html`
+  <button @click="${fn}">Click Me</button>
+`;
 //=> <button >Click Me</button>
 ```
 
@@ -170,10 +196,11 @@ Most of the **lit-html** [value types](https://polymer.github.io/lit-html/guide/
 - nested templates:
 
 ```js
-const header = html`<h1>Header</h1>`;
+const header = html`
+  <h1>Header</h1>
+`;
 const page = html`
-  ${header}
-  <p>This is some text</p>
+  ${header} <p>This is some text</p>
 `;
 ```
 
@@ -181,76 +208,153 @@ const page = html`
 
 ```js
 const items = [1, 2, 3];
-html`<ul>${items.map((item) => html`<li>${item}</li>`)}</ul>`;
-html`<p>total = ${new Set(items)}</p>`;
+html`
+  <ul>
+    ${
+      items.map(
+        (item) =>
+          html`
+            <li>${item}</li>
+          `
+      )
+    }
+  </ul>
+`;
+html`
+  <p>total = ${new Set(items)}</p>
+`;
 ```
 
 - Promises:
 
 ```js
 const promise = fetch('sample.txt').then((r) => r.text());
-html`<p>The response is ${promise}.</p>`;
+html`
+  <p>The response is ${promise}.</p>
+`;
 ```
+
+> note that **lit-html** no longer supports Promise values, and **lit-html-server** will therefore log a warning. Use the `until` directive instead.
 
 ### Directives
 
 Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server context):
 
-- `guard(expression, valueFn)`: no-op since re-rendering does not apply (renders result of `valueFn`)
+- `guard(value, fn)`: no-op since re-rendering does not apply (renders result of `fn`)
 
 ```js
 const guard = require('@popeindustries/lit-html-server/directives/guard.js');
-html`<div>
-  ${guard(items, () => items.map((item) => html`${item}`))}
-</div>`;
+html`
+  <div>
+    ${
+      guard(items, () =>
+        items.map(
+          (item) =>
+            html`
+              ${item}
+            `
+        )
+      )
+    }
+  </div>
+`;
 ```
 
 - `ifDefined(value)`: sets the attribute if the value is defined and removes the attribute if the value is undefined
 
 ```js
 const ifDefined = require('@popeindustries/lit-html-server/directives/if-defined.js');
-html`<div class=${ifDefined(className)}></div>`;
+html`
+  <div class="${ifDefined(className)}"></div>
+`;
 ```
 
-- `repeat(items, keyfn, template))`: no-op since re-rendering does not apply (maps `items` over `template`)
+- `repeat(items, keyfnOrTemplate, template))`: no-op since re-rendering does not apply (maps `items` over `template`)
 
 ```js
 const repeat = require('@popeindustries/lit-html-server/directives/repeat.js');
-html`<ul>
-  ${repeat(items, (i) => i.id, (i, index) => html`<li>${index}: ${i.name}</li>`)}
-</ul>`;
+html`
+  <ul>
+    ${
+      repeat(
+        items,
+        (i) => i.id,
+        (i, index) =>
+          html`
+            <li>${index}: ${i.name}</li>
+          `
+      )
+    }
+  </ul>
+`;
 ```
 
-- `until(promise, defaultContent)`: no-op since only one render pass (renders `defaultContent`)
+- `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive sync values are prioritised over async Promises, unless there are no more pending values, in which case the last value is rendered regardless
 
 ```js
 const until = require('@popeindustries/lit-html-server/directives/until.js');
-html`<p>
-  ${until(fetch('content.txt').then((r) => r.text()), html`<span>Loading...</span>`)}
-</p>`;
-```
+html`
+  <p>
+    ${
+      until(
+        fetch('content.json').then((r) => r.json()),
+        html`
+          <span>Loading...</span>
+        `
+      )
+    }
+  </p>
+`;
+// => renders <p><span>Loading...</span></p>
 
-- `when(condition, trueTemplate, falseTemplate)`: switches between two templates based on the given condition (does not cache templates)
-
-```js
-const when = require('@popeindustries/lit-html-server/directives/when.js');
-html`<p>
-  ${when(checked, () => html`Checkmark is checked`, () => html`Checkmark is not checked`)}
-</p>`;
+html`
+  <p>
+    ${
+      until(
+        fetch('content.json').then((r) => r.json()),
+        isBrowser
+          ? html`
+              <span>Loading...</span>
+            `
+          : undefined
+      )
+    }
+  </p>
+`;
+// => renders fetch result
 ```
 
 - `classMap(classInfo)`: applies css classes to the `class` attribute. 'classInfo' keys are added as class names if values are truthy
 
 ```js
-const classMap = require('@popeindustries/lit-html-server/directives/classMap.js');
-html`<div class=${classMap({ red: true })}></div>`;
+const classMap = require('@popeindustries/lit-html-server/directives/class-map.js');
+html`
+  <div class="${classMap({ red: true })}"></div>
+`;
 ```
 
 - `styleMap(styleInfo)`: applies css properties to the `style` attribute. 'styleInfo' keys and values are added as style properties
 
 ```js
-const styleMap = require('@popeindustries/lit-html-server/directives/styleMap.js');
-html`<div style=${styleMap({ color: 'red' })}></div>`;
+const styleMap = require('@popeindustries/lit-html-server/directives/style-map.js');
+html`
+  <div style="${styleMap({ color: 'red' })}"></div>
+`;
+```
+
+- `cache(value)`: Enables fast switching between multiple templates by caching previous results. Since it's generally not desireable to cache between requests, this is a no-op
+
+```js
+const cache = require('@popeindustries/lit-html-server/directives/cache.js');
+cache(
+  loggedIn
+    ? html`
+        You are logged in
+      `
+    : html`
+        Please log in
+      `
+);
 ```
 
 ## Thanks!
