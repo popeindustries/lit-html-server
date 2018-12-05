@@ -15,9 +15,7 @@
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",
-  "dependencies": {
-    "readable-stream": "^3.0.6"
-  },
+  "dependencies": {},
   "devDependencies": {
     "autocannon": "^3.2.0",
     "babel-eslint": "^10.0.1",

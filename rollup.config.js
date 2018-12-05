@@ -16,7 +16,7 @@ module.exports = [
     }
   },
   {
-    external: ['readable-stream', 'stream', 'fs'],
+    external: ['stream', 'fs'],
     input: 'lib/index.js',
     plugins: [commonjs(), resolve()],
     output: {
