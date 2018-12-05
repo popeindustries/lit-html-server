@@ -1,7 +1,7 @@
 'use srict';
 
-const { html, render, renderToString } = require('../index.js');
-const { html: browserHtml, renderToString: browserRenderToString } = require('../browser.js');
+const { html, render, renderToString } = require('../lib/index.js');
+const { html: browserHtml, renderToString: browserRenderToString } = require('../lib/browser.js');
 const { expect } = require('chai');
 const getStream = require('get-stream');
 const { normalizeWhitespace } = require('./utils.js');

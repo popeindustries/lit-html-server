@@ -1,3 +1,5 @@
 .npm
 node_modules
 .DS_Store
+./browser.js
+./index.js

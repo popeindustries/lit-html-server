@@ -80,7 +80,7 @@ function template(data) {
 }
 
 function wait(content) {
-  return new Promise((resolve) => {
+  new Promise((resolve) => {
     setTimeout(() => {
       resolve(content);
     }, Math.random() * 100);

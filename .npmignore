@@ -1,3 +1,5 @@
 test
+lib
 .*
 package-lock.json
+rollup.config.js

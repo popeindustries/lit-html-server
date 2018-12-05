@@ -9,7 +9,7 @@ const {
   unsafeHTML,
   until
 } = require('../directives/index.js');
-const { directive, html, renderToString } = require('../index.js');
+const { directive, html, renderToString } = require('../lib/index.js');
 const { expect } = require('chai');
 const { normalizeWhitespace } = require('./utils.js');
 
