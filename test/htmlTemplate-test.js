@@ -1,10 +1,10 @@
-'use strict';
+import asyncHtmlTemplate from '../lib/streamHtmlTemplate.js';
+import { expect } from 'chai';
+import getStream from 'get-stream';
+import htmlFactory from '../lib/htmlTemplate.js';
+import { normalizeWhitespace } from './utils.js';
 
-const asyncHtmlTemplate = require('../lib/streamHtmlTemplate.js');
-const { expect } = require('chai');
-const getStream = require('get-stream');
-const html = require('../lib/htmlTemplate.js')(asyncHtmlTemplate);
-const { normalizeWhitespace } = require('./utils.js');
+const html = htmlFactory(asyncHtmlTemplate);
 
 describe('html()', () => {
   describe('text mode', () => {

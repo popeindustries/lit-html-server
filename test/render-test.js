@@ -1,10 +1,8 @@
-'use srict';
-
-const { html, render, renderToString } = require('../lib/index.js');
-const { html: browserHtml, renderToString: browserRenderToString } = require('../lib/browser.js');
-const { expect } = require('chai');
-const getStream = require('get-stream');
-const { normalizeWhitespace } = require('./utils.js');
+import { html as browserHtml, renderToString as browserRenderToString } from '../lib/browser.js';
+import { html, render, renderToString } from '../lib/index.js';
+import { expect } from 'chai';
+import getStream from 'get-stream';
+import { normalizeWhitespace } from './utils.js';
 
 describe('render()', () => {
   it('should return a Readable stream when rendering a synchronous template', async () => {

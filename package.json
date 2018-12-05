@@ -25,6 +25,7 @@
     "eslint": "^5.9.0",
     "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-prettier": "^3.0.0",
+    "esm": "^3.0.84",
     "get-stream": "^4.1.0",
     "he": "^1.2.0",
     "husky": "^1.2.0",
@@ -47,6 +48,6 @@
     "perf": "node test/server.js & PID=$!; autocannon -c 100 -d 5 -p 10 http://localhost:3000 && kill $PID",
     "precommit": "lint-staged",
     "prepublishOnly": "npm run build",
-    "test": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000"
+    "test": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm"
   }
 }

@@ -1,6 +1,6 @@
-const stripWhitespace = require('normalize-html-whitespace');
+import stripWhitespace from 'normalize-html-whitespace';
 
-module.exports = { normalizeWhitespace };
+export { normalizeWhitespace };
 
 /**
  * Remove extra whitespaces from 'htmlString'

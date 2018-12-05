@@ -1,7 +1,5 @@
-'use strict';
-
-const { expect } = require('chai');
-const promiseHtmlTemplate = require('../lib/promiseHtmlTemplate.js');
+import { expect } from 'chai';
+import promiseHtmlTemplate from '../lib/promiseHtmlTemplate.js';
 
 describe('promiseHtmlTemplate', () => {
   it('should interpolate primitive values', async () => {

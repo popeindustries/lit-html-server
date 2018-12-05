@@ -1,6 +1,4 @@
-'use strict';
-
-const {
+import {
   classMap,
   guard,
   ifDefined,
@@ -8,10 +6,10 @@ const {
   styleMap,
   unsafeHTML,
   until
-} = require('../directives/index.js');
-const { directive, html, renderToString } = require('../lib/index.js');
-const { expect } = require('chai');
-const { normalizeWhitespace } = require('./utils.js');
+} from '../lib/directives/index.js';
+import { directive, html, renderToString } from '../lib/index.js';
+import { expect } from 'chai';
+import { normalizeWhitespace } from './utils.js';
 
 describe('directives', () => {
   describe('guard', () => {

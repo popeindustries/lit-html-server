@@ -1,10 +1,8 @@
-'use strict';
-
-const { expect } = require('chai');
-const getStream = require('get-stream');
-const { Readable } = require('readable-stream');
-const streamHtmlTemplate = require('../lib/streamHtmlTemplate.js');
-const promiseHtmlTemplate = require('../lib/promiseHtmlTemplate.js');
+import { expect } from 'chai';
+import getStream from 'get-stream';
+import promiseHtmlTemplate from '../lib/promiseHtmlTemplate.js';
+import { Readable } from 'readable-stream';
+import streamHtmlTemplate from '../lib/streamHtmlTemplate.js';
 
 function makeStream() {
   return new Readable({
