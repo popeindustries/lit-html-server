@@ -16,8 +16,6 @@
   "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",
   "dependencies": {
-    "get-stream": "^4.1.0",
-    "he": "^1.2.0",
     "readable-stream": "^3.0.6"
   },
   "devDependencies": {
@@ -27,6 +25,8 @@
     "eslint": "^5.9.0",
     "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-prettier": "^3.0.0",
+    "get-stream": "^4.1.0",
+    "he": "^1.2.0",
     "husky": "^1.2.0",
     "lint-staged": "^8.1.0",
     "lit-html": "^0.14.0",
@@ -46,6 +46,7 @@
     "lint": "eslint './{directives,lib,test}/**/*.js'",
     "perf": "node test/server.js & PID=$!; autocannon -c 100 -d 5 -p 10 http://localhost:3000 && kill $PID",
     "precommit": "lint-staged",
+    "prepublishOnly": "npm run build",
     "test": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000"
   }
 }
