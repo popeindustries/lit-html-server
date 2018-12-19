@@ -1,4 +1,4 @@
-import asyncHtmlTemplate from '../lib/streamHtmlTemplate.js';
+import asyncHtmlTemplate from '../lib/streamAsyncHtmlTemplate.js';
 import { expect } from 'chai';
 import getStream from 'get-stream';
 import htmlFactory from '../lib/htmlTemplate.js';

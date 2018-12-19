@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import getStream from 'get-stream';
-import promiseHtmlTemplate from '../lib/promiseHtmlTemplate.js';
+import promiseAsyncHtmlTemplate from '../lib/promiseAsyncHtmlTemplate.js';
 import { Readable } from 'stream';
-import streamHtmlTemplate from '../lib/streamHtmlTemplate.js';
+import streamAsyncHtmlTemplate from '../lib/streamAsyncHtmlTemplate.js';
 
 function makeStream() {
   return new Readable({
@@ -10,17 +10,17 @@ function makeStream() {
   });
 }
 
-describe('streamHtmlTemplate()', () => {
+describe('streamAsyncHtmlTemplate()', () => {
   describe('server', () => {
     it('should interpolate primitive values', async () => {
-      expect(await getStream(streamHtmlTemplate`hello ${'there'} ${1} ${true}`)).to.equal(
+      expect(await getStream(streamAsyncHtmlTemplate`hello ${'there'} ${1} ${true}`)).to.equal(
         'hello there 1 true'
       );
     });
     it('should interpolate null interpolations', async () => {
       expect(
         await getStream(
-          streamHtmlTemplate`Hello ${'there'}, welcome to the ${undefined} ${null} test`
+          streamAsyncHtmlTemplate`Hello ${'there'}, welcome to the ${undefined} ${null} test`
         )
       ).to.equal('Hello there, welcome to the  null test');
     });
@@ -33,7 +33,7 @@ describe('streamHtmlTemplate()', () => {
       stream2.push(null);
       stream1.push(' and cheese', 'utf8');
       stream1.push(null);
-      expect(await getStream(streamHtmlTemplate`First ${stream1} then ${stream2}!`)).to.equal(
+      expect(await getStream(streamAsyncHtmlTemplate`First ${stream1} then ${stream2}!`)).to.equal(
         'First bread and cheese then wine and more cheese!'
       );
     });
@@ -48,18 +48,18 @@ describe('streamHtmlTemplate()', () => {
           stream1.push(null);
         }, 20);
       });
-      expect(await getStream(streamHtmlTemplate`${stream1}`)).to.equal('abcd');
+      expect(await getStream(streamAsyncHtmlTemplate`${stream1}`)).to.equal('abcd');
     });
     it('should intepolate promises returning strings', async () => {
       const promise = Promise.resolve('hello');
-      expect(await getStream(streamHtmlTemplate`${promise} world`)).to.equal('hello world');
+      expect(await getStream(streamAsyncHtmlTemplate`${promise} world`)).to.equal('hello world');
     });
     it('should interpolate promises returning streams', async () => {
       const stream1 = makeStream();
       const promise = Promise.resolve(stream1);
       stream1.push('hello');
       stream1.push(null);
-      expect(await getStream(streamHtmlTemplate`${promise} world`)).to.equal('hello world');
+      expect(await getStream(streamAsyncHtmlTemplate`${promise} world`)).to.equal('hello world');
     });
     it('should interpolate arrays', async () => {
       const stream1 = makeStream();
@@ -69,7 +69,7 @@ describe('streamHtmlTemplate()', () => {
       stream1.push(null);
       stream2.push(null);
       const array = ['hello ', Promise.resolve(stream1), stream2, [", how's ", 'it ', 'going']];
-      expect(await getStream(streamHtmlTemplate`Well ${array}?`)).to.equal(
+      expect(await getStream(streamAsyncHtmlTemplate`Well ${array}?`)).to.equal(
         'Well hello there world, how&#x27;s it going?'
       );
     });
@@ -81,13 +81,13 @@ describe('streamHtmlTemplate()', () => {
       stream1.push(null);
       stream2.push(null);
       const array = ['hello ', Promise.resolve(stream1), stream2, [", how's ", 'it ', 'going']];
-      expect(await getStream(streamHtmlTemplate`Well ${array[Symbol.iterator]()}?`)).to.equal(
+      expect(await getStream(streamAsyncHtmlTemplate`Well ${array[Symbol.iterator]()}?`)).to.equal(
         'Well hello there world, how&#x27;s it going?'
       );
     });
     it('should concatenate multiple strings together and emit as a single chunk', (done) => {
       const promise = Promise.resolve('d');
-      const out = streamHtmlTemplate`a ${'b'} c ${promise} e ${['f', ' g']}`;
+      const out = streamAsyncHtmlTemplate`a ${'b'} c ${promise} e ${['f', ' g']}`;
       let chunks = [];
       out.on('data', (chunk) => chunks.push(chunk.toString()));
       out.on('end', () => {
@@ -97,7 +97,7 @@ describe('streamHtmlTemplate()', () => {
     });
     it('should forward stream errors', (done) => {
       const s = makeStream();
-      const out = streamHtmlTemplate`${s}`;
+      const out = streamAsyncHtmlTemplate`${s}`;
       out.on('error', (err) => {
         expect(err.message).to.equal('destroyed');
         done();
@@ -112,7 +112,7 @@ describe('streamHtmlTemplate()', () => {
           destroyed = true;
         }
       });
-      const out = streamHtmlTemplate`${s}`;
+      const out = streamAsyncHtmlTemplate`${s}`;
       out.on('close', () => {
         expect(destroyed).to.equal(true);
         done();
@@ -121,7 +121,7 @@ describe('streamHtmlTemplate()', () => {
     });
     it('should destroy source streams on Promise error', (done) => {
       const promise = Promise.reject(Error('destroyed'));
-      const out = streamHtmlTemplate`${promise} world`;
+      const out = streamAsyncHtmlTemplate`${promise} world`;
       out.on('error', (err) => {
         expect(err.message).to.equal('destroyed');
         done();
@@ -131,34 +131,34 @@ describe('streamHtmlTemplate()', () => {
 
   describe('browser', () => {
     it('should interpolate primitive values', async () => {
-      expect(await promiseHtmlTemplate`hello ${'there'} ${1} ${true}`).to.equal(
+      expect(await promiseAsyncHtmlTemplate`hello ${'there'} ${1} ${true}`).to.equal(
         'hello there 1 true'
       );
     });
     it('should interpolate null interpolations', async () => {
       expect(
-        await promiseHtmlTemplate`Hello ${'there'}, welcome to the ${undefined} ${null} test`
+        await promiseAsyncHtmlTemplate`Hello ${'there'}, welcome to the ${undefined} ${null} test`
       ).to.equal('Hello there, welcome to the  null test');
     });
     it('should intepolate promises returning strings', async () => {
       const promise = Promise.resolve('hello');
-      expect(await promiseHtmlTemplate`${promise} world`).to.equal('hello world');
+      expect(await promiseAsyncHtmlTemplate`${promise} world`).to.equal('hello world');
     });
     it('should interpolate arrays', async () => {
       const array = ['hello ', Promise.resolve('there '), 'world', [", how's ", 'it ', 'going']];
-      expect(await promiseHtmlTemplate`Well ${array}?`).to.equal(
+      expect(await promiseAsyncHtmlTemplate`Well ${array}?`).to.equal(
         'Well hello there world, how&#x27;s it going?'
       );
     });
     it('should interpolate sync iterators', async () => {
       const array = ['hello ', Promise.resolve('there '), 'world', [", how's ", 'it ', 'going']];
-      expect(await promiseHtmlTemplate`Well ${array[Symbol.iterator]()}?`).to.equal(
+      expect(await promiseAsyncHtmlTemplate`Well ${array[Symbol.iterator]()}?`).to.equal(
         'Well hello there world, how&#x27;s it going?'
       );
     });
     it('should reject on Promise error', (done) => {
       const promise = Promise.reject(Error('destroyed'));
-      promiseHtmlTemplate`${promise} world`.catch((err) => {
+      promiseAsyncHtmlTemplate`${promise} world`.catch((err) => {
         expect(err.message).to.equal('destroyed');
         done();
       });
