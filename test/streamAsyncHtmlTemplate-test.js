@@ -127,6 +127,16 @@ describe('streamAsyncHtmlTemplate()', () => {
         done();
       });
     });
+    it('should destroy source streams on thrown error in Promise', (done) => {
+      const promise = new Promise(() => {
+        throw Error('destroyed');
+      });
+      const out = streamAsyncHtmlTemplate`${promise} world`;
+      out.on('error', (err) => {
+        expect(err.message).to.equal('destroyed');
+        done();
+      });
+    });
   });
 
   describe('browser', () => {

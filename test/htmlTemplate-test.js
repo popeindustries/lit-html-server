@@ -107,6 +107,26 @@ describe('html()', () => {
         )
       ).to.equal('hello 1 2 3');
     });
+    it('should return a stream when interpolating async values', async () => {
+      expect(
+        normalizeWhitespace(
+          await getStream(
+            html`
+              hello ${asyncValue('there')}
+            `
+          )
+        )
+      ).to.equal('hello there');
+    });
+    it('should handle errors from async value', (done) => {
+      const stream = html`
+        hello ${asyncThrow(Error('oops'))}
+      `;
+      stream.on('error', (err) => {
+        expect(err).to.have.property('message', 'oops');
+        done();
+      });
+    });
   });
 
   describe('attribute mode', () => {
@@ -224,3 +244,11 @@ describe('html()', () => {
     });
   });
 });
+
+async function asyncValue(value) {
+  return value;
+}
+
+async function asyncThrow(err) {
+  throw err;
+}
