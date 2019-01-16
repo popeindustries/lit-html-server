@@ -6,8 +6,8 @@ import {
   styleMap,
   unsafeHTML,
   until
-} from '../lib/directives/index.js';
-import { directive, html, renderToString } from '../lib/index.js';
+} from '../src/directives/index.js';
+import { directive, html, renderToString } from '../src/index.js';
 import { expect } from 'chai';
 import { normalizeWhitespace } from './utils.js';
 

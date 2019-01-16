@@ -6,7 +6,7 @@ const resolve = require('rollup-plugin-node-resolve');
 module.exports = [
   ...configDirectives(),
   {
-    input: 'lib/browser.js',
+    input: 'src/browser.js',
     plugins: [commonjs(), resolve({ browser: true })],
     output: {
       exports: 'named',
@@ -17,7 +17,7 @@ module.exports = [
   },
   {
     external: ['stream', 'fs'],
-    input: 'lib/index.js',
+    input: 'src/index.js',
     plugins: [commonjs(), resolve()],
     output: {
       exports: 'named',
@@ -28,7 +28,7 @@ module.exports = [
 ];
 
 function configDirectives() {
-  const dir = path.resolve('lib/directives');
+  const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
   const plugins = [commonjs(), resolve({ browser: true })];
   const config = [];

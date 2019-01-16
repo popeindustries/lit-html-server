@@ -1,5 +1,5 @@
 test
-lib
+src
 .*
 package-lock.json
 rollup.config.js

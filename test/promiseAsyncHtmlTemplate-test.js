@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import promiseAsyncHtmlTemplate from '../lib/promiseAsyncHtmlTemplate.js';
+import promiseAsyncHtmlTemplate from '../src/promiseAsyncHtmlTemplate.js';
 
 describe('promiseAsyncHtmlTemplate', () => {
   it('should interpolate primitive values', async () => {

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import getStream from 'get-stream';
-import promiseAsyncHtmlTemplate from '../lib/promiseAsyncHtmlTemplate.js';
+import promiseAsyncHtmlTemplate from '../src/promiseAsyncHtmlTemplate.js';
 import { Readable } from 'stream';
-import streamAsyncHtmlTemplate from '../lib/streamAsyncHtmlTemplate.js';
+import streamAsyncHtmlTemplate from '../src/streamAsyncHtmlTemplate.js';
 
 function makeStream() {
   return new Readable({

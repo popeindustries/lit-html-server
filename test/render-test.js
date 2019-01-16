@@ -1,5 +1,5 @@
-import { html as browserHtml, renderToString as browserRenderToString } from '../lib/browser.js';
-import { html, render, renderToString } from '../lib/index.js';
+import { html as browserHtml, renderToString as browserRenderToString } from '../src/browser.js';
+import { html, render, renderToString } from '../src/index.js';
 import { expect } from 'chai';
 import getStream from 'get-stream';
 import { normalizeWhitespace } from './utils.js';

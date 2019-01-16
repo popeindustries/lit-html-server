@@ -1,7 +1,7 @@
-import asyncHtmlTemplate from '../lib/streamAsyncHtmlTemplate.js';
+import asyncHtmlTemplate from '../src/streamAsyncHtmlTemplate.js';
 import { expect } from 'chai';
 import getStream from 'get-stream';
-import htmlFactory from '../lib/htmlTemplate.js';
+import htmlFactory from '../src/htmlTemplate.js';
 import { normalizeWhitespace } from './utils.js';
 
 const html = htmlFactory(asyncHtmlTemplate);
