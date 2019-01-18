@@ -108,16 +108,13 @@ export class TemplateResult {
               }
             }
 
-            currentValue = this.processor.handleAttributeExpressions(
-              attributeValues,
-              name,
-              attributeStrings
-            );
+            currentValue = this.processor.handleAttributeExpressions(name, attributeStrings);
+            // Set values here to avoid iteration cost of TemplateResult#setValues
+            currentValue.setValues(attributeValues);
           } else {
-            currentValue = this.processor.handleAttributeExpressions([currentValue], name, [
-              '',
-              ''
-            ]);
+            currentValue = this.processor.handleAttributeExpressions(name, ['', '']);
+            // Set values here to avoid iteration cost of TemplateResult#setValues
+            currentValue.setValues([currentValue]);
           }
         }
       } else {
