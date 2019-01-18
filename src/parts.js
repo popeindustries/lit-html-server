@@ -1,6 +1,7 @@
 export class Part {
-  constructor(value) {
-    this.value = value;
+  constructor() {
+    this.length = 1;
+    this.value;
   }
 
   setValue(value) {
@@ -11,27 +12,18 @@ export class Part {
 }
 
 export class NodePart extends Part {
-  constructor(value) {
-    super(value);
-  }
-
-  commit() {
-    // TODO: handle value types
-    return this.value;
-  }
+  setValue(/* value */) {}
 }
 
 export class AttributePart extends Part {
-  constructor(value, name, strings) {
-    super(value);
+  constructor(name, strings) {
+    super();
     this.name = name;
     this.strings = strings;
+    this.length = strings.length - 1;
   }
 
-  commit() {
-    // TODO: handle strings and value types
-    return this.value;
-  }
+  setValue(/* value */) {}
 }
 
 export class BooleanAttributePart extends AttributePart {
@@ -43,20 +35,17 @@ export class BooleanAttributePart extends AttributePart {
     }
   }
 
-  commit() {
-    // TODO: handle strings and value types
-    return this.value;
-  }
+  setValue(/* value */) {}
 }
 
 export class PropertyAttributePart extends Part {
-  commit() {
-    return '';
+  setValue(/* value */) {
+    this.value = '';
   }
 }
 
 export class EventAttributePart extends Part {
-  commit() {
-    return '';
+  setValue(/* value */) {
+    this.value = '';
   }
 }

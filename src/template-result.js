@@ -43,7 +43,7 @@ export class TemplateResult {
   constructor(strings, values, type, processor) {
     this.type = type;
     this.processor = processor;
-    this.stringsAndParts = [];
+    this.content = [];
 
     this._prepare(strings, values);
   }
@@ -110,21 +110,21 @@ export class TemplateResult {
 
             currentValue = this.processor.handleAttributeExpressions(name, attributeStrings);
             // Set values here to avoid iteration cost of TemplateResult#setValues
-            currentValue.setValues(attributeValues);
+            currentValue.setValue(attributeValues);
           } else {
             currentValue = this.processor.handleAttributeExpressions(name, ['', '']);
             // Set values here to avoid iteration cost of TemplateResult#setValues
-            currentValue.setValues([currentValue]);
+            currentValue.setValue([currentValue]);
           }
         }
       } else {
         currentValue = this.processor.handleTextExpression(currentValue);
       }
 
-      this.stringsAndParts.push(currentString, currentValue);
+      this.content.push(currentString, currentValue);
     }
 
-    this.stringsAndParts.push(nextString);
+    this.content.push(nextString);
   }
 }
 

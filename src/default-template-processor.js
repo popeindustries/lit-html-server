@@ -20,12 +20,10 @@ export class DefaultTemplateProcessor {
     const prefix = name[0];
 
     if (prefix === '.') {
-      return new PropertyAttributePart();
-    }
-    if (prefix === '@') {
-      return new EventAttributePart();
-    }
-    if (prefix === '?') {
+      return new PropertyAttributePart(name.slice(1), strings);
+    } else if (prefix === '@') {
+      return new EventAttributePart(name.slice(1), strings);
+    } else if (prefix === '?') {
       return new BooleanAttributePart(name.slice(1), strings);
     }
 
