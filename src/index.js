@@ -1,48 +1,20 @@
-import asyncHtmlTemplate from './streamAsyncHtmlTemplate.js';
-import getStream from 'get-stream';
-import htmlTemplateFactory from './htmlTemplate.js';
-import { Readable } from 'stream';
-import { removeHeader } from './string.js';
+import { DefaultTemplateProcessor } from './default-template-processor.js';
+import { TemplateResult } from './template-result.js';
 
-export { directive } from './directive.js';
-export { htmlTemplate as html, render, renderToString, htmlTemplate as svg };
+export { defaultTemplateProcessor, html, templateCache };
 
-const htmlTemplate = htmlTemplateFactory(asyncHtmlTemplate);
+const defaultTemplateProcessor = new DefaultTemplateProcessor();
+const templateCache = new Map();
 
-/**
- * Render lit-html style HTML 'template' as Readable stream
- * @param {string|Readable} template
- * @returns {Readable}
- */
-function render(template) {
-  // Force to stream
-  if (typeof template === 'string') {
-    // Strip header
-    const str = removeHeader(template);
-    let reads = 0;
+function html(strings, ...values) {
+  let template = templateCache.get(strings);
 
-    template = new Readable({
-      read() {
-        if (!reads++) {
-          template.push(str, 'utf8');
-        } else {
-          template.push(null);
-        }
-      }
-    });
+  if (template === undefined) {
+    template = new TemplateResult(strings, values, 'html', defaultTemplateProcessor);
+    templateCache.set(strings, template);
+  } else {
+    template.setValues(values);
   }
 
   return template;
-}
-
-/**
- * Render lit-html style HTML 'template' as string (via Promise)
- * @param {string|Readable} template
- * @returns {Promise<string>}
- */
-function renderToString(template) {
-  if (typeof template === 'string') {
-    return Promise.resolve(removeHeader(template));
-  }
-  return getStream(template);
 }
