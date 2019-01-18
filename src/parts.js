@@ -34,11 +34,13 @@ export class AttributePart extends Part {
   }
 }
 
-export class BooleanAttributePart extends Part {
-  constructor(value, name, strings) {
-    super(value);
-    this.name = name;
-    this.strings = strings;
+export class BooleanAttributePart extends AttributePart {
+  constructor(name, strings) {
+    super(name, strings);
+
+    if (strings.length !== 2 || strings[0] !== '' || strings[1] !== '') {
+      throw new Error('Boolean attributes can only contain a single expression');
+    }
   }
 
   commit() {
