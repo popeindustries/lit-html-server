@@ -12,12 +12,11 @@ import {
 export class DefaultTemplateProcessor {
   /**
    * Create part instance for attribute values
-   * @param {Array<*>} values
    * @param {string} name
    * @param {Array<string>} strings
-   * @returns {AttributePart|BooleanAttributePart|EventAttributePart|PropertyAttributePart}
+   * @returns {AttributePart}
    */
-  handleAttributeExpressions(values, name, strings = []) {
+  handleAttributeExpressions(name, strings = []) {
     const prefix = name[0];
 
     if (prefix === '.') {
@@ -27,21 +26,17 @@ export class DefaultTemplateProcessor {
       return new EventAttributePart();
     }
     if (prefix === '?') {
-      if (values.length > 1 || strings.length > 0) {
-        throw Error('boolean attributes can only have a single part');
-      }
-      return new BooleanAttributePart(values[0], name.slice(1), strings);
+      return new BooleanAttributePart(name.slice(1), strings);
     }
 
-    return new AttributePart(values, name, strings);
+    return new AttributePart(name, strings);
   }
 
   /**
    * Create part instance for text values
-   * @param {*} value
    * @returns {NodePart}
    */
-  handleTextExpression(value) {
-    return new NodePart(value);
+  handleTextExpression() {
+    return new NodePart();
   }
 }
