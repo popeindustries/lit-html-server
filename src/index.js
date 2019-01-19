@@ -1,6 +1,6 @@
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { Template } from './template.js';
-import { TemplateResult } from './template-result.js';
+import { templateResult } from './template-result.js';
 
 export {
   defaultTemplateProcessor,
@@ -29,7 +29,7 @@ function html(strings, ...values) {
     templateCache.set(strings, template);
   }
 
-  return new TemplateResult(template, values);
+  return templateResult(template, values);
 }
 
 /**

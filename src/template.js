@@ -25,6 +25,7 @@
  *
  * html`${directive()}`
  * html`<el a="${directive()}">`
+ * html`<el a="text ${directive()}">`
  * html`<el .p="${directive()}">`
  */
 

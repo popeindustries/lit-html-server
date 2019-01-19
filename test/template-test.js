@@ -5,7 +5,7 @@ import { Template } from '../src/template.js';
 
 const defaultTemplateProcessor = new DefaultTemplateProcessor();
 
-describe.only('Template', () => {
+describe('Template', () => {
   it('should prepare a plain text template', () => {
     const template = new Template(['text'], defaultTemplateProcessor);
     expect(template.strings).to.eql(['text']);
