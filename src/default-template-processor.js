@@ -7,7 +7,7 @@ import {
 } from './parts.js';
 
 /**
- * DefaultTemplateProcessor class
+ *
  */
 export class DefaultTemplateProcessor {
   /**
