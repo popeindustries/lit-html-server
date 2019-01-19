@@ -1,87 +1,68 @@
-import { isDirective, isSyncIterator } from './is.js';
+import { isDirective, isPromise, isSyncIterator } from './is.js';
 
 /**
- * A basic interface for a dynamic template part
+ * A sentinel value that signals a Part to fully clear its content.
  */
-export class Part {
-  /**
-   * Retrieve html string from 'value'
-   * @param {any} value
-   * @returns {string}
-   */
-  getHTML(value) {
-    return String(value);
-  }
-}
+export const nothing = {};
 
 /**
  * A dynamic template part for text nodes
  */
-export class NodePart extends Part {
+export class NodePart {
   /**
-   * Retrieve html string from 'value'
+   * Retrieve string from 'value'
    * @param {any} value
    * @returns {string|Promise<string>}
    */
-  getHTML(value) {
-    if (isDirective(value)) {
-      value = value(this);
-    }
-
-    return value;
+  getString(value) {
+    return resolveValues([value])[0];
   }
 }
 
 /**
  * A dynamic template part for attributes.
- * Unlike text nodes, attributes can contain multiple strings and parts.
+ * Unlike text nodes, attributes may contain multiple strings and parts.
  */
-export class AttributePart extends Part {
+export class AttributePart {
   /**
    * Constructor
    * @param {string} name
    * @param {Array<string>} strings
    */
   constructor(name, strings) {
-    super();
     this.name = name;
     this.strings = strings;
     this.length = strings.length - 1;
   }
 
   /**
-   * Retrieve html string from 'values'
+   * Retrieve string from 'values'
    * @param {Array<any>} values
    * @returns {string|Promise<string>}
    */
-  getHTML(values) {
+  getString(values) {
+    values = resolveValues(values, this);
+    // TODO: handle values Promise
+
     const strings = this.strings;
     const endIndex = strings.length - 1;
-    let html = '';
+    let result = `${this.name}="`;
 
     for (let i = 0; i < endIndex; i++) {
       const string = strings[i];
-      const value = values[i];
+      let value = values[i];
 
-      // TODO: handle directive
-      // TODO: handle directive returning Promise
-
-      if (value !== undefined) {
-        if (isSyncIterator(value)) {
-          for (const item of value) {
-            html += typeof item === 'string' ? item : String(item);
-          }
-        } else {
-          html += typeof value === 'string' ? value : String(value);
-        }
+      // Bail if 'nothing'
+      if (value === nothing) {
+        return '';
       }
 
-      html += string + value;
+      result += string + value;
     }
 
-    html += strings[endIndex];
+    result += `${strings[endIndex]}"`;
 
-    return html;
+    return result;
   }
 }
 
@@ -105,20 +86,21 @@ export class BooleanAttributePart extends AttributePart {
   }
 
   /**
-   * Retrieve html string from 'values'
+   * Retrieve string from 'values'
    * @param {Array<any>} values
    * @returns {string|Promise<string>}
    */
-  getHTML(values) {
+  getString(values) {
     let value = values[0];
 
     if (isDirective(value)) {
       value = value(this);
     }
-
-    // TODO: handle Promise
-
-    return value ? this.name : '';
+    if (isPromise(value)) {
+      return value.then((v) => (v ? this.name : ''));
+    } else {
+      return value ? this.name : '';
+    }
   }
 }
 
@@ -126,13 +108,13 @@ export class BooleanAttributePart extends AttributePart {
  * A dynamic template part for property attributes.
  * Property attributes are prefixed with "."
  */
-export class PropertyAttributePart extends Part {
+export class PropertyAttributePart extends AttributePart {
   /**
-   * Retrieve html string from 'values'
+   * Retrieve string from 'values'
    * @param {Array<any>} values
    * @returns {string}
    */
-  getHTML(/* values */) {
+  getString(/* values */) {
     return '';
   }
 }
@@ -141,13 +123,40 @@ export class PropertyAttributePart extends Part {
  * A dynamic template part for event attributes.
  * Event attributes are prefixed with "@"
  */
-export class EventAttributePart extends Part {
+export class EventAttributePart extends AttributePart {
   /**
-   * Retrieve html string from 'values'
+   * Retrieve string from 'values'
    * @param {Array<any>} values
    * @returns {string}
    */
-  getHTML(/* values */) {
+  getString(/* values */) {
     return '';
   }
+}
+
+function resolveValues(values, part) {
+  if (!Array.isArray(values)) {
+    values = [values];
+  }
+
+  for (let i = 0, n = values.length; i < n; i++) {
+    let value = values[i];
+
+    if (isDirective(value)) {
+      value = value(part);
+    }
+    if (Array.isArray(value)) {
+      values[i] = resolveValues(value, part).join('');
+    } else if (isSyncIterator(value)) {
+      values[i] = resolveValues(Array.from(value), part).join('');
+    } else if (isPromise(value)) {
+      // ?
+    } else if (value === nothing) {
+      values = nothing;
+    } else {
+      values[i] = typeof value === 'string' ? value : String(value);
+    }
+  }
+
+  return values;
 }
