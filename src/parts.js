@@ -145,6 +145,7 @@ function resolveValues(values, part) {
     if (isDirective(value)) {
       value = value(part);
     }
+
     if (Array.isArray(value)) {
       values[i] = resolveValues(value, part).join('');
     } else if (isSyncIterator(value)) {
@@ -154,6 +155,7 @@ function resolveValues(values, part) {
     } else if (value === nothing) {
       values = nothing;
     } else {
+      // TODO: escape
       values[i] = typeof value === 'string' ? value : String(value);
     }
   }

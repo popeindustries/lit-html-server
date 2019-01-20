@@ -40,9 +40,9 @@ describe('parts', () => {
       const part = new AttributePart('a', ['', '']);
       expect(part.getString([[[1], 2, [3, [4, 5]]]])).to.equal('a="12345"');
     });
-    it('should resolve a Promise value');
     it('should resolve a directive value');
     it('should resolve a directive value returning nothing');
+    it('should resolve a Promise value');
   });
 
   describe('BooleanAttributePart', () => {

@@ -1,5 +1,4 @@
 export { isDirective } from './directive.js';
-export { isTemplateResult } from './template-result.js';
 export { isAsyncIterator, isPrimitive, isPromise, isStream, isSyncIterator };
 
 function isStream(stream) {

@@ -2,15 +2,6 @@ import { AttributePart } from './parts.js';
 import { isPromise } from './is.js';
 
 /**
- * Determine if 'obj' is a template result
- * @param {any} obj
- * @returns {boolean}
- */
-export function isTemplateResult(obj) {
-  return Array.isArray(obj) && obj.isTemplateResult;
-}
-
-/**
  *
  * @param {Template} template
  * @param {Array<*>} values
@@ -53,6 +44,5 @@ export function templateResult(template, values) {
 
   html += strings[endIndex];
   result.push(html);
-  // result.isTemplateResult = true;
   return result;
 }
