@@ -1,17 +1,25 @@
-import {
-  classMap,
-  guard,
-  ifDefined,
-  repeat,
-  styleMap,
-  unsafeHTML,
-  until
-} from '../src/directives/index.js';
 import { directive, html, renderToString } from '../src/index.js';
+import { cache } from '../src/directives/cache.js';
+import { classMap } from '../src/directives/class-map.js';
 import { expect } from 'chai';
+import { guard } from '../src/directives/guard.js';
+import { ifDefined } from '../src/directives/if-defined.js';
 import { normalizeWhitespace } from './utils.js';
+import { repeat } from '../src/directives/repeat.js';
+import { styleMap } from '../src/directives/style-map.js';
+import { unsafeHTML } from '../src/directives/unsafe-html.js';
+import { until } from '../src/directives/until.js';
 
 describe.skip('directives', () => {
+  describe('cache', () => {
+    it('should render a cached value', async () => {
+      const template = html`
+        <h1>Some ${cache()}</h1>
+      `;
+      expect(normalizeWhitespace(await renderToString(template))).to.equal('<h1>Some title</h1>');
+    });
+  });
+
   describe('guard', () => {
     it('should render a simple guarded value', async () => {
       const template = html`

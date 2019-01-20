@@ -44,6 +44,11 @@ export class AttributePart {
     values = resolveValues(values, this);
     // TODO: handle values Promise
 
+    // Bail if 'nothing'
+    if (values === nothing) {
+      return '';
+    }
+
     const strings = this.strings;
     const endIndex = strings.length - 1;
     let result = `${this.name}="`;
@@ -51,11 +56,6 @@ export class AttributePart {
     for (let i = 0; i < endIndex; i++) {
       const string = strings[i];
       let value = values[i];
-
-      // Bail if 'nothing'
-      if (value === nothing) {
-        return '';
-      }
 
       result += string + value;
     }

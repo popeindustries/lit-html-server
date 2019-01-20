@@ -2,8 +2,10 @@ import {
   AttributePart,
   BooleanAttributePart,
   EventAttributePart,
+  nothing,
   PropertyAttributePart
 } from '../src/parts.js';
+import { directive } from '../src/directive.js';
 import { expect } from 'chai';
 
 describe('parts', () => {
@@ -40,8 +42,20 @@ describe('parts', () => {
       const part = new AttributePart('a', ['', '']);
       expect(part.getString([[[1], 2, [3, [4, 5]]]])).to.equal('a="12345"');
     });
-    it('should resolve a directive value');
-    it('should resolve a directive value returning nothing');
+    it('should resolve a directive value', () => {
+      const d = directive(() => () => {
+        return 'directive';
+      });
+      const part = new AttributePart('a', ['', '']);
+      expect(part.getString([d()])).to.equal('a="directive"');
+    });
+    it('should resolve a directive value returning nothing', () => {
+      const d = directive(() => () => {
+        return nothing;
+      });
+      const part = new AttributePart('a', ['', '']);
+      expect(part.getString([d()])).to.equal('');
+    });
     it('should resolve a Promise value');
   });
 
@@ -76,4 +90,6 @@ describe('parts', () => {
       expect(part.getString(['text'])).to.equal('');
     });
   });
+
+  describe('NodePart', () => {});
 });

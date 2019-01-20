@@ -1,13 +1,17 @@
 import { directive } from '../directive.js';
 
+export const guard = directive(guardDirective);
+
 /**
  * Guard against re-render.
  * Not possible to compare against previous render in a server context,
  * so this is a no-op.
- * @param {*} value
- * @param {function} fn
- * @returns {function}
+ * @param {any} value
+ * @param {() => any} fn
+ * @returns {(part: NodePart) => any}
  */
-export const guard = directive((value, fn) => (part) => {
-  part.setValue(fn());
-});
+function guardDirective(value, fn) {
+  return function(/* part */) {
+    return fn();
+  };
+}

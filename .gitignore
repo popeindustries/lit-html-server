@@ -1,6 +1,6 @@
 .npm
 node_modules
 .DS_Store
-directives
+./directives/*
 browser.js
 index.js

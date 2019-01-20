@@ -1,14 +1,19 @@
 import { directive } from '../directive.js';
+import { NodePart } from '../parts.js';
+
+export const unsafeHTML = directive(unsafeHTMLDirective);
 
 /**
- * Render unescaped HTML
+ * Render 'value' without HTML escaping
  * @param {string} value
- * @returns {function}
+ * @returns {(part: NodePart) => string}
  */
-export const unsafeHTML = directive((value) => (part) => {
-  if (part.isAttribute) {
-    throw Error('unsafeHTML can only be used in text bindings');
-  }
-  // Should import from '../string.js' but Rollup can't tree shake he.encode
-  part.setValue(`<!-- no escape -->${value}`);
-});
+function unsafeHTMLDirective(value) {
+  return function(part) {
+    if (!(part instanceof NodePart)) {
+      throw Error('unsafeHTML can only be used in text bindings');
+    }
+    // TODO: flag for no-escape
+    return value;
+  };
+}

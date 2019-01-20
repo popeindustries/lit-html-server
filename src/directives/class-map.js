@@ -1,24 +1,28 @@
+import { AttributePart } from '../parts.js';
 import { directive } from '../directive.js';
 
+export const classMap = directive(classMapDirective);
+
 /**
- * Apply CSS classes.
+ * Applies CSS classes, where'classInfo' keys are added as class names if values are truthy.
  * Only applies to 'class' attribute.
- * 'classInfo' keys are added as class names if values are truthy
  * @param {object} classInfo
- * @returns {function}
+ * @returns {(part: AttributePart) => string}
  */
-export const classMap = directive((classInfo) => (part) => {
-  if (!part.isAttribute || part.attributeName !== 'class') {
-    throw Error('The `classMap` directive must be used in the `class` attribute');
-  }
-
-  let value = '';
-
-  for (const key in classInfo) {
-    if (classInfo[key]) {
-      value += `${value.length ? ' ' : ''}${key}`;
+function classMapDirective(classInfo) {
+  return function(part) {
+    if (!(part instanceof AttributePart) || part.name !== 'class') {
+      throw Error('The `classMap` directive must be used in the `class` attribute');
     }
-  }
 
-  part.setValue(value);
-});
+    let value = '';
+
+    for (const key in classInfo) {
+      if (classInfo[key]) {
+        value += `${value.length ? ' ' : ''}${key}`;
+      }
+    }
+
+    return value;
+  };
+}

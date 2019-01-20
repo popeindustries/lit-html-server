@@ -1,16 +1,19 @@
+import { AttributePart, nothing } from '../parts.js';
 import { directive } from '../directive.js';
+
+export const ifDefined = directive(ifDefinedDirective);
 
 /**
  * Sets the attribute if 'value' is defined,
  * removes the attribute if undefined.
- * @param {*} value
- * @returns {function}
+ * @param {any} value
+ * @returns {(part: AttributePart) => any}
  */
-export const ifDefined = directive((value) => (part) => {
-  if (value === undefined && part.isAttribute) {
-    // Should import from '../string.js' but Rollup can't tree shake he.encode
-    part.setValue('{__null__}');
-    return;
-  }
-  part.setValue(value);
-});
+function ifDefinedDirective(value) {
+  return function(part) {
+    if (value === undefined && part instanceof AttributePart) {
+      return nothing;
+    }
+    return value;
+  };
+}

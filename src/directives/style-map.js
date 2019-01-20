@@ -1,22 +1,26 @@
+import { AttributePart } from '../parts.js';
 import { directive } from '../directive.js';
 
+export const styleMap = directive(styleMapDirective);
+
 /**
- * Apply CSS properties.
+ * Apply CSS properties, where 'styleInfo' keys and values are added as CSS properties.
  * Only applies to 'style' attribute.
- * 'styleInfo' keys and values are added as CSS properties
  * @param {object} styleInfo
- * @returns {function}
+ * @returns {(part: AttributePart) => string}
  */
-export const styleMap = directive((styleInfo) => (part) => {
-  if (!part.isAttribute || part.attributeName !== 'style') {
-    throw Error('The `styleMap` directive must be used in the `style` attribute');
-  }
+function styleMapDirective(styleInfo) {
+  return function(part) {
+    if (!(part instanceof AttributePart) || part.name !== 'style') {
+      throw Error('The `styleMap` directive must be used in the `style` attribute');
+    }
 
-  let value = '';
+    let value = '';
 
-  for (const key in styleInfo) {
-    value += `${value.length ? '; ' : ''}${key}: ${styleInfo[key]}`;
-  }
+    for (const key in styleInfo) {
+      value += `${value.length ? '; ' : ''}${key}: ${styleInfo[key]}`;
+    }
 
-  part.setValue(value);
-});
+    return value;
+  };
+}
