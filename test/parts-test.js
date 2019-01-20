@@ -6,7 +6,7 @@ import {
 } from '../src/parts.js';
 import { expect } from 'chai';
 
-describe.only('parts', () => {
+describe('parts', () => {
   describe('AttributePart', () => {
     it('should resolve a string value', () => {
       const part = new AttributePart('a', ['', '']);

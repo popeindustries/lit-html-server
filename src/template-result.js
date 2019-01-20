@@ -30,6 +30,8 @@ export function templateResult(template, values) {
     html += string;
 
     if (part instanceof AttributePart) {
+      // AttributeParts can have multiple values, so slice based on length
+      // (strings in-between values are already stored in the instance)
       if (part.length == 1) {
         value = part.getString([value]);
       } else {
@@ -49,7 +51,8 @@ export function templateResult(template, values) {
     }
   }
 
+  html += strings[endIndex];
   result.push(html);
-  result.isTemplateResult = true;
+  // result.isTemplateResult = true;
   return result;
 }

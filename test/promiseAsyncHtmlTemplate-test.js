@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import promiseAsyncHtmlTemplate from '../src/promiseAsyncHtmlTemplate.js';
 
-describe('promiseAsyncHtmlTemplate', () => {
+describe.skip('promiseAsyncHtmlTemplate', () => {
   it('should interpolate primitive values', async () => {
     expect(await promiseAsyncHtmlTemplate`hello ${'there'} ${1} ${true}`).to.equal(
       'hello there 1 true'

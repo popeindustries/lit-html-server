@@ -64,6 +64,7 @@ export class Template {
       let string = nextString;
       nextString = strings[i + 1];
       const tagState = getTagState(string);
+      let skip = 0;
       let part;
 
       // Open/close tag found at end of string
@@ -88,21 +89,21 @@ export class Template {
             // Store any text between quote character and value
             const attributeStrings = [suffix.slice(matchQuote.index + 1)];
             let open = true;
-            let j = 1;
+            skip = 0;
             let attributeString;
 
             // Scan ahead and gather all strings for this attribute
             while (open) {
-              attributeString = strings[i + j];
-              const quoteIndex = attributeString.indexOf(quoteCharacter);
+              attributeString = strings[i + skip + 1];
+              const closingQuoteIndex = attributeString.indexOf(quoteCharacter);
 
-              if (quoteIndex === -1) {
+              if (closingQuoteIndex === -1) {
                 attributeStrings.push(attributeString);
-                j++;
+                skip++;
               } else {
-                attributeStrings.push(attributeString.slice(0, quoteIndex));
-                nextString = attributeString.slice(quoteIndex + 1);
-                i += j;
+                attributeStrings.push(attributeString.slice(0, closingQuoteIndex));
+                nextString = attributeString.slice(closingQuoteIndex + 1);
+                i += skip;
                 open = false;
               }
             }
@@ -118,6 +119,12 @@ export class Template {
 
       this.strings.push(string);
       this.parts.push(part);
+      // Add placehholders for strings/parts that wil be skipped due to multple values in a single AttributePart
+      if (skip > 0) {
+        this.strings.push('');
+        this.parts.push(null);
+        skip = 0;
+      }
     }
 
     this.strings.push(nextString);

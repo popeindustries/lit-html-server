@@ -1,6 +1,6 @@
 {
   "arrowParens": "always",
-  "htmlWhitespaceSensitivity": "strict",
+  "htmlWhitespaceSensitivity": "ignore",
   "printWidth": 100,
   "singleQuote": true
 }

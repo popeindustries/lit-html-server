@@ -10,7 +10,7 @@ function makeStream() {
   });
 }
 
-describe('streamAsyncHtmlTemplate()', () => {
+describe.skip('streamAsyncHtmlTemplate()', () => {
   describe('server', () => {
     it('should interpolate primitive values', async () => {
       expect(await getStream(streamAsyncHtmlTemplate`hello ${'there'} ${1} ${true}`)).to.equal(

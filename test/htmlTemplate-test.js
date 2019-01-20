@@ -6,7 +6,7 @@ import { normalizeWhitespace } from './utils.js';
 
 const html = htmlFactory(asyncHtmlTemplate);
 
-describe('html()', () => {
+describe.skip('html()', () => {
   describe('text mode', () => {
     it('should return a string when interpolating primitive values', () => {
       expect(
@@ -223,7 +223,8 @@ describe('html()', () => {
           await getStream(
             html`
               <a href="${'www.google.com'}">
-                <span>${Promise.resolve('hi')}</span> <span ?enabled="${true}">${'there'}</span>
+                <span>${Promise.resolve('hi')}</span>
+                <span ?enabled="${true}">${'there'}</span>
               </a>
             `
           )
