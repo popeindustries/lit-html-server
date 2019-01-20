@@ -5,7 +5,7 @@ import { isPromise, isSyncIterator } from './is.js';
  * Asynchronous tagged template processor for HTML templates created with `htmlTemplate`.
  * Returns a Promise.
  * @param {[string]} strings
- * @param {*} values
+ * @param {any} values
  * @returns {Promise<string>}
  */
 export default function asyncHtmlTemplate(strings, ...values) {

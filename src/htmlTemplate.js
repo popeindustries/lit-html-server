@@ -20,7 +20,7 @@ export default function htmlTemplateFactory(asyncTemplate) {
    * Returns string for synchronous value types,
    * or a Readable stream or Promise (depending on passed 'asyncTemplate') if asynchronous.
    * @param {[string]} strings
-   * @param {*} values
+   * @param {any} values
    * @returns {string|Readable|Promise}
    */
   return function htmlTemplate(strings, ...values) {

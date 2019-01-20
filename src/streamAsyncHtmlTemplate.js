@@ -7,7 +7,7 @@ import { removeHeader, sanitize } from './string.js';
  * Returns a Readable stream.
  * Based on https://github.com/almost/stream-template
  * @param {[string]} strings
- * @param {*} values
+ * @param {any} values
  * @returns {Readable}
  */
 export default function asyncHtmlTemplate(strings, ...values) {
@@ -18,7 +18,7 @@ class AsyncHtmlTemplate extends Readable {
   /**
    * Constructor
    * @param {[string]} strings
-   * @param {*} values
+   * @param {any} values
    */
   constructor(strings, values) {
     super({ autoDestroy: true });

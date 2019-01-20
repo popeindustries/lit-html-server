@@ -1,4 +1,3 @@
-export { isDirective } from './directive.js';
 export { isAsyncIterator, isPrimitive, isPromise, isStream, isSyncIterator };
 
 function isStream(stream) {

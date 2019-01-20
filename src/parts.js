@@ -1,4 +1,6 @@
-import { isDirective, isPromise, isSyncIterator } from './is.js';
+import { isPrimitive, isPromise, isSyncIterator } from './is.js';
+import { isDirective } from './directive.js';
+import { isTemplateResult } from './template-result.js';
 
 /**
  * A sentinel value that signals a Part to fully clear its content.
@@ -36,18 +38,21 @@ export class AttributePart {
   }
 
   /**
-   * Retrieve string from 'values'
+   * Retrieve string from 'values'.
+   * Resolves to a single string, or Promise for a string,
+   * even when responsible for multiple values.
    * @param {Array<any>} values
    * @returns {string|Promise<string>}
    */
   getString(values) {
     values = resolveValues(values, this);
-    // TODO: handle values Promise
 
     // Bail if 'nothing'
     if (values === nothing) {
       return '';
     }
+
+    // TODO: handle values Promise
 
     const strings = this.strings;
     const endIndex = strings.length - 1;
@@ -146,17 +151,19 @@ function resolveValues(values, part) {
       value = value(part);
     }
 
-    if (Array.isArray(value)) {
+    if (isPrimitive(value)) {
+      // TODO: escape
+      values[i] = String(value);
+    } else if (isTemplateResult(value) && value.isAsync) {
+      // TODO: template result with one or more Promises
+    } else if (isPromise(value)) {
+      // ?
+    } else if (Array.isArray(value)) {
       values[i] = resolveValues(value, part).join('');
     } else if (isSyncIterator(value)) {
       values[i] = resolveValues(Array.from(value), part).join('');
-    } else if (isPromise(value)) {
-      // ?
     } else if (value === nothing) {
       values = nothing;
-    } else {
-      // TODO: escape
-      values[i] = typeof value === 'string' ? value : String(value);
     }
   }
 

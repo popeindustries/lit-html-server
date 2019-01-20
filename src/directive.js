@@ -1,6 +1,6 @@
 /**
  * Determine if 'obj' is a directive function
- * @param {*} obj
+ * @param {any} obj
  * @returns {boolean}
  */
 export function isDirective(obj) {

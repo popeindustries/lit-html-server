@@ -97,7 +97,7 @@ function escapeHtml(string) {
 /**
  * Escapes text to prevent scripting attacks.
  *
- * @param {*} text Text value to escape.
+ * @param {any} text Text value to escape.
  * @return {string} An escaped string.
  */
 function escapeTextForBrowser(text) {
