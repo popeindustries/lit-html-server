@@ -1,6 +1,9 @@
+/**
+ * @typedef TemplatePartValue
+ */
+
 import { isPrimitive, isPromise, isSyncIterator } from './is.js';
 import { isDirective } from './directive.js';
-import { isTemplateResult } from './template-result.js';
 
 /**
  * A sentinel value that signals a Part to fully clear its content.
@@ -12,12 +15,12 @@ export const nothing = {};
  */
 export class NodePart {
   /**
-   * Retrieve string from 'value'
+   * Retrieve HTML string from 'value'
    * @param {any} value
-   * @returns {string|Promise<string>}
+   * @returns {TemplatePartValue|Array<TemplatePartValue>}
    */
-  getString(value) {
-    return resolveValues([value])[0];
+  getHTML(value) {
+    return resolveValue(value);
   }
 }
 
@@ -38,13 +41,13 @@ export class AttributePart {
   }
 
   /**
-   * Retrieve string from 'values'.
+   * Retrieve HTML string from 'values'.
    * Resolves to a single string, or Promise for a string,
    * even when responsible for multiple values.
    * @param {Array<any>} values
    * @returns {string|Promise<string>}
    */
-  getString(values) {
+  getHTML(values) {
     values = resolveValues(values, this);
 
     // Bail if 'nothing'
@@ -91,11 +94,11 @@ export class BooleanAttributePart extends AttributePart {
   }
 
   /**
-   * Retrieve string from 'values'
+   * Retrieve HTML string from 'values'
    * @param {Array<any>} values
    * @returns {string|Promise<string>}
    */
-  getString(values) {
+  getHTML(values) {
     let value = values[0];
 
     if (isDirective(value)) {
@@ -115,11 +118,11 @@ export class BooleanAttributePart extends AttributePart {
  */
 export class PropertyAttributePart extends AttributePart {
   /**
-   * Retrieve string from 'values'
+   * Retrieve HTML string from 'values'
    * @param {Array<any>} values
    * @returns {string}
    */
-  getString(/* values */) {
+  getHTML(/* values */) {
     return '';
   }
 }
@@ -130,13 +133,51 @@ export class PropertyAttributePart extends AttributePart {
  */
 export class EventAttributePart extends AttributePart {
   /**
-   * Retrieve string from 'values'
+   * Retrieve HTML string from 'values'
    * @param {Array<any>} values
    * @returns {string}
    */
-  getString(/* values */) {
+  getHTML(/* values */) {
     return '';
   }
+}
+
+/**
+ * Resolve 'value' to string
+ * @param {any} value
+ * @param {NodePart} part
+ * @returns {TemplatePartValue}
+ */
+function resolveValue(value, part) {
+  if (isDirective(value)) {
+    value = value(part);
+  }
+
+  if (value === undefined || value === nothing) {
+    return '';
+  } else if (isPrimitive(value)) {
+    // TODO: escape if not "no-escape"
+    return String(value);
+  }
+  if (isPromise(value)) {
+    return value.then((result) => resolveValue(result, part));
+  }
+  if (isSyncIterator(value)) {
+    if (!Array.isArray(value)) {
+      value = Array.from(value);
+    }
+    return value.reduce((values, value) => {
+      value = resolveValue(value, part);
+      if (Array.isArray(value)) {
+        return values.concat(value);
+      }
+      values.push(value);
+      return values;
+    }, []);
+  }
+
+  // Pass-through TemplateResult
+  return value;
 }
 
 function resolveValues(values, part) {
@@ -154,7 +195,7 @@ function resolveValues(values, part) {
     if (isPrimitive(value)) {
       // TODO: escape
       values[i] = String(value);
-    } else if (isTemplateResult(value) && value.isAsync) {
+      // } else if (isTemplateResult(value) && value.isAsync) {
       // TODO: template result with one or more Promises
     } else if (isPromise(value)) {
       // ?

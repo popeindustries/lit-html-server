@@ -1,5 +1,6 @@
 import { addHeader, ASYNC_PLACEHOLDER, emptyArray, NULL_ATTRIBUTE, sanitize } from './string.js';
-import { isDirective, isPromise, isStream, isSyncIterator } from './is.js';
+import { isPromise, isStream, isSyncIterator } from './is.js';
+import { isDirective } from './directive.js';
 import Part from './Part.js';
 
 // https://github.com/Polymer/lit-html/blob/be84d43f446f22fdd4d44201155b60cf35318912/src/lib/template.ts#L244

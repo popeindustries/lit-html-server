@@ -2,13 +2,88 @@ import {
   AttributePart,
   BooleanAttributePart,
   EventAttributePart,
+  NodePart,
   nothing,
   PropertyAttributePart
 } from '../src/parts.js';
 import { directive } from '../src/directive.js';
 import { expect } from 'chai';
+import { TemplateResult } from '../src/template-result.js';
 
 describe('parts', () => {
+  describe('NodePart', () => {
+    it('should resolve a string value', () => {
+      const part = new NodePart();
+      expect(part.getHTML('text')).to.equal('text');
+    });
+    it('should resolve a number value', () => {
+      const part = new NodePart();
+      expect(part.getHTML(1)).to.equal('1');
+    });
+    it('should resolve a boolean value', () => {
+      const part = new NodePart();
+      expect(part.getHTML(true)).to.equal('true');
+    });
+    it('should resolve a null value', () => {
+      const part = new NodePart();
+      expect(part.getHTML(null)).to.equal('null');
+    });
+    it('should resolve an undefined value', () => {
+      const part = new NodePart();
+      expect(part.getHTML(undefined)).to.equal('');
+    });
+    it('should resolve an array value', () => {
+      const part = new NodePart();
+      expect(part.getHTML([1, 2, 3])).to.deep.equal(['1', '2', '3']);
+    });
+    it('should resolve an nested array value', () => {
+      const part = new NodePart();
+      expect(part.getHTML([1, 2, [3, [4, 5]]])).to.deep.equal(['1', '2', '3', '4', '5']);
+    });
+    it('should resolve an iterator value');
+    it('should resolve a string Promise value', async () => {
+      const part = new NodePart();
+      const promise = Promise.resolve('text');
+      expect(await part.getHTML(promise)).to.equal('text');
+    });
+    it('should resolve a number Promise value', async () => {
+      const part = new NodePart();
+      const promise = Promise.resolve(1);
+      expect(await part.getHTML(promise)).to.equal('1');
+    });
+    it('should resolve a boolean Promise value', async () => {
+      const part = new NodePart();
+      const promise = Promise.resolve(true);
+      expect(await part.getHTML(promise)).to.equal('true');
+    });
+    it('should resolve a null Promise value', async () => {
+      const part = new NodePart();
+      const promise = Promise.resolve(null);
+      expect(await part.getHTML(promise)).to.equal('null');
+    });
+    it('should resolve an undefined Promise value', async () => {
+      const part = new NodePart();
+      const promise = Promise.resolve(undefined);
+      expect(await part.getHTML(promise)).to.equal('');
+    });
+    it('should resolve an array Promise value', async () => {
+      const part = new NodePart();
+      const promise = Promise.resolve([1, 2, 3]);
+      expect(await part.getHTML(promise)).to.deep.equal(['1', '2', '3']);
+    });
+    it('should handle Promise errors');
+    it('should pass through a TemplateResult', () => {
+      const part = new NodePart();
+      const value = new TemplateResult();
+      expect(part.getHTML(value)).to.equal(value);
+    });
+    it('should resolve an array of TemplateResults', () => {
+      const part = new NodePart();
+      const value = [new TemplateResult(), new TemplateResult()];
+      expect(part.getHTML(value)).to.deep.equal(value);
+    });
+  });
+
   describe('AttributePart', () => {
     it('should resolve a string value', () => {
       const part = new AttributePart('a', ['', '']);
@@ -90,6 +165,4 @@ describe('parts', () => {
       expect(part.getString(['text'])).to.equal('');
     });
   });
-
-  describe('NodePart', () => {});
 });
