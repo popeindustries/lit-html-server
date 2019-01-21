@@ -30,7 +30,7 @@
  */
 
 import { DefaultTemplateProcessor } from './default-template-processor.js';
-import { promiseTemplateRenderer } from './promise-template-renderer.js';
+import { PromiseTemplateRenderer } from './promise-template-renderer.js';
 import { Template } from './template.js';
 import { TemplateResult } from './template-result.js';
 
@@ -77,5 +77,5 @@ function renderToStream(/* result */) {}
  * @returns {Promise<string>}
  */
 function renderToString(result) {
-  return promiseTemplateRenderer(result);
+  return new PromiseTemplateRenderer(result).render();
 }
