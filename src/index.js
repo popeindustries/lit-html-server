@@ -1,38 +1,8 @@
-/**
- * html`text`
- * html`${'text'}`
- * html`${123}`
- * html`${undefined}`
- * html`${null}`
- * html`${value}`
- * html`${[1,2,3]}`
- * html`${html`text`} text`
- * html`${'text'} ${'text'}`
- * html`${[1,2,3].map((i) => html`${i}`)}`
- *
- * html`<el a="${'text'}">`
- * html`<el a="t${'e'}x${'t'}s">`
- * html`<el a="${value} b="${value}">`
- * html`<el style="prop: ${value}">`
- * html`<el style="${prop}: ${value}">`
- * html`<el a=${'text'}>`
- * html`<el a="b=${'value'}">`
- * html`<el a=${[1,2,3]}>`
- * html`<el a=${undefined}>`
- * html`<el .p=${123}>`
- * html`<el ?b="${value}">`
- * html`<el @e=${value}>`
- *
- * html`${directive()}`
- * html`<el a="${directive()}">`
- * html`<el a="text ${directive()}">`
- * html`<el .p="${directive()}">`
- */
-
 import { DefaultTemplateProcessor } from './default-template-processor.js';
-import { PromiseTemplateRenderer } from './promise-template-renderer.js';
+import { promiseTemplateRenderer } from './promise-template-renderer.js';
+import { streamTemplateRenderer } from './stream-template-renderer.js';
 import { Template } from './template.js';
-import { TemplateResult } from './template-result.js';
+import { templateResult } from './template-result.js';
 
 export {
   defaultTemplateProcessor,
@@ -51,7 +21,7 @@ const templateCache = new Map();
  * rendered as a Readable stream or String
  * @param {Array<string>} strings
  * @param  {...any} values
- * @returns {TemplateResult}
+ * @returns {Array}
  */
 function html(strings, ...values) {
   let template = templateCache.get(strings);
@@ -61,21 +31,23 @@ function html(strings, ...values) {
     templateCache.set(strings, template);
   }
 
-  return new TemplateResult(template, values);
+  return templateResult(template, values);
 }
 
 /**
- * Renders a template to a Readable stream
- * @param {TemplateResult} result
+ * Render a template result to a Readable stream
+ * @param {Array} result
  * @returns {Readable}
  */
-function renderToStream(/* result */) {}
+function renderToStream(result) {
+  return streamTemplateRenderer(result);
+}
 
 /**
- * Renders a template to a String resolving Promise
- * @param {TemplateResult} result
+ * Render a template result to a string resolving Promise
+ * @param {Array} result
  * @returns {Promise<string>}
  */
 function renderToString(result) {
-  return new PromiseTemplateRenderer(result).render();
+  return promiseTemplateRenderer(result);
 }

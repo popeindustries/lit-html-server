@@ -1,14 +1,17 @@
-/**
- * @typedef TemplatePartValue
- */
-
-import { isPrimitive, isPromise, isSyncIterator } from './is.js';
+import { isPrimitive, isPromise, isSyncIterator, isUnsafeString } from './is.js';
+import escapeHTML from './escape.js';
 import { isDirective } from './directive.js';
+import { isTemplateResult } from './template-result.js';
 
 /**
  * A sentinel value that signals a Part to fully clear its content.
  */
 export const nothing = {};
+
+/**
+ * A prefix value for strings that should not be escaped
+ */
+export const unsafeStringPrefix = '__unsafe-lit-html-server-string__';
 
 /**
  * A dynamic template part for text nodes
@@ -17,10 +20,10 @@ export class NodePart {
   /**
    * Retrieve HTML string from 'value'
    * @param {any} value
-   * @returns {TemplatePartValue|Array<TemplatePartValue>}
+   * @returns {any}
    */
-  getHTML(value) {
-    return resolveValue(value);
+  getValue(value) {
+    return resolveValue(value, this, true);
   }
 }
 
@@ -42,35 +45,51 @@ export class AttributePart {
 
   /**
    * Retrieve HTML string from 'values'.
-   * Resolves to a single string, or Promise for a string,
+   * Resolves to a single string, or Promise for a single string,
    * even when responsible for multiple values.
    * @param {Array<any>} values
    * @returns {string|Promise<string>}
    */
-  getHTML(values) {
-    values = resolveValues(values, this);
-
-    // Bail if 'nothing'
-    if (values === nothing) {
-      return '';
-    }
-
-    // TODO: handle values Promise
-
+  getValue(values) {
     const strings = this.strings;
     const endIndex = strings.length - 1;
-    let result = `${this.name}="`;
+    const result = [`${this.name}="`];
+    let pending;
 
     for (let i = 0; i < endIndex; i++) {
       const string = strings[i];
-      let value = values[i];
+      let value = resolveValue(values[i], this, false);
 
-      result += string + value;
+      result.push(string);
+
+      // Bail if 'nothing'
+      if (value === nothing) {
+        return '';
+      } else if (isPromise(value)) {
+        if (pending === undefined) {
+          pending = [];
+        }
+
+        const index = result.push(value) - 1;
+
+        pending.push(
+          value.then((value) => {
+            result[index] = value;
+          })
+        );
+      } else if (Array.isArray(value)) {
+        result.push(value.join(''));
+      } else {
+        result.push(value);
+      }
     }
 
-    result += `${strings[endIndex]}"`;
+    result.push(`${strings[endIndex]}"`);
 
-    return result;
+    if (pending !== undefined) {
+      return Promise.all(pending).then(() => result.join(''));
+    }
+    return result.join('');
   }
 }
 
@@ -98,17 +117,18 @@ export class BooleanAttributePart extends AttributePart {
    * @param {Array<any>} values
    * @returns {string|Promise<string>}
    */
-  getHTML(values) {
+  getValue(values) {
     let value = values[0];
 
     if (isDirective(value)) {
       value = value(this);
     }
+
     if (isPromise(value)) {
-      return value.then((v) => (v ? this.name : ''));
-    } else {
-      return value ? this.name : '';
+      return value.then((value) => (value ? this.name : ''));
     }
+
+    return value ? this.name : '';
   }
 }
 
@@ -122,7 +142,7 @@ export class PropertyAttributePart extends AttributePart {
    * @param {Array<any>} values
    * @returns {string}
    */
-  getHTML(/* values */) {
+  getValue(/* values */) {
     return '';
   }
 }
@@ -137,7 +157,7 @@ export class EventAttributePart extends AttributePart {
    * @param {Array<any>} values
    * @returns {string}
    */
-  getHTML(/* values */) {
+  getValue(/* values */) {
     return '';
   }
 }
@@ -146,67 +166,41 @@ export class EventAttributePart extends AttributePart {
  * Resolve 'value' to string
  * @param {any} value
  * @param {NodePart} part
- * @returns {TemplatePartValue}
+ * @param {boolean} ignoreNothingAndUndefined
+ * @returns {any}
  */
-function resolveValue(value, part) {
+function resolveValue(value, part, ignoreNothingAndUndefined = true) {
   if (isDirective(value)) {
     value = value(part);
   }
 
-  if (value === undefined || value === nothing) {
+  if (ignoreNothingAndUndefined && (value === nothing || value === undefined)) {
     return '';
+  }
+
+  // Pass-through template result
+  if (isTemplateResult(value)) {
+    return value;
   } else if (isPrimitive(value)) {
-    // TODO: escape if not "no-escape"
-    return String(value);
-  }
-  if (isPromise(value)) {
-    return value.then((result) => resolveValue(result, part));
-  }
-  if (isSyncIterator(value)) {
+    const string = typeof value !== 'string' ? String(value) : value;
+    // Escape if not prefixed with unsafeStringPrefix, otherwise strip prefix
+    return isUnsafeString(string) ? string.slice(33) : escapeHTML(string);
+  } else if (isPromise(value)) {
+    return value.then((value) => resolveValue(value, part, ignoreNothingAndUndefined));
+  } else if (isSyncIterator(value)) {
     if (!Array.isArray(value)) {
       value = Array.from(value);
     }
     return value.reduce((values, value) => {
-      value = resolveValue(value, part);
+      value = resolveValue(value, part, ignoreNothingAndUndefined);
+      // Allow nested template results to also be flattened
       if (Array.isArray(value)) {
         return values.concat(value);
       }
       values.push(value);
       return values;
     }, []);
+  } else {
+    return value;
   }
-
-  // Pass-through TemplateResult
-  return value;
-}
-
-function resolveValues(values, part) {
-  if (!Array.isArray(values)) {
-    values = [values];
-  }
-
-  for (let i = 0, n = values.length; i < n; i++) {
-    let value = values[i];
-
-    if (isDirective(value)) {
-      value = value(part);
-    }
-
-    if (isPrimitive(value)) {
-      // TODO: escape
-      values[i] = String(value);
-      // } else if (isTemplateResult(value) && value.isAsync) {
-      // TODO: template result with one or more Promises
-    } else if (isPromise(value)) {
-      // ?
-    } else if (Array.isArray(value)) {
-      values[i] = resolveValues(value, part).join('');
-    } else if (isSyncIterator(value)) {
-      values[i] = resolveValues(Array.from(value), part).join('');
-    } else if (value === nothing) {
-      values = nothing;
-    }
-  }
-
-  return values;
 }

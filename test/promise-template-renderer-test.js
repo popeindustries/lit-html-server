@@ -2,8 +2,8 @@
 import { html as h, renderToString as render } from '../src/index.js';
 import { expect } from 'chai';
 
-describe('Promise template renderer', () => {
-  describe.only('text', () => {
+describe.skip('Promise template renderer', () => {
+  describe('text', () => {
     it('should render a plain text template', async () => {
       const result = h`text`;
       expect(await render(result)).to.equal('text');
