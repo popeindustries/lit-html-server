@@ -14,9 +14,46 @@ export const nothing = {};
 export const unsafeStringPrefix = '__unsafe-lit-html-server-string__';
 
 /**
+ * Base class interface for Node/Attribute parts
+ * @class Part
+ */
+export class Part {
+  /**
+   * Constructor
+   */
+  constructor() {
+    this._value;
+  }
+
+  /**
+   * Store the current value.
+   * Used by directives to temporarily transfer value
+   * (value will be deleted after reading).
+   * @param {any} value
+   */
+  setValue(value) {
+    this._value = value;
+  }
+
+  /**
+   * Retrieve resolved value given passed value
+   * @param {any} value
+   * @returns {any}
+   */
+  getValue(value) {
+    return value;
+  }
+
+  /**
+   * No-op
+   */
+  commit() {}
+}
+
+/**
  * A dynamic template part for text nodes
  */
-export class NodePart {
+export class NodePart extends Part {
   /**
    * Retrieve HTML string from 'value'
    * @param {any} value
@@ -31,13 +68,14 @@ export class NodePart {
  * A dynamic template part for attributes.
  * Unlike text nodes, attributes may contain multiple strings and parts.
  */
-export class AttributePart {
+export class AttributePart extends Part {
   /**
    * Constructor
    * @param {string} name
    * @param {Array<string>} strings
    */
   constructor(name, strings) {
+    super();
     this.name = name;
     this.strings = strings;
     this.length = strings.length - 1;
@@ -171,7 +209,10 @@ export class EventAttributePart extends AttributePart {
  */
 function resolveValue(value, part, ignoreNothingAndUndefined = true) {
   if (isDirective(value)) {
-    value = value(part);
+    // Directives are synchronous, so it's safe to read and delete value
+    value(part);
+    value = part._value;
+    part._value = undefined;
   }
 
   if (ignoreNothingAndUndefined && (value === nothing || value === undefined)) {

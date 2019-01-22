@@ -81,15 +81,15 @@ describe('Parts', () => {
     });
     it('should handle Promise errors');
     it('should resolve a directive value', () => {
-      const d = directive(() => () => {
-        return 'directive';
+      const d = directive(() => (part) => {
+        part.setValue('directive');
       });
       const part = new NodePart();
       expect(part.getValue(d())).to.equal('directive');
     });
     it('should resolve a directive value returning "nothing"', () => {
-      const d = directive(() => () => {
-        return nothing;
+      const d = directive(() => (part) => {
+        part.setValue(nothing);
       });
       const part = new NodePart();
       expect(part.getValue(d())).to.equal('');
@@ -144,15 +144,15 @@ describe('Parts', () => {
       expect(part.getValue([[[1], 2, [3, [4, 5]]]])).to.equal('a="12345"');
     });
     it('should resolve a directive value', () => {
-      const d = directive(() => () => {
-        return 'directive';
+      const d = directive(() => (part) => {
+        part.setValue('directive');
       });
       const part = new AttributePart('a', ['', '']);
       expect(part.getValue([d()])).to.equal('a="directive"');
     });
     it('should resolve a directive value returning "nothing"', () => {
-      const d = directive(() => () => {
-        return nothing;
+      const d = directive(() => (part) => {
+        part.setValue(nothing);
       });
       const part = new AttributePart('a', ['', '']);
       expect(part.getValue([d()])).to.equal('');

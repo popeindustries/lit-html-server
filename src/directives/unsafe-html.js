@@ -1,19 +1,18 @@
+import { NodePart, unsafeStringPrefix } from '../parts.js';
 import { directive } from '../directive.js';
-import { NodePart } from '../parts.js';
 
 export const unsafeHTML = directive(unsafeHTMLDirective);
 
 /**
  * Render 'value' without HTML escaping
  * @param {string} value
- * @returns {(part: NodePart) => string}
+ * @returns {(part: NodePart) => void}
  */
 function unsafeHTMLDirective(value) {
   return function(part) {
     if (!(part instanceof NodePart)) {
       throw Error('unsafeHTML can only be used in text bindings');
     }
-    // TODO: flag for no-escape
-    return value;
+    part.setValue(`${unsafeStringPrefix}${value}`);
   };
 }

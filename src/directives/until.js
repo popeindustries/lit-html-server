@@ -9,17 +9,17 @@ export const until = directive(untilDirective);
  * sync values are prioritised over async, unless there are no more pending
  * values, in which case the last value is always rendered regardless.
  * @param {...: Array<any>} args
- * @returns {(AttributePart|NodePart) => any}
+ * @returns {(AttributePart|NodePart) => void}
  */
 function untilDirective(...args) {
-  return function(/* part */) {
+  return function(part) {
     for (let i = 0, n = args.length; i < n; i++) {
       const value = args[i];
 
       // Render sync values immediately,
       // or last value (async included) if no more values pending
       if (isPrimitive(value) || i === n - 1) {
-        return value;
+        part.setValue(value);
       }
     }
   };

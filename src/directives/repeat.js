@@ -9,14 +9,14 @@ export const repeat = directive(repeatDirective);
  * @param {Array<any>} items
  * @param {function} [keyFnOrTemplate]
  * @param {(item: any, index: number) => templateResult} template
- * @returns {function}
+ * @returns {(part: Part) => void}
  */
 function repeatDirective(items, keyFnOrTemplate, template) {
   if (template === undefined) {
     template = keyFnOrTemplate;
   }
 
-  return function(/* part */) {
-    return items.map((item, index) => template(item, index));
+  return function(part) {
+    part.setValue(items.map((item, index) => template(item, index)));
   };
 }

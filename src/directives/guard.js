@@ -8,10 +8,10 @@ export const guard = directive(guardDirective);
  * so this is a no-op.
  * @param {any} value
  * @param {() => any} fn
- * @returns {(part: NodePart) => any}
+ * @returns {(part: NodePart) => void}
  */
 function guardDirective(value, fn) {
-  return function(/* part */) {
-    return fn();
+  return function(part) {
+    part.setValue(fn());
   };
 }
