@@ -11,7 +11,7 @@
     "template"
   ],
   "main": "index.js",
-  "browser": "browser.js",
+  "module": "src/index.js",
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",
@@ -38,7 +38,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "rollup --config rollup.config.js",
+    "build": "rm -rf ./index.js ./directives/*.js && rollup --config rollup.config.js",
     "format": "prettier --write './{directives,lib,test}/**/*.{js,json}'",
     "lint": "eslint './{directives,lib,test}/**/*.js'",
     "perf": "node test/server.js & PID=$!; autocannon -c 100 -d 5 -p 10 http://localhost:3000 && kill $PID",

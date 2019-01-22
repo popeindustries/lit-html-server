@@ -3,12 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const resolve = require('rollup-plugin-node-resolve');
 
+const plugins = [commonjs(), resolve({ preferBuiltins: true })];
+
 module.exports = [
   ...configDirectives(),
   {
     external: ['stream', 'fs'],
     input: 'src/index.js',
-    plugins: [commonjs(), resolve()],
+    plugins,
     output: {
       exports: 'named',
       file: 'index.js',
@@ -20,18 +22,21 @@ module.exports = [
 function configDirectives() {
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
-  const plugins = [commonjs(), resolve({ browser: true })];
   const config = [];
 
   for (const directive of directives) {
     if (path.extname(directive) === '.js') {
       config.push({
+        external: [
+          path.resolve('src/directive.js'),
+          path.resolve('src/parts.js'),
+          path.resolve('src/is.js')
+        ],
         input: path.join(dir, directive),
         plugins,
         output: {
           file: path.join('directives', directive),
-          format: 'umd',
-          name: `litHtmlServer.directives.${directive.replace('.js', '')}`
+          format: 'cjs'
         }
       });
     }

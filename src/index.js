@@ -6,8 +6,10 @@ import { Template } from './template.js';
 import { templateResult } from './template-result.js';
 
 export { directive } from './directive.js';
+export { AttributePart, NodePart, nothing, unsafeStringPrefix } from './parts.js';
 export {
   defaultTemplateProcessor,
+  defaultTemplateResultProcessor,
   html,
   renderToStream,
   renderToString,
