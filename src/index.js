@@ -40,10 +40,11 @@ function html(strings, ...values) {
 /**
  * Render a template result to a Readable stream
  * @param {Array} result
+ * @param {object} [options] stream.Readable options
  * @returns {Readable}
  */
-function renderToStream(result) {
-  return streamTemplateRenderer(result);
+function renderToStream(result, options) {
+  return streamTemplateRenderer(result, options);
 }
 
 /**
