@@ -19,13 +19,13 @@ class TemplateResultStream extends Readable {
   constructor(result, options) {
     super({ autoDestroy: true, ...options });
 
+    this.canPushData = true;
     this.done = false;
     this.buffer = '';
     this.index = 0;
 
     bufferResult(result, this)
       .then(() => {
-        console.log('done');
         this.done = true;
         this._drainBuffer();
       })
@@ -40,7 +40,6 @@ class TemplateResultStream extends Readable {
    * @param {string} chunk
    */
   pushChunk(chunk) {
-    console.log('push');
     this.buffer += chunk;
     this._drainBuffer();
   }
@@ -49,7 +48,7 @@ class TemplateResultStream extends Readable {
    * Extend super.read()
    */
   _read() {
-    console.log('read', this.done);
+    this.canPushData = true;
     this._drainBuffer();
   }
 
@@ -59,25 +58,24 @@ class TemplateResultStream extends Readable {
    * @returns {boolean}
    */
   _drainBuffer() {
+    if (!this.canPushData) {
+      return false;
+    }
+
     const bufferLength = this.buffer.length;
-    console.log('drain', bufferLength);
 
-    if (bufferLength > 0) {
+    if (this.index < bufferLength) {
       // Strictly speaking we shouldn't compare character length with byte length, but close enough
-      const length = Math.min(bufferLength, this.readableHighWaterMark);
-      const chunk = this.buffer.slice(0, length);
-      const isWriteable = this.push(chunk, 'utf8');
+      const length = Math.min(bufferLength - this.index, this.readableHighWaterMark);
+      const chunk = this.buffer.slice(this.index, this.index + length);
 
-      this.buffer = chunk.length === bufferLength ? '' : this.buffer.slice(length);
-
-      if (isWriteable === false) {
-        return false;
-      }
+      this.canPushData = this.push(chunk, 'utf8');
+      this.index += length;
     } else if (this.done) {
       this.push(null);
     }
 
-    return true;
+    return this.canPushData;
   }
 
   /**
