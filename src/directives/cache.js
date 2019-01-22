@@ -1,3 +1,6 @@
+/**
+ * @typedef NodePart { import('../parts.js').NodePart }
+ */
 import { AttributePart } from '../parts.js';
 import { directive } from '../directive.js';
 
@@ -6,8 +9,9 @@ export const cache = directive(cacheDirective);
 /**
  * Enables fast switching between multiple templates by caching previous results.
  * Not possible/desireable to cache between requests, so this is a no-op.
- * @param {any} value
- * @returns {(part: NodePart) => void}
+ *
+ * @param { any } value
+ * @returns { (part: NodePart) => void }
  */
 function cacheDirective(value) {
   return function(part) {

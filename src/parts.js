@@ -4,7 +4,7 @@ import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';
 
 /**
- * A sentinel value that signals a Part to fully clear its content.
+ * A sentinel value that signals a Part to clear its content
  */
 export const nothing = {};
 
@@ -15,7 +15,6 @@ export const unsafeStringPrefix = '__unsafe-lit-html-server-string__';
 
 /**
  * Base class interface for Node/Attribute parts
- * @class Part
  */
 export class Part {
   /**
@@ -29,16 +28,18 @@ export class Part {
    * Store the current value.
    * Used by directives to temporarily transfer value
    * (value will be deleted after reading).
-   * @param {any} value
+   *
+   * @param { any } value
    */
   setValue(value) {
     this._value = value;
   }
 
   /**
-   * Retrieve resolved value given passed value
-   * @param {any} value
-   * @returns {any}
+   * Retrieve resolved string from passed "value"
+   *
+   * @param { any } value
+   * @returns { any }
    */
   getValue(value) {
     return value;
@@ -55,9 +56,10 @@ export class Part {
  */
 export class NodePart extends Part {
   /**
-   * Retrieve HTML string from 'value'
-   * @param {any} value
-   * @returns {any}
+   * Retrieve resolved value given passed "value"
+   *
+   * @param { any } value
+   * @returns { any }
    */
   getValue(value) {
     return resolveValue(value, this, true);
@@ -71,8 +73,9 @@ export class NodePart extends Part {
 export class AttributePart extends Part {
   /**
    * Constructor
-   * @param {string} name
-   * @param {Array<string>} strings
+   *
+   * @param { string } name
+   * @param { Array<string> } strings
    */
   constructor(name, strings) {
     super();
@@ -82,11 +85,12 @@ export class AttributePart extends Part {
   }
 
   /**
-   * Retrieve HTML string from 'values'.
+   * Retrieve resolved string from passed "values".
    * Resolves to a single string, or Promise for a single string,
    * even when responsible for multiple values.
-   * @param {Array<any>} values
-   * @returns {string|Promise<string>}
+   *
+   * @param { Array<any> } values
+   * @returns { string|Promise<string> }
    */
   getValue(values) {
     const strings = this.strings;
@@ -141,8 +145,9 @@ export class AttributePart extends Part {
 export class BooleanAttributePart extends AttributePart {
   /**
    * Constructor
-   * @param {string} name
-   * @param {Array<string>} strings
+   *
+   * @param { string } name
+   * @param { Array<string> } strings
    * @throws error when multiple expressions
    */
   constructor(name, strings) {
@@ -154,9 +159,10 @@ export class BooleanAttributePart extends AttributePart {
   }
 
   /**
-   * Retrieve HTML string from 'values'
-   * @param {Array<any>} values
-   * @returns {string|Promise<string>}
+   * Retrieve resolved string from passed "values".
+   *
+   * @param { Array<any> } values
+   * @returns { string|Promise<string> }
    */
   getValue(values) {
     let value = values[0];
@@ -179,9 +185,12 @@ export class BooleanAttributePart extends AttributePart {
  */
 export class PropertyAttributePart extends AttributePart {
   /**
-   * Retrieve HTML string from 'values'
-   * @param {Array<any>} values
-   * @returns {string}
+   * Retrieve resolved string from passed "values".
+   * Properties have no server-side representation,
+   * so always returns an empty string.
+   *
+   * @param { Array<any> } values
+   * @returns { string }
    */
   getValue(/* values */) {
     return '';
@@ -194,9 +203,12 @@ export class PropertyAttributePart extends AttributePart {
  */
 export class EventAttributePart extends AttributePart {
   /**
-   * Retrieve HTML string from 'values'
-   * @param {Array<any>} values
-   * @returns {string}
+   * Retrieve resolved string from passed "values".
+   * Event bindings have no server-side representation,
+   * so always returns an empty string.
+   *
+   * @param { Array<any> } values
+   * @returns { string }
    */
   getValue(/* values */) {
     return '';
@@ -204,11 +216,12 @@ export class EventAttributePart extends AttributePart {
 }
 
 /**
- * Resolve 'value' to string
- * @param {any} value
- * @param {NodePart} part
- * @param {boolean} ignoreNothingAndUndefined
- * @returns {any}
+ * Resolve "value" to string if possible
+ *
+ * @param { any } value
+ * @param { Part } part
+ * @param { boolean } ignoreNothingAndUndefined
+ * @returns { any }
  */
 function resolveValue(value, part, ignoreNothingAndUndefined = true) {
   if (isDirective(value)) {

@@ -1,3 +1,8 @@
+/**
+ * @typedef TemplateProcessor
+ * @property { (name: string, strings: Array<string>) => AttributePart } handleAttributeExpressions
+ * @property { () => NodePart } handleTextExpression
+ */
 import {
   AttributePart,
   BooleanAttributePart,
@@ -7,14 +12,17 @@ import {
 } from './parts.js';
 
 /**
- *
+ * Class representing the default Template processor.
+ * Exposes factory functions for generating Part instances to use for
+ * resolving a template's dynamic values.
  */
 export class DefaultTemplateProcessor {
   /**
-   * Create part instance for attribute values
-   * @param {string} name
-   * @param {Array<string>} strings
-   * @returns {AttributePart}
+   * Create part instance for dynamic attribute values
+   *
+   * @param { string } name
+   * @param { Array<string> } strings
+   * @returns { AttributePart }
    */
   handleAttributeExpressions(name, strings = []) {
     const prefix = name[0];
@@ -31,8 +39,9 @@ export class DefaultTemplateProcessor {
   }
 
   /**
-   * Create part instance for text values
-   * @returns {NodePart}
+   * Create part instance for dynamic text values
+   *
+   * @returns { NodePart }
    */
   handleTextExpression() {
     return new NodePart();

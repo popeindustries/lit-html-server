@@ -1,15 +1,31 @@
+/**
+ * @typedef TemplateResultProcessor
+ * @property { (template: Template, values: Array<any>) => templateResult } processTemplate
+ */
+/**
+ * @typedef Template { import('./template.js).Template }
+ */
+/**
+ * @typedef templateResult { import('./template-result.js).templateResult }
+ */
 import { AttributePart } from './parts.js';
 import { isPromise } from './is.js';
 
 /**
- *
+ * Class representing the default template result processor.
+ * @implements TemplateResultProcessor
  */
 export class DefaultTemplateResultProcessor {
   /**
-   * Create template result array from "template" instance and dynamic "values"
-   * @param {Template} template
-   * @param {Array<any>} values
-   * @returns {Array}
+   * Create template result array from "template" instance and dynamic "values".
+   * The returned array contains Template "strings" concatenated with known string "values",
+   * and any Promises that will eventually resolve asynchronous string "values".
+   * A synchronous template tree will reduce to an array containing a single string.
+   * An asynchronous template tree will reduce to an array of strings and Promises.
+   *
+   * @param { Template } template
+   * @param { Array<any> } values
+   * @returns { templateResult }
    */
   processTemplate(template, values) {
     const { strings, parts } = template;
@@ -48,11 +64,12 @@ export class DefaultTemplateResultProcessor {
 }
 
 /**
- * Commit value to string buffer
- * @param {string} buffer
- * @param {Array<string|Promise<string>>} result
- * @param {*} value
- * @returns {string}
+ * Commit value to string "buffer"
+ *
+ * @param { string } buffer
+ * @param { templateResult } result
+ * @param { any } value
+ * @returns { string }
  */
 function reduce(buffer, result, value) {
   if (typeof value === 'string') {

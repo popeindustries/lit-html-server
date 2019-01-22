@@ -1,3 +1,6 @@
+/**
+ * @typedef TemplateProcessor { import('./default-template-processor.js').TemplateProcessor }
+ */
 import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
 const RE_QUOTE = /"[^"]*|'[^']*$/;
@@ -8,9 +11,10 @@ const RE_QUOTE = /"[^"]*|'[^']*$/;
  */
 export class Template {
   /**
-   * Constructor
-   * @param {Array<string>} strings
-   * @param {DefaultTemplateProcessor} processor
+   * Create Template instance
+   *
+   * @param { Array<string> } strings
+   * @param { TemplateProcessor } processor
    */
   constructor(strings, processor) {
     this.strings = [];
@@ -20,9 +24,12 @@ export class Template {
   }
 
   /**
-   * Create strings and parts
-   * @param {Array<string>} strings
-   * @param {DefaultTemplateProcessor} processor
+   * Prepare the template's static strings,
+   * and create Part instances for the dynamic values,
+   * based on lit-html syntax.
+   *
+   * @param { Array<string> } strings
+   * @param { TemplateProcessor } processor
    */
   _prepare(strings, processor) {
     const endIndex = strings.length - 1;
@@ -105,8 +112,9 @@ export class Template {
  *
  * Iterating through all characters has at worst a time complexity of O(n),
  * and is better than the alternative (using "indexOf/lastIndexOf") which is potentially O(2n).
- * @param {string} string
- * @returns {number} returns "-1" if no tag, "0" if closed tag, or "1" if open tag
+ *
+ * @param { string } string
+ * @returns { number } - returns "-1" if no tag, "0" if closed tag, or "1" if open tag
  */
 function getTagState(string) {
   for (let i = string.length - 1; i >= 0; i--) {

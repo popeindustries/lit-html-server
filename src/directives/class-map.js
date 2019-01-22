@@ -6,8 +6,9 @@ export const classMap = directive(classMapDirective);
 /**
  * Applies CSS classes, where'classInfo' keys are added as class names if values are truthy.
  * Only applies to 'class' attribute.
- * @param {object} classInfo
- * @returns {(part: AttributePart) => void}
+ *
+ * @param { object } classInfo
+ * @returns { (part: AttributePart) => void }
  */
 function classMapDirective(classInfo) {
   return function(part) {

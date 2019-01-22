@@ -1,10 +1,14 @@
+/**
+ * @typedef templateResult { import('./template-result.js).templateResult }
+ */
 import { isPromise } from './is.js';
 
 /**
- * Buffer strings from "result" and store them on "target"
- * @param {Array<string|Promise<string>>} result
- * @param {object} [accumulator]
- * @returns {Promise<void>}
+ * Buffer strings from "result" and store them on "accumulator"
+ *
+ * @param { templateResult } result
+ * @param { object } [accumulator]
+ * @returns { Promise<string> }
  */
 export async function bufferResult(
   result,
@@ -34,10 +38,12 @@ export async function bufferResult(
 }
 
 /**
- * Add resolved "value" to "buffer"
- * @param {string} buffer
- * @param {any} value
- * @returns {string}
+ * Add resolved "value" to "buffer".
+ * Flattens nested arrays and concatenates all synchronous and asynchronous strings.
+ *
+ * @param { string } buffer
+ * @param { any } value
+ * @returns { string }
  */
 async function reduce(buffer, value) {
   if (typeof value === 'string') {

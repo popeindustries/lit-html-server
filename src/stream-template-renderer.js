@@ -1,20 +1,29 @@
+/**
+ * @typedef templateResult { import('./template-result.js).templateResult }
+ */
 import { bufferResult } from './template-result-bufferer.js';
 import { Readable } from 'stream';
 
 /**
  * Render a template result to a Readable stream
- * @param {Array<string|Promise<string>>} result
- * @param {object} [options] stream.Readable options
- * @returns {Readable}
+ *
+ * @param { templateResult } result
+ * @param { object } [options] Readable options
+ * @see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
+ * @returns { Readable }
  */
 export function streamTemplateRenderer(result, options = {}) {
   return new TemplateResultStream(result, options);
 }
 
+/**
+ * A custom Readable stream class
+ */
 class TemplateResultStream extends Readable {
   /**
+   * Constructor
    *
-   * @param {Array<string|Promise<string>>} result
+   * @param { templateResult } result
    */
   constructor(result, options) {
     super({ autoDestroy: true, ...options });
@@ -35,9 +44,10 @@ class TemplateResultStream extends Readable {
   }
 
   /**
-   * Add "chunk" onto buffer
+   * Push "chunk" onto buffer
    * (Called by "bufferResult" utility)
-   * @param {string} chunk
+   *
+   * @param { string } chunk
    */
   bufferChunk(chunk) {
     this.buffer += chunk;
@@ -45,7 +55,7 @@ class TemplateResultStream extends Readable {
   }
 
   /**
-   * Extend super.read()
+   * Extend Readable.read()
    */
   _read() {
     this.canPushData = true;
@@ -55,7 +65,8 @@ class TemplateResultStream extends Readable {
   /**
    * Write all buffered content to stream.
    * Returns "false" if write triggered backpressure, otherwise "true".
-   * @returns {boolean}
+   *
+   * @returns { boolean }
    */
   _drainBuffer() {
     if (!this.canPushData) {
@@ -79,8 +90,9 @@ class TemplateResultStream extends Readable {
   }
 
   /**
-   * Extend super.destroy()
-   * @param {Error} [err]
+   * Extend Readalbe.destroy()
+   *
+   * @param { Error } [err]
    */
   _destroy(err) {
     if (this.done) {
@@ -92,9 +104,10 @@ class TemplateResultStream extends Readable {
     }
     this.emit('close');
 
+    this.canPushData = false;
     this.done = true;
-    this.result = null;
     this.buffer = '';
+    this.index = 0;
     this.removeAllListeners();
   }
 }

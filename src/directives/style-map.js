@@ -6,8 +6,9 @@ export const styleMap = directive(styleMapDirective);
 /**
  * Apply CSS properties, where 'styleInfo' keys and values are added as CSS properties.
  * Only applies to 'style' attribute.
- * @param {object} styleInfo
- * @returns {(part: AttributePart) => void}
+ *
+ * @param { object } styleInfo
+ * @returns { (part: AttributePart) => void }
  */
 function styleMapDirective(styleInfo) {
   return function(part) {

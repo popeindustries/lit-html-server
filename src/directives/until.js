@@ -8,8 +8,9 @@ export const until = directive(untilDirective);
  * Not possible to render more than once in a server context, so primitive
  * sync values are prioritised over async, unless there are no more pending
  * values, in which case the last value is always rendered regardless.
- * @param {...: Array<any>} args
- * @returns {(AttributePart|NodePart) => void}
+ *
+ * @param { ...: Array<any> } args
+ * @returns { (AttributePart|NodePart) => void }
  */
 function untilDirective(...args) {
   return function(part) {

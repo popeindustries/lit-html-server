@@ -1,3 +1,7 @@
+/**
+ * @typedef Readable { import('stream').Readable }
+ * @typedef templateResult { import('./template-result.js).templateResult }
+ */
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
 import { promiseTemplateRenderer } from './promise-template-renderer.js';
@@ -24,9 +28,10 @@ const templateCache = new Map();
 /**
  * Interprets a template literal as an HTML template that can be
  * rendered as a Readable stream or String
- * @param {Array<string>} strings
- * @param  {...any} values
- * @returns {Array}
+ *
+ * @param { Array<string> } strings
+ * @param  { ...any } values
+ * @returns { templateResult }
  */
 function html(strings, ...values) {
   let template = templateCache.get(strings);
@@ -41,9 +46,11 @@ function html(strings, ...values) {
 
 /**
  * Render a template result to a Readable stream
- * @param {Array} result
- * @param {object} [options] stream.Readable options
- * @returns {Readable}
+ *
+ * @param { templateResult } result - a template result returned from call to "html`...`"
+ * @param { object } [options] - Readable stream options
+ * @see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
+ * @returns { Readable }
  */
 function renderToStream(result, options) {
   return streamTemplateRenderer(result, options);
@@ -51,8 +58,9 @@ function renderToStream(result, options) {
 
 /**
  * Render a template result to a string resolving Promise
- * @param {Array} result
- * @returns {Promise<string>}
+ *
+ * @param { templateResult } result
+ * @returns { Promise<string> }
  */
 function renderToString(result) {
   return promiseTemplateRenderer(result);
