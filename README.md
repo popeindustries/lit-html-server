@@ -52,13 +52,13 @@ async function body(apiPath) {
 ...and render:
 
 ```js
-const { render } = require('@popeindustries/lit-html-server');
+const { renderToStream } = require('@popeindustries/lit-html-server');
 
 // Returns a Node.js Readable stream which can be piped to `response`
-render(layout({ title: 'Home', api: '/api/home' }));
+renderToStream(layout({ title: 'Home', api: '/api/home' }));
 ```
 
-## Node API
+## API
 
 ### `html`
 
@@ -76,11 +76,11 @@ All template expressions (values interpolated with `${value}`) are escaped for s
 ```js
 const { unsafeHTML } = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
 html`
-  <div> ${unsafeHTML('<span>dangerous!</span>')} </div>
+  <div>${unsafeHTML('<span>dangerous!</span>')}</div>
 `;
 ```
 
-### `render(template: string|Readable): Readable`
+### `renderToStream(templateResult): Readable`
 
 Returns the result of the template tagged by `html` as a Node.js `Readable` stream of markup.
 
@@ -92,7 +92,7 @@ render(
 ).pipe(response);
 ```
 
-### `renderToString(template: string|Readable): Promise<string>`
+### `renderToString(templateResult): Promise<string>`
 
 Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup.
 
@@ -103,22 +103,6 @@ const markup = await renderToString(
   `
 );
 ```
-
-## Browser API
-
-**lit-html-server** can also be used in a browser context:
-
-```js
-const { html, renderToString } = require('@popeindustries/lit-html-server/browser.js');
-```
-
-### `html`
-
-The tag function to apply to HTML template literals (also aliased as `svg`). See [above](#html).
-
-### `renderToString(template: string|Promise): Promise<string>`
-
-Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup. See [above](#rendertostringtemplate-stringreadable-promisestring).
 
 ## Writing templates
 
@@ -200,7 +184,8 @@ const header = html`
   <h1>Header</h1>
 `;
 const page = html`
-  ${header} <p>This is some text</p>
+  ${header}
+  <p>This is some text</p>
 `;
 ```
 
@@ -210,14 +195,12 @@ const page = html`
 const items = [1, 2, 3];
 html`
   <ul>
-    ${
-      items.map(
-        (item) =>
-          html`
-            <li>${item}</li>
-          `
-      )
-    }
+    ${items.map(
+      (item) =>
+        html`
+          <li>${item}</li>
+        `
+    )}
   </ul>
 `;
 html`
@@ -234,33 +217,31 @@ html`
 `;
 ```
 
-> note that **lit-html** no longer supports Promise values, and **lit-html-server** will therefore log a warning. Use the `until` directive instead.
+> Note that **lit-html** no longer supports Promise values. Though **lit-html-server** does, it's recommended to use the `until` directive instead.
 
 ### Directives
 
 Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server context):
 
-- `guard(value, fn)`: no-op since re-rendering does not apply (renders result of `fn`)
+- `guard(value, fn)`: no-op since re-rendering does not apply (renders result of `fn`):
 
 ```js
 const guard = require('@popeindustries/lit-html-server/directives/guard.js');
 html`
   <div>
-    ${
-      guard(items, () =>
-        items.map(
-          (item) =>
-            html`
-              ${item}
-            `
-        )
+    ${guard(items, () =>
+      items.map(
+        (item) =>
+          html`
+            ${item}
+          `
       )
-    }
+    )}
   </div>
 `;
 ```
 
-- `ifDefined(value)`: sets the attribute if the value is defined and removes the attribute if the value is undefined
+- `ifDefined(value)`: sets the attribute if the value is defined and removes the attribute if the value is undefined:
 
 ```js
 const ifDefined = require('@popeindustries/lit-html-server/directives/if-defined.js');
@@ -275,56 +256,50 @@ html`
 const repeat = require('@popeindustries/lit-html-server/directives/repeat.js');
 html`
   <ul>
-    ${
-      repeat(
-        items,
-        (i) => i.id,
-        (i, index) =>
-          html`
-            <li>${index}: ${i.name}</li>
-          `
-      )
-    }
+    ${repeat(
+      items,
+      (i) => i.id,
+      (i, index) =>
+        html`
+          <li>${index}: ${i.name}</li>
+        `
+    )}
   </ul>
 `;
 ```
 
-- `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive sync values are prioritised over async Promises, unless there are no more pending values, in which case the last value is rendered regardless
+- `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive sync values are prioritised over async Promises, unless there are no more pending values, in which case the last value is rendered regardless of type:
 
 ```js
 const until = require('@popeindustries/lit-html-server/directives/until.js');
 html`
   <p>
-    ${
-      until(
-        fetch('content.json').then((r) => r.json()),
-        html`
-          <span>Loading...</span>
-        `
-      )
-    }
+    ${until(
+      fetch('content.json').then((r) => r.json()),
+      html`
+        <span>Loading...</span>
+      `
+    )}
   </p>
 `;
 // => renders <p><span>Loading...</span></p>
 
 html`
   <p>
-    ${
-      until(
-        fetch('content.json').then((r) => r.json()),
-        isBrowser
-          ? html`
-              <span>Loading...</span>
-            `
-          : undefined
-      )
-    }
+    ${until(
+      fetch('content.json').then((r) => r.json()),
+      isBrowser
+        ? html`
+            <span>Loading...</span>
+          `
+        : undefined
+    )}
   </p>
 `;
 // => renders fetch result
 ```
 
-- `classMap(classInfo)`: applies css classes to the `class` attribute. 'classInfo' keys are added as class names if values are truthy
+- `classMap(classInfo)`: applies css classes to the `class` attribute. 'classInfo' keys are added as class names if values are truthy:
 
 ```js
 const classMap = require('@popeindustries/lit-html-server/directives/class-map.js');
@@ -333,7 +308,7 @@ html`
 `;
 ```
 
-- `styleMap(styleInfo)`: applies css properties to the `style` attribute. 'styleInfo' keys and values are added as style properties
+- `styleMap(styleInfo)`: applies css properties to the `style` attribute. 'styleInfo' keys and values are added as style properties:
 
 ```js
 const styleMap = require('@popeindustries/lit-html-server/directives/style-map.js');
@@ -342,7 +317,7 @@ html`
 `;
 ```
 
-- `cache(value)`: Enables fast switching between multiple templates by caching previous results. Since it's generally not desireable to cache between requests, this is a no-op
+- `cache(value)`: Enables fast switching between multiple templates by caching previous results. Since it's generally not desireable to cache between requests, this is a no-op:
 
 ```js
 const cache = require('@popeindustries/lit-html-server/directives/cache.js');
