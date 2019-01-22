@@ -1,4 +1,5 @@
 import { DefaultTemplateProcessor } from './default-template-processor.js';
+import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
 import { promiseTemplateRenderer } from './promise-template-renderer.js';
 import { streamTemplateRenderer } from './stream-template-renderer.js';
 import { Template } from './template.js';
@@ -14,6 +15,7 @@ export {
 };
 
 const defaultTemplateProcessor = new DefaultTemplateProcessor();
+const defaultTemplateResultProcessor = new DefaultTemplateResultProcessor();
 const templateCache = new Map();
 
 /**
@@ -31,7 +33,7 @@ function html(strings, ...values) {
     templateCache.set(strings, template);
   }
 
-  return templateResult(template, values);
+  return templateResult(template, values, defaultTemplateResultProcessor);
 }
 
 /**
