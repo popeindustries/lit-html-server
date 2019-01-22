@@ -48,7 +48,11 @@ describe('Parts', () => {
       const part = new NodePart();
       expect(part.getValue([1, 2, [3, [4, 5]]])).to.deep.equal(['1', '2', '3', '4', '5']);
     });
-    it('should resolve an iterator value');
+    it('should resolve a sync iterator value', () => {
+      const part = new NodePart();
+      const array = ['hello ', 'world'];
+      expect(part.getValue(array[Symbol.iterator]())).to.deep.equal(['hello ', 'world']);
+    });
     it('should resolve a string Promise value', async () => {
       const part = new NodePart();
       const promise = Promise.resolve('text');
@@ -79,7 +83,16 @@ describe('Parts', () => {
       const promise = Promise.resolve([1, 2, 3]);
       expect(await part.getValue(promise)).to.deep.equal(['1', '2', '3']);
     });
-    it('should handle Promise errors');
+    it('should handle Promise errors', async () => {
+      const part = new NodePart();
+      const promise = Promise.reject(Error('errored!'));
+      try {
+        const result = await part.getValue(promise);
+        expect(result).to.not.exist;
+      } catch (err) {
+        expect(err).to.have.property('message', 'errored!');
+      }
+    });
     it('should resolve a directive value', () => {
       const d = directive(() => (part) => {
         part.setValue('directive');
@@ -176,6 +189,16 @@ describe('Parts', () => {
     it('should resolve an undefined Promise value', async () => {
       const part = new AttributePart('a', ['', '']);
       expect(await part.getValue([Promise.resolve(undefined)])).to.equal('a="undefined"');
+    });
+    it('should handle Promise errors', async () => {
+      try {
+        const part = new AttributePart('a', ['', '']);
+        const promise = Promise.reject(Error('errored!'));
+        const result = await part.getValue([promise]);
+        expect(result).to.not.exist;
+      } catch (err) {
+        expect(err).to.have.property('message', 'errored!');
+      }
     });
   });
 

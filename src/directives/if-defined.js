@@ -12,7 +12,7 @@ export const ifDefined = directive(ifDefinedDirective);
 function ifDefinedDirective(value) {
   return function(part) {
     if (value === undefined && part instanceof AttributePart) {
-      part.setValue(nothing);
+      return part.setValue(nothing);
     }
     part.setValue(value);
   };

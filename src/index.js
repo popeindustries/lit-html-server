@@ -5,6 +5,7 @@ import { streamTemplateRenderer } from './stream-template-renderer.js';
 import { Template } from './template.js';
 import { templateResult } from './template-result.js';
 
+export { directive } from './directive.js';
 export {
   defaultTemplateProcessor,
   html,

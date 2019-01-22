@@ -125,7 +125,10 @@ export class AttributePart extends Part {
     result.push(`${strings[endIndex]}"`);
 
     if (pending !== undefined) {
-      return Promise.all(pending).then(() => result.join(''));
+      // Flatten in case array returned from Promise
+      return Promise.all(pending).then(() =>
+        result.reduce((result, value) => result.concat(value), []).join('')
+      );
     }
     return result.join('');
   }
@@ -234,7 +237,7 @@ function resolveValue(value, part, ignoreNothingAndUndefined = true) {
     }
     return value.reduce((values, value) => {
       value = resolveValue(value, part, ignoreNothingAndUndefined);
-      // Allow nested template results to also be flattened
+      // Allow nested template results to also be flattened by not checking isTemplateResult
       if (Array.isArray(value)) {
         return values.concat(value);
       }
