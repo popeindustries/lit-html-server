@@ -10,7 +10,7 @@ export async function bufferResult(
   result,
   accumulator = {
     buffer: '',
-    pushChunk(chunk) {
+    bufferChunk(chunk) {
       this.buffer += chunk;
     }
   }
@@ -19,13 +19,13 @@ export async function bufferResult(
 
   for (let chunk of result) {
     if (typeof chunk === 'string') {
-      accumulator.pushChunk(chunk);
+      accumulator.bufferChunk(chunk);
     } else if (isPromise(chunk)) {
       chunk = await chunk;
       if (typeof chunk === 'string') {
-        accumulator.pushChunk(chunk);
+        accumulator.bufferChunk(chunk);
       } else {
-        accumulator.pushChunk(await reduce(accumulator.buffer, chunk));
+        accumulator.bufferChunk(await reduce(accumulator.buffer, chunk));
       }
     }
   }

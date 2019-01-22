@@ -80,6 +80,14 @@ describe('Stream template renderer', () => {
         expect(err).to.have.property('message', 'errored!');
       }
     });
+    it('should render a template when backpressure', async () => {
+      const result = h`This is a long ${'template'} with ${Promise.resolve(
+        'async'
+      )} values in it${Promise.resolve('!')}`;
+      expect(await getStream(render(result, { highWaterMark: 2 }))).to.equal(
+        'This is a long template with async values in it!'
+      );
+    });
   });
 
   describe('attributes', () => {

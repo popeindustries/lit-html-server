@@ -35,11 +35,11 @@ class TemplateResultStream extends Readable {
   }
 
   /**
-   * Push "chunk" onto buffer
+   * Add "chunk" onto buffer
    * (Called by "bufferResult" utility)
    * @param {string} chunk
    */
-  pushChunk(chunk) {
+  bufferChunk(chunk) {
     this.buffer += chunk;
     this._drainBuffer();
   }

@@ -6,16 +6,6 @@ const resolve = require('rollup-plugin-node-resolve');
 module.exports = [
   ...configDirectives(),
   {
-    input: 'src/browser.js',
-    plugins: [commonjs(), resolve({ browser: true })],
-    output: {
-      exports: 'named',
-      file: 'browser.js',
-      format: 'umd',
-      name: 'litHtmlServer'
-    }
-  },
-  {
     external: ['stream', 'fs'],
     input: 'src/index.js',
     plugins: [commonjs(), resolve()],
