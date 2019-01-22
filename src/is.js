@@ -1,15 +1,6 @@
 import { unsafeStringPrefix } from './parts.js';
 
-export { isAsyncIterator, isPrimitive, isPromise, isStream, isSyncIterator, isUnsafeString };
-
-/**
- * Determine if 'stream' is a Readable Stream instance
- * @param {Readable} stream
- * @returns {boolean}
- */
-function isStream(stream) {
-  return stream != null && stream.pipe != null;
-}
+export { isAsyncIterator, isPrimitive, isPromise, isSyncIterator, isUnsafeString };
 
 /**
  * Determine if 'promise' is a Promise instance
