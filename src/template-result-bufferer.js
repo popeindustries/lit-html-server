@@ -19,39 +19,22 @@ export async function bufferResult(
     }
   }
 ) {
+  let stack = result.slice();
+  let chunk;
+
   accumulator.buffer = '';
 
-  for (let chunk of result) {
+  while ((chunk = stack.shift()) !== undefined) {
     if (typeof chunk === 'string') {
       accumulator.bufferChunk(chunk);
+    } else if (Array.isArray(chunk)) {
+      stack = chunk.concat(stack);
     } else if (isPromise(chunk)) {
-      chunk = await chunk;
-      if (typeof chunk === 'string') {
-        accumulator.bufferChunk(chunk);
-      } else {
-        accumulator.bufferChunk(await reduce(accumulator.buffer, chunk));
-      }
+      stack.unshift(await chunk);
+    } else {
+      throw Error('unknown value type', chunk);
     }
   }
 
   return accumulator.buffer;
-}
-
-/**
- * Add resolved "value" to "buffer".
- * Flattens nested arrays and concatenates all synchronous and asynchronous strings.
- *
- * @param { string } buffer
- * @param { any } value
- * @returns { string }
- */
-async function reduce(buffer, value) {
-  if (typeof value === 'string') {
-    buffer += value;
-    return buffer;
-  } else if (Array.isArray(value)) {
-    return value.reduce((buffer, value) => reduce(buffer, value), buffer);
-  } else if (isPromise(value)) {
-    return reduce(buffer, await value);
-  }
 }
