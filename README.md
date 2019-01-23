@@ -80,7 +80,7 @@ html`
 `;
 ```
 
-### `renderToStream(templateResult): Readable`
+### `renderToStream(TemplateResult): Readable`
 
 Returns the result of the template tagged by `html` as a Node.js `Readable` stream of markup.
 
@@ -92,7 +92,7 @@ render(
 ).pipe(response);
 ```
 
-### `renderToString(templateResult): Promise<string>`
+### `renderToString(TemplateResult): Promise<string>`
 
 Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup.
 

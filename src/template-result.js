@@ -1,5 +1,5 @@
 /**
- * @typedef { Array<string|Promise<any>> } templateResult - an array of template strings (or Promises) and their resolved values
+ * @typedef { Array<string|Promise<any>> } TemplateResult - an array of template strings (or Promises) and their resolved values
  * @property { boolean } isTemplateResult
  */
 /**
@@ -21,9 +21,9 @@ export function isTemplateResult(obj) {
  * @param { Template } template
  * @param { Array<any> } values
  * @param { TemplateResultProcessor } processor
- * @returns { templateResult }
+ * @returns { TemplateResult }
  */
-export function templateResult(template, values, processor) {
+export function TemplateResult(template, values, processor) {
   const result = processor.processTemplate(template, values);
 
   result.isTemplateResult = true;

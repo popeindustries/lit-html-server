@@ -1,12 +1,12 @@
 /**
- * @typedef templateResult { import('./template-result.js).templateResult }
+ * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
 import { isPromise } from './is.js';
 
 /**
  * Buffer strings from "result" and store them on "accumulator"
  *
- * @param { templateResult } result
+ * @param { TemplateResult } result
  * @param { object } [accumulator]
  * @returns { Promise<string> }
  */

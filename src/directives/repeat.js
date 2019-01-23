@@ -9,7 +9,7 @@ export const repeat = directive(repeatDirective);
  *
  * @param { Array<any> } items
  * @param { function } keyFnOrTemplate
- * @param { (item: any, index: number) => templateResult } [template]
+ * @param { (item: any, index: number) => TemplateResult } [template]
  * @returns { (part: Part) => void }
  */
 function repeatDirective(items, keyFnOrTemplate, template) {

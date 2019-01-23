@@ -1,14 +1,19 @@
 /**
- * @typedef templateResult { import('./template-result.js).templateResult }
+ * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
 import { bufferResult } from './template-result-bufferer.js';
 
 /**
- * Render a template result to a string resolving Promise
- *
- * @param { templateResult } result
- * @returns { Promise<string> }
+ * A class for rendering a template result to a string resolving Promise
  */
-export function promiseTemplateRenderer(result) {
-  return bufferResult(result);
+export class PromiseTemplateRenderer {
+  /**
+   * Constructor
+   *
+   * @param { TemplateResult } result
+   * @returns { Promise<string> }
+   */
+  constructor(result) {
+    return bufferResult(result);
+  }
 }

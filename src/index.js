@@ -1,13 +1,13 @@
 /**
  * @typedef Readable { import('stream').Readable }
- * @typedef templateResult { import('./template-result.js).templateResult }
+ * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
-import { promiseTemplateRenderer } from './promise-template-renderer.js';
-import { streamTemplateRenderer } from './stream-template-renderer.js';
+import { PromiseTemplateRenderer } from './promise-template-renderer.js';
+import { StreamTemplateRenderer } from './stream-template-renderer.js';
 import { Template } from './template.js';
-import { templateResult } from './template-result.js';
+import { TemplateResult } from './template-result.js';
 
 export { directive } from './directive.js';
 export { AttributePart, NodePart, nothing, unsafeStringPrefix } from './parts.js';
@@ -31,7 +31,7 @@ const templateCache = new Map();
  *
  * @param { Array<string> } strings
  * @param  { ...any } values
- * @returns { templateResult }
+ * @returns { TemplateResult }
  */
 function html(strings, ...values) {
   let template = templateCache.get(strings);
@@ -41,27 +41,27 @@ function html(strings, ...values) {
     templateCache.set(strings, template);
   }
 
-  return templateResult(template, values, defaultTemplateResultProcessor);
+  return TemplateResult(template, values, defaultTemplateResultProcessor);
 }
 
 /**
  * Render a template result to a Readable stream
  *
- * @param { templateResult } result - a template result returned from call to "html`...`"
+ * @param { TemplateResult } result - a template result returned from call to "html`...`"
  * @param { object } [options] - Readable stream options
  * @see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
  * @returns { Readable }
  */
 function renderToStream(result, options) {
-  return streamTemplateRenderer(result, options);
+  return new StreamTemplateRenderer(result, options);
 }
 
 /**
  * Render a template result to a string resolving Promise
  *
- * @param { templateResult } result
+ * @param { TemplateResult } result
  * @returns { Promise<string> }
  */
 function renderToString(result) {
-  return promiseTemplateRenderer(result);
+  return new PromiseTemplateRenderer(result);
 }

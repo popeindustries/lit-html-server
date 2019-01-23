@@ -1,29 +1,20 @@
 /**
- * @typedef templateResult { import('./template-result.js).templateResult }
+ * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
 import { bufferResult } from './template-result-bufferer.js';
 import { Readable } from 'stream';
 
 /**
- * Render a template result to a Readable stream
- *
- * @param { templateResult } result
- * @param { object } [options] Readable options
- * @see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
- * @returns { Readable }
+ * A custom Readable stream class that renders a TemplateResult
  */
-export function streamTemplateRenderer(result, options = {}) {
-  return new TemplateResultStream(result, options);
-}
-
-/**
- * A custom Readable stream class
- */
-class TemplateResultStream extends Readable {
+export class StreamTemplateRenderer extends Readable {
   /**
    * Constructor
    *
-   * @param { templateResult } result
+   * @param { TemplateResult } result
+   * @param { object } [options] Readable options
+   * @see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
+   * @returns { Readable }
    */
   constructor(result, options) {
     super({ autoDestroy: true, ...options });

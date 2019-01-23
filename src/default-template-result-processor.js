@@ -1,12 +1,10 @@
 /**
  * @typedef TemplateResultProcessor
- * @property { (template: Template, values: Array<any>) => templateResult } processTemplate
+ * @property { (template: Template, values: Array<any>) => TemplateResult } processTemplate
  */
 /**
  * @typedef Template { import('./template.js).Template }
- */
-/**
- * @typedef templateResult { import('./template-result.js).templateResult }
+ * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
 import { AttributePart } from './parts.js';
 import { isPromise } from './is.js';
@@ -25,7 +23,7 @@ export class DefaultTemplateResultProcessor {
    *
    * @param { Template } template
    * @param { Array<any> } values
-   * @returns { templateResult }
+   * @returns { TemplateResult }
    */
   processTemplate(template, values) {
     const { strings, parts } = template;
@@ -67,7 +65,7 @@ export class DefaultTemplateResultProcessor {
  * Commit value to string "buffer"
  *
  * @param { string } buffer
- * @param { templateResult } result
+ * @param { TemplateResult } result
  * @param { any } value
  * @returns { string }
  */
