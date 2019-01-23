@@ -1,4 +1,4 @@
-import { directive } from '../directive.js';
+import { directive } from '../index.js';
 
 export const guard = directive(guardDirective);
 

@@ -1,5 +1,4 @@
-import { AttributePart } from '../parts.js';
-import { directive } from '../directive.js';
+import { directive } from '../index.js';
 
 export const classMap = directive(classMapDirective);
 
@@ -12,7 +11,7 @@ export const classMap = directive(classMapDirective);
  */
 function classMapDirective(classInfo) {
   return function(part) {
-    if (!(part instanceof AttributePart) || part.name !== 'class') {
+    if (part.constructor.name !== 'AttributePart' || part.name !== 'class') {
       throw Error('The `classMap` directive must be used in the `class` attribute');
     }
 

@@ -1,4 +1,4 @@
-import { directive } from '../directive.js';
+import { directive } from '../index.js';
 import { isPrimitive } from '../is.js';
 
 export const until = directive(untilDirective);

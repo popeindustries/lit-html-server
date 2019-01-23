@@ -27,11 +27,7 @@ function configDirectives() {
   for (const directive of directives) {
     if (path.extname(directive) === '.js') {
       config.push({
-        external: [
-          path.resolve('src/directive.js'),
-          path.resolve('src/parts.js'),
-          path.resolve('src/is.js')
-        ],
+        external: [path.resolve('src/index.js')],
         input: path.join(dir, directive),
         plugins,
         output: {

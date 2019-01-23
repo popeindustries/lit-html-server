@@ -1,5 +1,4 @@
-import { AttributePart } from '../parts.js';
-import { directive } from '../directive.js';
+import { directive } from '../index.js';
 
 export const styleMap = directive(styleMapDirective);
 
@@ -12,7 +11,7 @@ export const styleMap = directive(styleMapDirective);
  */
 function styleMapDirective(styleInfo) {
   return function(part) {
-    if (!(part instanceof AttributePart) || part.name !== 'style') {
+    if (part.constructor.name !== 'AttributePart' || part.name !== 'style') {
       throw Error('The `styleMap` directive must be used in the `style` attribute');
     }
 
