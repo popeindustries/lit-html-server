@@ -2,19 +2,20 @@
  * @typedef Readable { import('stream').Readable }
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
+import { isTemplateResult, TemplateResult } from './template-result.js';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
 import { PromiseTemplateRenderer } from './promise-template-renderer.js';
 import { StreamTemplateRenderer } from './stream-template-renderer.js';
 import { Template } from './template.js';
-import { TemplateResult } from './template-result.js';
 
-export { directive } from './directive.js';
 export { AttributePart, NodePart, nothingString, unsafeStringPrefix } from './parts.js';
+export { directive } from './directive.js';
 export {
   defaultTemplateProcessor,
   defaultTemplateResultProcessor,
   html,
+  isTemplateResult,
   renderToStream,
   renderToString,
   html as svg,
