@@ -1,4 +1,4 @@
-import { directive, nothing } from '../index.js';
+import { directive, nothingString } from '../index.js';
 
 export const ifDefined = directive(ifDefinedDirective);
 
@@ -12,7 +12,7 @@ export const ifDefined = directive(ifDefinedDirective);
 function ifDefinedDirective(value) {
   return function(part) {
     if (value === undefined && part.constructor.name === 'AttributePart') {
-      return part.setValue(nothing);
+      return part.setValue(nothingString);
     }
     part.setValue(value);
   };

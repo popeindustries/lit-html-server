@@ -1,6 +1,4 @@
-import { unsafeStringPrefix } from './parts.js';
-
-export { isAsyncIterator, isPrimitive, isPromise, isSyncIterator, isUnsafeString };
+export { isAsyncIterator, isPrimitive, isPromise, isSyncIterator };
 
 /**
  * Determine if "promise" is a Promise instance
@@ -47,14 +45,4 @@ function isPrimitive(value) {
   const type = typeof value;
 
   return value === null || !(type === 'object' || type === 'function');
-}
-
-/**
- * Determine if "string" is an unsafe string
- *
- * @param { string } string
- * @returns { boolean }
- */
-function isUnsafeString(string) {
-  return typeof string === 'string' && string.indexOf(unsafeStringPrefix) === 0;
 }

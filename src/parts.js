@@ -1,12 +1,12 @@
-import { isPrimitive, isPromise, isSyncIterator, isUnsafeString } from './is.js';
+import { isPrimitive, isPromise, isSyncIterator } from './is.js';
 import escapeHTML from './escape.js';
 import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';
 
 /**
- * A sentinel value that signals a Part to clear its content
+ * A value for strings that signals a Part to clear its content
  */
-export const nothing = {};
+export const nothingString = '__nothing-lit-html-server-string__';
 
 /**
  * A prefix value for strings that should not be escaped
@@ -105,7 +105,7 @@ export class AttributePart extends Part {
       result.push(string);
 
       // Bail if 'nothing'
-      if (value === nothing) {
+      if (value === nothingString) {
         return '';
       } else if (isPromise(value)) {
         if (pending === undefined) {
@@ -168,7 +168,7 @@ export class BooleanAttributePart extends AttributePart {
     let value = values[0];
 
     if (isDirective(value)) {
-      value = value(this);
+      value = getDirectiveValue(value, this);
     }
 
     if (isPromise(value)) {
@@ -225,13 +225,10 @@ export class EventAttributePart extends AttributePart {
  */
 function resolveValue(value, part, ignoreNothingAndUndefined = true) {
   if (isDirective(value)) {
-    // Directives are synchronous, so it's safe to read and delete value
-    value(part);
-    value = part._value;
-    part._value = undefined;
+    value = getDirectiveValue(value, part);
   }
 
-  if (ignoreNothingAndUndefined && (value === nothing || value === undefined)) {
+  if (ignoreNothingAndUndefined && (value === nothingString || value === undefined)) {
     return '';
   }
 
@@ -241,7 +238,7 @@ function resolveValue(value, part, ignoreNothingAndUndefined = true) {
   } else if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
     // Escape if not prefixed with unsafeStringPrefix, otherwise strip prefix
-    return isUnsafeString(string) ? string.slice(33) : escapeHTML(string);
+    return string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string);
   } else if (isPromise(value)) {
     return value.then((value) => resolveValue(value, part, ignoreNothingAndUndefined));
   } else if (isSyncIterator(value)) {
@@ -260,4 +257,19 @@ function resolveValue(value, part, ignoreNothingAndUndefined = true) {
   } else {
     return value;
   }
+}
+
+/**
+ * Retrieve value from "directive"
+ *
+ * @param { function } directive
+ * @param { Part } part
+ * @returns { any }
+ */
+function getDirectiveValue(directive, part) {
+  // Directives are synchronous, so it's safe to read and delete value
+  directive(part);
+  const value = part._value;
+  part._value = undefined;
+  return value;
 }

@@ -3,7 +3,7 @@ import {
   BooleanAttributePart,
   EventAttributePart,
   NodePart,
-  nothing,
+  nothingString,
   PropertyAttributePart,
   unsafeStringPrefix
 } from '../src/parts.js';
@@ -102,7 +102,7 @@ describe('Parts', () => {
     });
     it('should resolve a directive value returning "nothing"', () => {
       const d = directive(() => (part) => {
-        part.setValue(nothing);
+        part.setValue(nothingString);
       });
       const part = new NodePart();
       expect(part.getValue(d())).to.equal('');
@@ -165,7 +165,7 @@ describe('Parts', () => {
     });
     it('should resolve a directive value returning "nothing"', () => {
       const d = directive(() => (part) => {
-        part.setValue(nothing);
+        part.setValue(nothingString);
       });
       const part = new AttributePart('a', ['', '']);
       expect(part.getValue([d()])).to.equal('');
