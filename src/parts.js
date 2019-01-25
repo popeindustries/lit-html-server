@@ -89,7 +89,7 @@ export class AttributePart extends Part {
    * Resolves to a single string, or Promise for a single string,
    * even when responsible for multiple values.
    *
-   * @param { Array<any> } values
+   * @param { any|Array<any> } values
    * @returns { string|Promise<string> }
    */
   getValue(values) {

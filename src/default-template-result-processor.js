@@ -51,7 +51,11 @@ export class DefaultTemplateResultProcessor {
         value = part.getValue(value);
       }
 
-      buffer = reduce(buffer, result, value);
+      if (typeof value === 'string') {
+        buffer += value;
+      } else {
+        buffer = reduce(buffer, result, value);
+      }
     }
 
     buffer += strings[endIndex];
