@@ -1,7 +1,7 @@
 /**
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
-import { bufferResult } from './template-result-bufferer.js';
+import { isPromise } from './is.js';
 import { Readable } from 'stream';
 
 /**
@@ -9,22 +9,29 @@ import { Readable } from 'stream';
  */
 export class StreamTemplateRenderer extends Readable {
   /**
-   * Constructor
+   * Create a Readable stream instance.
+   * Note that, by default, the "result" will be emptied of elements during render,
+   * and should be considered single use.
+   * Set "options.destructive = false" to allow for reuse.
    *
-   * @param { TemplateResult } result
-   * @param { object } [options] Readable options
-   * @see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
+   * @param { TemplateResult } result - a template result returned from call to "html`...`"
+   * @param { object } [options]
+   * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
+   * @param { object } [options.chunkSize = 16384] - the string character length to push to the consumer each read request
    * @returns { Readable }
    */
-  constructor(result, options) {
-    super({ autoDestroy: true, ...options });
+  constructor(result, options = { destructive: true }) {
+    const highWaterMark = options.highWaterMark || 16384;
+
+    super({ autoDestroy: true, highWaterMark });
 
     this.canPushData = true;
     this.done = false;
     this.buffer = '';
     this.index = 0;
+    this.chunk = '';
 
-    bufferResult(result, this)
+    this._process(options.destructive ? result : result.slice())
       .then(() => {
         this.done = true;
         this._drainBuffer();
@@ -35,14 +42,26 @@ export class StreamTemplateRenderer extends Readable {
   }
 
   /**
-   * Push "chunk" onto buffer
-   * (Called by "bufferResult" utility)
+   * Process TemplateResult stack
    *
-   * @param { string } chunk
+   * @param { TemplateResult } stack
+   * @returns { Promise<void> }
    */
-  bufferChunk(chunk) {
-    this.buffer += chunk;
-    this._drainBuffer();
+  async _process(stack) {
+    let chunk;
+
+    while ((chunk = stack.shift()) !== undefined) {
+      if (typeof chunk === 'string') {
+        this.buffer += chunk;
+        this._drainBuffer();
+      } else if (Array.isArray(chunk)) {
+        stack = chunk.concat(stack);
+      } else if (isPromise(chunk)) {
+        stack.unshift(await chunk);
+      } else {
+        throw Error('unknown value type:', chunk);
+      }
+    }
   }
 
   /**
@@ -57,7 +76,7 @@ export class StreamTemplateRenderer extends Readable {
    * Write all buffered content to stream.
    * Returns "false" if write triggered backpressure, otherwise "true".
    *
-   * @returns { boolean }
+   * @returns { void }
    */
   _drainBuffer() {
     if (!this.canPushData) {
@@ -71,13 +90,11 @@ export class StreamTemplateRenderer extends Readable {
       const length = Math.min(bufferLength - this.index, this.readableHighWaterMark);
       const chunk = this.buffer.slice(this.index, this.index + length);
 
-      this.canPushData = this.push(chunk, 'utf8');
+      this.canPushData = this.push(chunk);
       this.index += length;
     } else if (this.done) {
       this.push(null);
     }
-
-    return this.canPushData;
   }
 
   /**
