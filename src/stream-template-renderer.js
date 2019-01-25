@@ -29,7 +29,6 @@ export class StreamTemplateRenderer extends Readable {
     this.done = false;
     this.buffer = '';
     this.index = 0;
-    this.chunk = '';
 
     this._process(options.destructive ? result : result.slice())
       .then(() => {
@@ -53,6 +52,7 @@ export class StreamTemplateRenderer extends Readable {
     while ((chunk = stack.shift()) !== undefined) {
       if (typeof chunk === 'string') {
         this.buffer += chunk;
+        chunk = '';
         this._drainBuffer();
       } else if (Array.isArray(chunk)) {
         stack = chunk.concat(stack);
@@ -88,9 +88,8 @@ export class StreamTemplateRenderer extends Readable {
     if (this.index < bufferLength) {
       // Strictly speaking we shouldn't compare character length with byte length, but close enough
       const length = Math.min(bufferLength - this.index, this.readableHighWaterMark);
-      const chunk = this.buffer.slice(this.index, this.index + length);
 
-      this.canPushData = this.push(chunk);
+      this.canPushData = this.push(this.buffer.slice(this.index, this.index + length));
       this.index += length;
     } else if (this.done) {
       this.push(null);

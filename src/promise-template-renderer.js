@@ -33,6 +33,7 @@ async function reduce(stack) {
   while ((chunk = stack.shift()) !== undefined) {
     if (typeof chunk === 'string') {
       buffer += chunk;
+      chunk = '';
     } else if (Array.isArray(chunk)) {
       stack = chunk.concat(stack);
     } else if (isPromise(chunk)) {

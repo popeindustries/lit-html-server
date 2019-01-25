@@ -93,13 +93,12 @@ export class AttributePart extends Part {
    * @returns { string|Promise<string> }
    */
   getValue(values) {
-    const strings = this.strings;
-    const endIndex = strings.length - 1;
+    const endIndex = this.strings.length - 1;
     let buffer = `${this.name}="`;
     let chunks, pending;
 
     for (let i = 0; i < endIndex; i++) {
-      const string = strings[i];
+      const string = this.strings[i];
       let value = resolveValue(values[i], this, false);
 
       buffer += string;
@@ -129,12 +128,12 @@ export class AttributePart extends Part {
       }
     }
 
-    buffer += `${strings[endIndex]}"`;
+    buffer += `${this.strings[endIndex]}"`;
 
     if (pending !== undefined) {
       chunks.push(buffer);
-      // Flatten in case array returned from Promise
       return Promise.all(pending).then(() =>
+        // Flatten in case array returned from Promise
         chunks.reduce((chunks, value) => chunks.concat(value), []).join('')
       );
     }
