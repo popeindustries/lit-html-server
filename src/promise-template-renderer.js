@@ -11,22 +11,23 @@ export class PromiseTemplateRenderer {
    * Constructor
    *
    * @param { TemplateResult } result
+   * @param { object } [options]
+   * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
    * @returns { Promise<string> }
    */
-  constructor(result) {
-    return reduce(result);
+  constructor(result, options = { destructive: true }) {
+    return reduce(options.destructive ? result : result.slice());
   }
 }
 
 /**
  * Reduce TemplateResult to a single string resolving Promise
  *
- * @param { TemplateResult } result
+ * @param { TemplateResult } stack
  * @returns { Promise<string> }
  */
-async function reduce(result) {
+async function reduce(stack) {
   let buffer = '';
-  let stack = result.slice();
   let chunk;
 
   while ((chunk = stack.shift()) !== undefined) {

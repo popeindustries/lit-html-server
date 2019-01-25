@@ -47,9 +47,14 @@ function html(strings, ...values) {
 
 /**
  * Render a template result to a Readable stream
+ * Note that, by default, the "result" will be emptied of elements during render,
+ * and should be considered single use.
+ * Set "options.destructive = false" to allow for reuse.
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
- * @param { object } [options] - Readable stream options
+ * @param { object } [options]
+ * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
+ * @param { object } [options.chunkSize = 16384] - the string character length to push to the consumer each read request
  * @see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
  * @returns { Readable }
  */
@@ -58,11 +63,16 @@ function renderToStream(result, options) {
 }
 
 /**
- * Render a template result to a string resolving Promise
+ * Render a template result to a string resolving Promise.
+ * Note that, by default, the "result" will be emptied of elements during render,
+ * and should be considered single use.
+ * Set "options.destructive = false" to allow for reuse.
  *
- * @param { TemplateResult } result
+ * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { object } [options]
+ * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
  * @returns { Promise<string> }
  */
-function renderToString(result) {
-  return new PromiseTemplateRenderer(result);
+function renderToString(result, options) {
+  return new PromiseTemplateRenderer(result, options);
 }
