@@ -204,20 +204,20 @@ describe('Promise template renderer', () => {
       expect(await getStream(renderToStream(result))).to.equal(expected);
     });
     it('should render a template with Promise text attribute', async () => {
-      const result = h`<div a="some ${Promise.resolve('text')}"></div>`;
-      const expected = '<div a="some text"></div>';
+      const result = h`<div a="some ${Promise.resolve('text')} here"></div>`;
+      const expected = '<div a="some text here"></div>';
       expect(await renderToString(result)).to.equal(expected);
       expect(await getStream(renderToStream(result))).to.equal(expected);
     });
     it('should render a template with Promise array attribute', async () => {
-      const result = h`<div a="some ${Promise.resolve([1, 2, 3])}"></div>`;
-      const expected = '<div a="some 123"></div>';
+      const result = h`<div a="some ${Promise.resolve([1, 2, 3])} here"></div>`;
+      const expected = '<div a="some 123 here"></div>';
       expect(await renderToString(result)).to.equal(expected);
       expect(await getStream(renderToStream(result))).to.equal(expected);
     });
     it('should render a template with Promise template attribute', async () => {
-      const result = h`<div a="some ${Promise.resolve(h`text`)}"></div>`;
-      const expected = '<div a="some text"></div>';
+      const result = h`<div a="some ${Promise.resolve(h`text`)} here"></div>`;
+      const expected = '<div a="some text here"></div>';
       expect(await renderToString(result)).to.equal(expected);
       expect(await getStream(renderToStream(result))).to.equal(expected);
     });

@@ -95,46 +95,50 @@ export class AttributePart extends Part {
   getValue(values) {
     const strings = this.strings;
     const endIndex = strings.length - 1;
-    const result = [`${this.name}="`];
-    let pending;
+    let buffer = `${this.name}="`;
+    let chunks, pending;
 
     for (let i = 0; i < endIndex; i++) {
       const string = strings[i];
       let value = resolveValue(values[i], this, false);
 
-      result.push(string);
+      buffer += string;
 
       // Bail if 'nothing'
       if (value === nothingString) {
         return '';
       } else if (isPromise(value)) {
-        if (pending === undefined) {
+        if (chunks === undefined) {
+          chunks = [];
           pending = [];
         }
 
-        const index = result.push(value) - 1;
+        chunks.push(buffer);
+        buffer = '';
+        const index = chunks.push(value) - 1;
 
         pending.push(
           value.then((value) => {
-            result[index] = value;
+            chunks[index] = value;
           })
         );
       } else if (Array.isArray(value)) {
-        result.push(value.join(''));
+        buffer += value.join('');
       } else {
-        result.push(value);
+        buffer += value;
       }
     }
 
-    result.push(`${strings[endIndex]}"`);
+    buffer += `${strings[endIndex]}"`;
 
     if (pending !== undefined) {
+      chunks.push(buffer);
       // Flatten in case array returned from Promise
       return Promise.all(pending).then(() =>
-        result.reduce((result, value) => result.concat(value), []).join('')
+        chunks.reduce((chunks, value) => chunks.concat(value), []).join('')
       );
     }
-    return result.join('');
+    return buffer;
   }
 }
 

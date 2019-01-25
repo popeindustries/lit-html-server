@@ -171,8 +171,8 @@ describe('Parts', () => {
       expect(part.getValue([d()])).to.equal('');
     });
     it('should resolve a string Promise value', async () => {
-      const part = new AttributePart('a', ['', '']);
-      expect(await part.getValue([Promise.resolve('text')])).to.equal('a="text"');
+      const part = new AttributePart('a', ['', ' here']);
+      expect(await part.getValue([Promise.resolve('text')])).to.equal('a="text here"');
     });
     it('should resolve a number Promise value', async () => {
       const part = new AttributePart('a', ['', '']);
