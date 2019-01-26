@@ -18,7 +18,7 @@ export class TemplateResult {
     const isString = this.index % 2 === 0;
     const index = (this.index / 2) | 0;
 
-    if (index >= this.template.strings.length) {
+    if (!isString && this.index >= this.template.strings.length) {
       this.index = 0;
       return null;
     }
@@ -39,10 +39,10 @@ export class TemplateResult {
         value = part.getValue(this.values.slice(index, index + part.length));
         this.index += part.length - 1;
       } else {
-        value = part.getValue([value]);
+        value = part.getValue([this.values[index]]);
       }
     } else {
-      value = part.getValue(value);
+      value = part.getValue(this.values[index]);
     }
 
     return value;

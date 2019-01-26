@@ -107,13 +107,13 @@ describe('Parts', () => {
       const part = new NodePart();
       expect(part.getValue(d())).to.equal('');
     });
-    it('should pass through a nested template result', () => {
+    it.skip('should pass through a nested template result', () => {
       const part = new NodePart();
       const value = [''];
       value.isTemplateResult = true;
       expect(part.getValue(value)).to.equal(value);
     });
-    it('should flatten an array of template results', () => {
+    it.skip('should flatten an array of template results', () => {
       const part = new NodePart();
       const value1 = ['1'];
       value1.isTemplateResult = true;

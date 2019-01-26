@@ -1,7 +1,7 @@
 import { isPrimitive, isPromise, isSyncIterator } from './is.js';
 import escapeHTML from './escape.js';
 import { isDirective } from './directive.js';
-import { isTemplateResult } from './template-result.js';
+import { TemplateResult } from './template-result.js';
 
 /**
  * A value for strings that signals a Part to clear its content
@@ -236,7 +236,7 @@ function resolveValue(value, part, ignoreNothingAndUndefined = true) {
   }
 
   // Pass-through template result
-  if (isTemplateResult(value)) {
+  if (value instanceof TemplateResult) {
     return value;
   } else if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
@@ -250,7 +250,7 @@ function resolveValue(value, part, ignoreNothingAndUndefined = true) {
     }
     return value.reduce((values, value) => {
       value = resolveValue(value, part, ignoreNothingAndUndefined);
-      // Allow nested template results to also be flattened by not checking isTemplateResult
+      // Flatten
       if (Array.isArray(value)) {
         return values.concat(value);
       }
