@@ -19,22 +19,17 @@ export class StreamTemplateRenderer extends Readable {
    * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
    * @returns { Readable }
    */
-  constructor(result, options = { destructive: true }) {
+  constructor(result /* , options = { destructive: true } */) {
     super({ autoDestroy: true });
 
     this.canPushData = true;
     this.done = false;
-    this.buffer = '';
-    this.index = 0;
+    this.stack = [result];
+  }
 
-    this._process(options.destructive ? result : result.slice())
-      .then(() => {
-        this.done = true;
-        this._drainBuffer();
-      })
-      .catch((err) => {
-        this.destroy(err);
-      });
+  process() {
+    // const result = this.stack.shift();
+    // while()
   }
 
   /**

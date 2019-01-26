@@ -1,31 +1,57 @@
-/**
- * @typedef { Array<string|Promise<any>> } TemplateResult - an array of template strings (or Promises) and their resolved values
- * @property { boolean } isTemplateResult
- */
-/**
- * @typedef TemplateResultProcessor { import('./default-template-result-processor.js').TemplateResultProcessor }
- */
-/**
- * Determine if 'obj' is a template result
- *
- * @param { any } obj
- * @returns { boolean }
- */
-export function isTemplateResult(obj) {
-  return Array.isArray(obj) && obj.isTemplateResult;
-}
+import { AttributePart } from './parts.js';
 
-/**
- * Reduce a Template's strings and values to an array of resolved strings (or Promises)
- *
- * @param { Template } template
- * @param { Array<any> } values
- * @param { TemplateResultProcessor } processor
- * @returns { TemplateResult }
- */
-export function TemplateResult(template, values, processor) {
-  const result = processor.processTemplate(template, values);
+export class TemplateResult {
+  /**
+   *
+   *
+   * @param { Template } template
+   * @param { Array<any> } values
+   * @returns { TemplateResult }
+   */
+  constructor(template, values) {
+    this.template = template;
+    this.values = values;
+    this.index = 0;
+  }
 
-  result.isTemplateResult = true;
-  return result;
+  read() {
+    const isString = this.index % 2 === 0;
+    const index = (this.index / 2) | 0;
+
+    if (index >= this.template.strings.length) {
+      this.index = 0;
+      return null;
+    }
+
+    this.index++;
+
+    if (isString) {
+      return this.template.strings[index];
+    }
+
+    const part = this.template.parts[index];
+    let value;
+
+    if (part instanceof AttributePart) {
+      // AttributeParts can have multiple values, so slice based on length
+      // (strings in-between values are already stored in the instance)
+      if (part.length > 1) {
+        value = part.getValue(this.values.slice(index, index + part.length));
+        this.index += part.length - 1;
+      } else {
+        value = part.getValue([value]);
+      }
+    } else {
+      value = part.getValue(value);
+    }
+
+    return value;
+  }
+
+  destroy() {
+    this.values.length = 0;
+    this.values = null;
+    this.template = null;
+    this.index = 0;
+  }
 }
