@@ -54,8 +54,6 @@ function html(strings, ...values) {
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
  * @param { object } [options]
  * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
- * @param { object } [options.chunkSize = 16384] - the string character length to push to the consumer each read request
- * @see https://nodejs.org/api/stream.html#stream_new_stream_readable_options
  * @returns { Readable }
  */
 function renderToStream(result, options) {

@@ -17,13 +17,10 @@ export class StreamTemplateRenderer extends Readable {
    * @param { TemplateResult } result - a template result returned from call to "html`...`"
    * @param { object } [options]
    * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
-   * @param { object } [options.chunkSize = 16384] - the string character length to push to the consumer each read request
    * @returns { Readable }
    */
   constructor(result, options = { destructive: true }) {
-    const highWaterMark = options.highWaterMark || 16384;
-
-    super({ autoDestroy: true, highWaterMark });
+    super({ autoDestroy: true });
 
     this.canPushData = true;
     this.done = false;
@@ -52,7 +49,6 @@ export class StreamTemplateRenderer extends Readable {
     while ((chunk = stack.shift()) !== undefined) {
       if (typeof chunk === 'string') {
         this.buffer += chunk;
-        chunk = '';
         this._drainBuffer();
       } else if (Array.isArray(chunk)) {
         stack = chunk.concat(stack);
@@ -83,14 +79,9 @@ export class StreamTemplateRenderer extends Readable {
       return false;
     }
 
-    const bufferLength = this.buffer.length;
-
-    if (this.index < bufferLength) {
-      // Strictly speaking we shouldn't compare character length with byte length, but close enough
-      const length = Math.min(bufferLength - this.index, this.readableHighWaterMark);
-
-      this.canPushData = this.push(this.buffer.slice(this.index, this.index + length));
-      this.index += length;
+    if (this.buffer.length > 0) {
+      this.canPushData = this.push(this.buffer);
+      this.buffer = '';
     } else if (this.done) {
       this.push(null);
     }
