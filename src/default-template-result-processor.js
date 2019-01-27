@@ -60,8 +60,12 @@ export class DefaultTemplateResultProcessor {
               renderer.destroy(err);
             });
         } else if (Array.isArray(chunk)) {
-          popStack = false;
-          stack.shift();
+          // An existing TemplateResult will have already set this to "false",
+          // so only remove existing Array if there is no active TemplateResult
+          if (popStack === true) {
+            popStack = false;
+            stack.shift();
+          }
           stack = chunk.concat(stack);
         } else {
           destroy(stack);
