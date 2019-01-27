@@ -28,25 +28,31 @@ describe('Template Result', () => {
       const result = h`${undefined}`;
       expect(result.read()).to.equal('');
     });
-    it.skip('should process a template with array value', async () => {
+    it('should process a template with array value', async () => {
       const result = h`some numbers ${[1, 2, 3]}`;
       expect(result.read()).to.equal('some numbers 123');
     });
-    it.skip('should process a template with deeply nested array value', async () => {
+    it('should process a template with deeply nested array value', async () => {
       const result = h`a lot of numbers ${[1, 2, [3, [4, 5]]]} here`;
       expect(result.read()).to.equal('a lot of numbers 12345 here');
     });
-    it.skip('should process a template with nested template value', () => {
+    it('should process a template with nested template value', () => {
       const result = h`some nested ${h`text`}`;
-      expect(result.read()).to.equal('some nested text');
+      expect(result.read(true)).to.equal('some nested text');
     });
-    it.skip('should process a template with Promise value', () => {
+    it('should process a template with Promise value', async () => {
       const result = h`some ${Promise.resolve('text')} here`;
-      expect(result.read()).to.equal('some text here');
+      const chunks = result.read();
+      expect(chunks[0]).to.equal('some ');
+      expect(await chunks[1]).to.equal('text');
+      expect(chunks[2]).to.equal(' here');
     });
-    it.skip('should process a template with nested template with Promise value', () => {
+    it('should process a template with nested template with Promise value', async () => {
       const result = h`some nested ${h`${Promise.resolve('text')} in here too`}`;
-      expect(result.read()).to.equal('some nested text in here too');
+      const chunks = result.read(true);
+      expect(chunks[0]).to.equal('some nested ');
+      expect(await chunks[1]).to.equal('text');
+      expect(chunks[2]).to.equal(' in here too');
     });
   });
 
@@ -93,9 +99,12 @@ describe('Template Result', () => {
       const result = h`<div a="some ${h`text`}"></div>`;
       expect(result.read()).to.equal('<div a="some text"></div>');
     });
-    it.skip('should process a template with Promise attribute value', () => {
+    it('should process a template with Promise attribute value', async () => {
       const result = h`<div a="some ${Promise.resolve('text')}"></div>`;
-      expect(result.read()).to.equal('<div a="some text"></div>');
+      const chunks = result.read();
+      expect(chunks[0]).to.equal('<div ');
+      expect(await chunks[1]).to.equal('a="some text"');
+      expect(chunks[2]).to.equal('></div>');
     });
   });
 });

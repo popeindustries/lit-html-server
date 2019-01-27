@@ -60,6 +60,7 @@ export class DefaultTemplateResultProcessor {
             });
         } else if (Array.isArray(chunk)) {
           popStack = false;
+          stack.shift();
           stack = chunk.concat(stack);
         } else {
           return renderer.destroy(Error('unknown chunk type:', chunk));

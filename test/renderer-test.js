@@ -117,10 +117,9 @@ describe('Template render', () => {
         expect(err).to.have.property('message', 'errored!');
       }
     });
-    it.skip('should render a template with deeply nested sync/async templates', async () => {
+    it('should render a template with deeply nested sync/async templates', async () => {
       const data = { title: 'title', body: 'this is body text' };
-      // const nestedVeryDeep = async () => ['and ', "don't ", 'forget ', ['this']];
-      const nestedVeryDeep = async () => "and don't forget this";
+      const nestedVeryDeep = async () => ['and ', "don't ", 'forget ', ['this']];
       const nestedDeep = async () => h`<div>this too ${nestedVeryDeep()}</div>`;
       const nested = async (body) => h`<div>${body} ${nestedDeep()}</div>`;
       const result = () => h`<main><h1>${data.title}</h1>${nested(data.body)}</main>`;

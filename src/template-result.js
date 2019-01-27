@@ -53,12 +53,13 @@ class TemplateResult {
 
   /**
    * Consume template result content.
-   * *Note* that TemplateResults may only be read once,
+   * *Note* that instances may only be read once,
    * and will be destroyed upon completion.
    *
+   * @param { boolean } deep - recursively read nested TemplateResults
    * @returns { any }
    */
-  read() {
+  read(deep) {
     let buffer = '';
     let chunk, chunks;
 
@@ -69,13 +70,13 @@ class TemplateResult {
         if (chunks === undefined) {
           chunks = [];
         }
-        buffer = reduce(buffer, chunks, chunk);
+        buffer = reduce(buffer, chunks, chunk, deep);
       }
     }
 
     if (chunks !== undefined) {
       chunks.push(buffer);
-      return chunks;
+      return chunks.length > 1 ? chunks : chunks[0];
     }
 
     return buffer;
@@ -83,7 +84,7 @@ class TemplateResult {
 
   /**
    * Consume template result content one chunk at a time.
-   * *Note* that TemplateResults may only be read once,
+   * *Note* that instances may only be read once,
    * and will be destroyed when the last chunk is read.
    *
    * @returns { any }
@@ -130,12 +131,20 @@ class TemplateResult {
  * @param { string } buffer
  * @param { Array<any> } chunks
  * @param { any } chunk
+ * @param { boolean } [deep]
  * @returns { string }
  */
-function reduce(buffer, chunks, chunk) {
+function reduce(buffer, chunks, chunk, deep = false) {
   if (typeof chunk === 'string') {
     buffer += chunk;
     return buffer;
+  } else if (isTemplateResult(chunk)) {
+    if (deep) {
+      return reduce(buffer, chunks, chunk.read(deep), deep);
+    } else {
+      chunks.push(buffer, chunk);
+      return '';
+    }
   } else if (Array.isArray(chunk)) {
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
   } else if (isPromise(chunk)) {

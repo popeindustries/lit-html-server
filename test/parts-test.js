@@ -107,20 +107,6 @@ describe('Parts', () => {
       const part = new NodePart();
       expect(part.getValue(d())).to.equal('');
     });
-    it.skip('should pass through a nested template result', () => {
-      const part = new NodePart();
-      const value = [''];
-      value.isTemplateResult = true;
-      expect(part.getValue(value)).to.equal(value);
-    });
-    it.skip('should flatten an array of template results', () => {
-      const part = new NodePart();
-      const value1 = ['1'];
-      value1.isTemplateResult = true;
-      const value2 = ['2'];
-      value2.isTemplateResult = true;
-      expect(part.getValue([value1, value2])).to.deep.equal(['1', '2']);
-    });
   });
 
   describe('AttributePart', () => {
