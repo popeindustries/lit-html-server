@@ -1,7 +1,7 @@
 import { isPrimitive, isPromise, isSyncIterator } from './is.js';
 import escapeHTML from './escape.js';
 import { isDirective } from './directive.js';
-import { TemplateResult } from './template-result.js';
+import { isTemplateResult } from './template-result.js';
 
 /**
  * A value for strings that signals a Part to clear its content
@@ -62,7 +62,7 @@ export class NodePart extends Part {
    * @returns { any }
    */
   getValue(value) {
-    return resolveValue(value, this, true);
+    return resolveNodeValue(value, this);
   }
 }
 
@@ -89,54 +89,55 @@ export class AttributePart extends Part {
    * Resolves to a single string, or Promise for a single string,
    * even when responsible for multiple values.
    *
-   * @param { any|Array<any> } values
+   * @param { Array<any> } values
    * @returns { string|Promise<string> }
    */
   getValue(values) {
     const endIndex = this.strings.length - 1;
     let buffer = `${this.name}="`;
-    let chunks, pending;
+    let chunks, pendingChunks;
 
     for (let i = 0; i < endIndex; i++) {
       const string = this.strings[i];
-      let value = resolveValue(values[i], this, false);
+      let value = resolveAttributeValue(values[i], this);
 
       buffer += string;
 
       // Bail if 'nothing'
       if (value === nothingString) {
         return '';
+      }
+
+      if (typeof value === 'string') {
+        buffer += value;
       } else if (isPromise(value)) {
+        // Lazy init for uncommon scenario
         if (chunks === undefined) {
           chunks = [];
-          pending = [];
+          pendingChunks = [];
         }
 
         chunks.push(buffer);
         buffer = '';
         const index = chunks.push(value) - 1;
 
-        pending.push(
+        pendingChunks.push(
           value.then((value) => {
             chunks[index] = value;
           })
         );
       } else if (Array.isArray(value)) {
         buffer += value.join('');
-      } else {
-        buffer += value;
       }
     }
 
     buffer += `${this.strings[endIndex]}"`;
 
-    if (pending !== undefined) {
+    if (pendingChunks !== undefined) {
       chunks.push(buffer);
-      return Promise.all(pending).then(() =>
-        // Flatten in case array returned from Promise
-        chunks.reduce((chunks, value) => chunks.concat(value), []).join('')
-      );
+      return Promise.all(pendingChunks).then(() => chunks.join(''));
     }
+
     return buffer;
   }
 }
@@ -222,34 +223,77 @@ export class EventAttributePart extends AttributePart {
  * Resolve "value" to string if possible
  *
  * @param { any } value
- * @param { Part } part
- * @param { boolean } ignoreNothingAndUndefined
+ * @param { AttributePart } part
  * @returns { any }
  */
-function resolveValue(value, part, ignoreNothingAndUndefined = true) {
+function resolveAttributeValue(value, part) {
   if (isDirective(value)) {
     value = getDirectiveValue(value, part);
   }
 
-  if (ignoreNothingAndUndefined && (value === nothingString || value === undefined)) {
+  if (value === nothingString) {
+    return value;
+  }
+
+  if (isTemplateResult(value)) {
+    value = value.read();
+  }
+
+  if (isPrimitive(value)) {
+    const string = typeof value !== 'string' ? String(value) : value;
+    // Escape if not prefixed with unsafeStringPrefix, otherwise strip prefix
+    return string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string);
+  } else if (isPromise(value)) {
+    return value.then((value) => resolveAttributeValue(value, part));
+  } else if (isSyncIterator(value)) {
+    if (!Array.isArray(value)) {
+      value = Array.from(value);
+    }
+    return value
+      .reduce((values, value) => {
+        value = resolveAttributeValue(value, part);
+        // Flatten
+        if (Array.isArray(value)) {
+          return values.concat(value);
+        }
+        values.push(value);
+        return values;
+      }, [])
+      .join('');
+  }
+}
+
+/**
+ * Resolve "value" to string if possible
+ *
+ * @param { any } value
+ * @param { NodePart } part
+ * @returns { any }
+ */
+function resolveNodeValue(value, part) {
+  if (isDirective(value)) {
+    value = getDirectiveValue(value, part);
+  }
+
+  if (value === nothingString || value === undefined) {
     return '';
   }
 
   // Pass-through template result
-  if (value instanceof TemplateResult) {
+  if (isTemplateResult(value)) {
     return value;
   } else if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
     // Escape if not prefixed with unsafeStringPrefix, otherwise strip prefix
     return string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string);
   } else if (isPromise(value)) {
-    return value.then((value) => resolveValue(value, part, ignoreNothingAndUndefined));
+    return value.then((value) => resolveNodeValue(value, part));
   } else if (isSyncIterator(value)) {
     if (!Array.isArray(value)) {
       value = Array.from(value);
     }
     return value.reduce((values, value) => {
-      value = resolveValue(value, part, ignoreNothingAndUndefined);
+      value = resolveNodeValue(value, part);
       // Flatten
       if (Array.isArray(value)) {
         return values.concat(value);

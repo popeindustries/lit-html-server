@@ -1,7 +1,12 @@
 /**
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
-import { isPromise } from './is.js';
+/**
+ * @typedef TemplateResultProcessor { import('./default-template-result-processor.js).TemplateResultProcessor }
+ */
+/**
+ * @typedef TemplateResultRenderer { import('./default-template-result-renderer.js).TemplateResultRenderer }
+ */
 
 /**
  * A class for rendering a template result to a string resolving Promise
@@ -11,37 +16,31 @@ export class PromiseTemplateRenderer {
    * Constructor
    *
    * @param { TemplateResult } result
-   * @param { object } [options]
-   * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
+   * @param { TemplateResultProcessor } processor
    * @returns { Promise<string> }
    */
-  constructor(result, options = { destructive: true }) {
-    return reduce(options.destructive ? result : result.slice());
+  constructor(result, processor) {
+    return new Promise((resolve, reject) => {
+      let buffer = '';
+
+      processor.process(
+        {
+          awaitingPromise: false,
+          push(chunk) {
+            if (chunk === null) {
+              resolve(buffer);
+            } else {
+              buffer += chunk;
+            }
+            return true;
+          },
+          destroy(err) {
+            buffer = '';
+            reject(err);
+          }
+        },
+        [result]
+      );
+    });
   }
-}
-
-/**
- * Reduce TemplateResult to a single string resolving Promise
- *
- * @param { TemplateResult } stack
- * @returns { Promise<string> }
- */
-async function reduce(stack) {
-  let buffer = '';
-  let chunk;
-
-  while ((chunk = stack.shift()) !== undefined) {
-    if (typeof chunk === 'string') {
-      buffer += chunk;
-      chunk = '';
-    } else if (Array.isArray(chunk)) {
-      stack = chunk.concat(stack);
-    } else if (isPromise(chunk)) {
-      stack.unshift(await chunk);
-    } else {
-      throw Error('unknown value type:', chunk);
-    }
-  }
-
-  return buffer;
 }

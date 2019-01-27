@@ -1,86 +1,108 @@
 /**
  * @typedef TemplateResultProcessor
- * @property { (template: Template, values: Array<any>) => TemplateResult } processTemplate
+ * @property { (renderer: TemplateResultRenderer, stack: Array<any>) => void } process
  */
 /**
- * @typedef Template { import('./template.js).Template }
- * @typedef TemplateResult { import('./template-result.js).TemplateResult }
+ * @typedef TemplateResultRenderer
+ * @property { boolean } awaitingPromise
+ * @property { (chunk: string) => boolean } push
+ * @property { (err: Error) => void } destroy
  */
-import { AttributePart } from './parts.js';
 import { isPromise } from './is.js';
+import { isTemplateResult } from './template-result.js';
 
 /**
- * Class representing the default template result processor.
+ * Class for the default TemplateResult processor
+ * used by Promise/Stream TemplateRenderers.
+ *
  * @implements TemplateResultProcessor
  */
 export class DefaultTemplateResultProcessor {
   /**
-   * Create template result array from "template" instance and dynamic "values".
-   * The returned array contains Template "strings" concatenated with known string "values",
-   * and any Promises that will eventually resolve asynchronous string "values".
-   * A synchronous template tree will reduce to an array containing a single string.
-   * An asynchronous template tree will reduce to an array of strings and Promises.
+   * Process "stack" and push chunks to "renderer"
    *
-   * @param { Template } template
-   * @param { Array<any> } values
-   * @returns { TemplateResult }
+   * @param { TemplateResultRenderer } renderer
+   * @param { Array<any> } stack
    */
-  processTemplate(template, values) {
-    const { strings, parts } = template;
-    const endIndex = strings.length - 1;
-    const result = [];
-    let buffer = '';
+  process(renderer, stack) {
+    while (!renderer.awaitingPromise) {
+      let chunk = stack[0];
+      let breakLoop = false;
+      let popStack = true;
 
-    for (let i = 0; i < endIndex; i++) {
-      const string = strings[i];
-      const part = parts[i];
-      let value = values[i];
-
-      buffer += string;
-
-      if (part instanceof AttributePart) {
-        // AttributeParts can have multiple values, so slice based on length
-        // (strings in-between values are already stored in the instance)
-        if (part.length > 1) {
-          value = part.getValue(values.slice(i, i + part.length));
-          i += part.length - 1;
-        } else {
-          value = part.getValue([value]);
-        }
-      } else {
-        value = part.getValue(value);
+      if (chunk === undefined) {
+        return renderer.push(null);
       }
 
-      if (typeof value === 'string') {
-        buffer += value;
-      } else {
-        buffer = reduce(buffer, result, value);
+      if (isTemplateResult(chunk)) {
+        popStack = false;
+        chunk = getTemplateResultChunk(chunk, stack);
+      }
+
+      // Skip if finished reading TemplateResult (null) or empty string
+      if (chunk !== null && chunk !== '') {
+        if (typeof chunk === 'string') {
+          if (!renderer.push(chunk)) {
+            breakLoop = true;
+          }
+        } else if (isPromise(chunk)) {
+          breakLoop = true;
+          renderer.awaitingPromise = true;
+          stack.unshift(chunk);
+          chunk
+            .then((chunk) => {
+              renderer.awaitingPromise = false;
+              stack[0] = chunk;
+              this.process(renderer, stack);
+            })
+            .catch((err) => {
+              renderer.destroy(err);
+            });
+        } else if (Array.isArray(chunk)) {
+          popStack = false;
+          stack = chunk.concat(stack);
+        } else {
+          return renderer.destroy(Error('unknown chunk type:', chunk));
+        }
+      }
+
+      if (popStack) {
+        stack.shift();
+      }
+
+      if (breakLoop) {
+        break;
       }
     }
-
-    buffer += strings[endIndex];
-    result.push(buffer);
-
-    return result;
   }
 }
 
 /**
- * Commit value to string "buffer"
+ * Retrieve next chunk from "result".
+ * Adds nested TemplateResults to the stack if necessary.
  *
- * @param { string } buffer
  * @param { TemplateResult } result
- * @param { any } value
- * @returns { string }
+ * @param { Array<any> } stack
  */
-function reduce(buffer, result, value) {
-  if (typeof value === 'string') {
-    buffer += value;
-    return buffer;
-  } else if (Array.isArray(value)) {
-    return value.reduce((buffer, value) => reduce(buffer, result, value), buffer);
-  } else if (isPromise(value)) {
-    result.push(buffer, value);
-    return '';
+function getTemplateResultChunk(result, stack) {
+  let chunk = result.readChunk();
+
+  // Skip empty strings
+  if (chunk === '') {
+    chunk = result.readChunk();
   }
+
+  // Handle nested result
+  if (isTemplateResult(chunk)) {
+    // Add to top of stack
+    stack.unshift(chunk);
+    chunk = getTemplateResultChunk(chunk, stack);
+  }
+
+  // Finished reading, dispose
+  if (chunk === null) {
+    stack.shift();
+  }
+
+  return chunk;
 }

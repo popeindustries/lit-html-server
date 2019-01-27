@@ -2,12 +2,12 @@
  * @typedef Readable { import('stream').Readable }
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
+import { isTemplateResult, templateResult } from './template-result.js';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
 import { PromiseTemplateRenderer } from './promise-template-renderer.js';
 import { StreamTemplateRenderer } from './stream-template-renderer.js';
 import { Template } from './template.js';
-import { TemplateResult } from './template-result.js';
 
 export { AttributePart, NodePart, nothingString, unsafeStringPrefix } from './parts.js';
 export { directive } from './directive.js';
@@ -15,6 +15,7 @@ export {
   defaultTemplateProcessor,
   defaultTemplateResultProcessor,
   html,
+  isTemplateResult,
   renderToStream,
   renderToString,
   html as svg,
@@ -41,35 +42,27 @@ function html(strings, ...values) {
     templateCache.set(strings, template);
   }
 
-  return new TemplateResult(template, values, defaultTemplateResultProcessor);
+  return templateResult(template, values);
 }
 
 /**
  * Render a template result to a Readable stream
- * Note that, by default, the "result" will be emptied of elements during render,
- * and should be considered single use.
- * Set "options.destructive = false" to allow for reuse.
+ * *Note* that TemplateResults are single use, and can only be rendered once.
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
- * @param { object } [options]
- * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
  * @returns { Readable }
  */
-function renderToStream(result, options) {
-  return new StreamTemplateRenderer(result, options);
+function renderToStream(result) {
+  return new StreamTemplateRenderer(result, defaultTemplateResultProcessor);
 }
 
 /**
  * Render a template result to a string resolving Promise.
- * Note that, by default, the "result" will be emptied of elements during render,
- * and should be considered single use.
- * Set "options.destructive = false" to allow for reuse.
+ * *Note* that TemplateResults are single use, and can only be rendered once.
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
- * @param { object } [options]
- * @param { object } [options.destructive = true] - destroy "result" while rendering ("true"), or operate on a shallow copy ("false")
  * @returns { Promise<string> }
  */
-function renderToString(result, options) {
-  return new PromiseTemplateRenderer(result, options);
+function renderToString(result) {
+  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor);
 }
