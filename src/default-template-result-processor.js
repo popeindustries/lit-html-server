@@ -56,6 +56,7 @@ export class DefaultTemplateResultProcessor {
               this.process(renderer, stack);
             })
             .catch((err) => {
+              destroy(stack);
               renderer.destroy(err);
             });
         } else if (Array.isArray(chunk)) {
@@ -63,6 +64,7 @@ export class DefaultTemplateResultProcessor {
           stack.shift();
           stack = chunk.concat(stack);
         } else {
+          destroy(stack);
           return renderer.destroy(Error('unknown chunk type:', chunk));
         }
       }
@@ -73,6 +75,21 @@ export class DefaultTemplateResultProcessor {
 
       if (breakLoop) {
         break;
+      }
+    }
+  }
+}
+
+/**
+ * Destroy all remaining TemplateResults in "stack"
+ *
+ * @param { Array<any> } stack
+ */
+function destroy(stack) {
+  if (stack.length > 0) {
+    for (const chunk of stack) {
+      if (isTemplateResult(chunk)) {
+        chunk.destroy(true);
       }
     }
   }

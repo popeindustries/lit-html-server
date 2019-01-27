@@ -2,6 +2,7 @@ import { AttributePart } from './parts.js';
 import { isPromise } from './is.js';
 
 const pool = [];
+let id = 0;
 
 /**
  * Retrieve TemplateResult instance.
@@ -48,6 +49,7 @@ class TemplateResult {
   constructor(template, values) {
     this.template = template;
     this.values = values;
+    this.id = id++;
     this.index = 0;
   }
 
@@ -56,7 +58,7 @@ class TemplateResult {
    * *Note* that instances may only be read once,
    * and will be destroyed upon completion.
    *
-   * @param { boolean } deep - recursively read nested TemplateResults
+   * @param { boolean } deep - recursively resolve nested TemplateResults
    * @returns { any }
    */
   read(deep) {
@@ -94,7 +96,7 @@ class TemplateResult {
     const index = (this.index / 2) | 0;
 
     if (!isString && index >= this.template.strings.length - 1) {
-      destroy(this);
+      this.destroy();
       return null;
     }
 
@@ -121,6 +123,32 @@ class TemplateResult {
     }
 
     return value;
+  }
+
+  /**
+   * Destroy the instance,
+   * returning it to the object pool
+   *
+   * @param { boolean } permanent - permanently destroy instance and it's children
+   * @returns { void }
+   */
+  destroy(permanent) {
+    if (this.values !== undefined) {
+      if (permanent) {
+        for (const value of this.values) {
+          if (isTemplateResult(value)) {
+            value.destroy(permanent);
+          }
+        }
+      }
+      this.values.length = 0;
+    }
+    this.values = undefined;
+    this.template = undefined;
+    this.index = 0;
+    if (!permanent) {
+      pool.push(this);
+    }
   }
 }
 
@@ -151,16 +179,4 @@ function reduce(buffer, chunks, chunk, deep = false) {
     chunks.push(buffer, chunk);
     return '';
   }
-}
-
-/**
- * Destroy the TemplateResult instance,
- * returning it to the object pool
- */
-function destroy(result) {
-  result.values.length = 0;
-  result.values = null;
-  result.template = null;
-  result.index = 0;
-  pool.push(result);
 }

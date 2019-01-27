@@ -21,6 +21,7 @@ export class PromiseTemplateRenderer {
    */
   constructor(result, processor) {
     return new Promise((resolve, reject) => {
+      const stack = [result];
       let buffer = '';
 
       processor.process(
@@ -39,7 +40,7 @@ export class PromiseTemplateRenderer {
             reject(err);
           }
         },
-        [result]
+        stack
       );
     });
   }

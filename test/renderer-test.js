@@ -132,10 +132,31 @@ describe('Template render', () => {
       const result = h`text`;
       const expected = 'text';
       expect(await getStream(renderToStream(result))).to.equal(expected);
-      expect(result).to.have.property('template', null);
-      expect(result).to.have.property('values', null);
+      expect(result).to.have.property('template', undefined);
+      expect(result).to.have.property('values', undefined);
     });
-    it('should destroy template result on error');
+    it('should destroy template result on error', async () => {
+      const result = () => h`oops! ${h`${Promise.reject(Error('errored!'))}`}`;
+      let chunks;
+      try {
+        chunks = result();
+        const html = await renderToString(chunks);
+        expect(html).to.not.exist;
+      } catch (err) {
+        expect(chunks).to.have.property('template', undefined);
+        expect(chunks).to.have.property('values', undefined);
+        expect(err).to.have.property('message', 'errored!');
+      }
+      try {
+        chunks = result();
+        const html = await getStream(renderToStream(chunks));
+        expect(html).to.not.exist;
+      } catch (err) {
+        expect(chunks).to.have.property('template', undefined);
+        expect(chunks).to.have.property('values', undefined);
+        expect(err).to.have.property('message', 'errored!');
+      }
+    });
   });
 
   describe('attributes', () => {
