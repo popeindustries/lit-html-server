@@ -3,9 +3,9 @@
 
 # lit-html-server
 
-Render [**lit-html**](https://polymer.github.io/lit-html/) templates on the server as Node.js streams. Supports all **lit-html** types, special attribute expressions, and most of the standard directives.
+Render [**lit-html**](https://polymer.github.io/lit-html/) templates on the server as Node.js streams. Supports all **lit-html** types, special attribute expressions, and many of the standard directives.
 
-> Although based on **lit-html** semantics, **lit-html-server** is a great general purpose HTML template streaming library. Tagged template literals are a native JavaScript feature, and the HTML rendered is 100% standard markup, with no special syntax or client-side runtime required.
+> Although based on **lit-html** semantics, **lit-html-server** is a great general purpose HTML template streaming library. Tagged template literals are a native JavaScript feature, and the HTML rendered is 100% standard markup, with no special syntax or client-side runtime required!
 
 ## Usage
 
@@ -49,13 +49,20 @@ async function body(apiPath) {
 }
 ```
 
-...and render:
+...and render (plain HTTP server example, though similar for Express/Fastify/etc):
 
 ```js
+const http = require('http');
 const { renderToStream } = require('@popeindustries/lit-html-server');
 
-// Returns a Node.js Readable stream which can be piped to `response`
-renderToStream(layout({ title: 'Home', api: '/api/home' }));
+http
+  .createServer((request, response) => {
+    const data = { title: 'Home', api: '/api/home' };
+
+    res.writeHead(200);
+    // Returns a Node.js Readable stream which can be piped to "response"
+    renderToStream(layout(data)).pipe(response);
+  }
 ```
 
 ## API
@@ -85,7 +92,7 @@ html`
 Returns the result of the template tagged by `html` as a Node.js `Readable` stream of markup.
 
 ```js
-render(
+renderToStream(
   html`
     <h1>Hello ${name}!</h1>
   `
@@ -102,6 +109,7 @@ const markup = await renderToString(
     <h1>Hello ${name}!</h1>
   `
 );
+response.end(markup);
 ```
 
 ## Writing templates
@@ -156,7 +164,7 @@ html`
 html`
   <input .value="${value}" />
 `;
-//=> <input >
+//=> <input />
 ```
 
 - event handler (attribute markup removed):
@@ -223,6 +231,30 @@ html`
 
 Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server context):
 
+- `cache(value)`: Enables fast switching between multiple templates by caching previous results. Since it's generally not desireable to cache between requests, this is a no-op:
+
+```js
+const cache = require('@popeindustries/lit-html-server/directives/cache.js');
+cache(
+  loggedIn
+    ? html`
+        You are logged in
+      `
+    : html`
+        Please log in
+      `
+);
+```
+
+- `classMap(classInfo)`: applies css classes to the `class` attribute. 'classInfo' keys are added as class names if values are truthy:
+
+```js
+const classMap = require('@popeindustries/lit-html-server/directives/class-map.js');
+html`
+  <div class="${classMap({ red: true })}"></div>
+`;
+```
+
 - `guard(value, fn)`: no-op since re-rendering does not apply (renders result of `fn`):
 
 ```js
@@ -268,6 +300,15 @@ html`
 `;
 ```
 
+- `styleMap(styleInfo)`: applies css properties to the `style` attribute. 'styleInfo' keys and values are added as style properties:
+
+```js
+const styleMap = require('@popeindustries/lit-html-server/directives/style-map.js');
+html`
+  <div style="${styleMap({ color: 'red' })}"></div>
+`;
+```
+
 - `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive sync values are prioritised over async Promises, unless there are no more pending values, in which case the last value is rendered regardless of type:
 
 ```js
@@ -297,39 +338,6 @@ html`
   </p>
 `;
 // => renders fetch result
-```
-
-- `classMap(classInfo)`: applies css classes to the `class` attribute. 'classInfo' keys are added as class names if values are truthy:
-
-```js
-const classMap = require('@popeindustries/lit-html-server/directives/class-map.js');
-html`
-  <div class="${classMap({ red: true })}"></div>
-`;
-```
-
-- `styleMap(styleInfo)`: applies css properties to the `style` attribute. 'styleInfo' keys and values are added as style properties:
-
-```js
-const styleMap = require('@popeindustries/lit-html-server/directives/style-map.js');
-html`
-  <div style="${styleMap({ color: 'red' })}"></div>
-`;
-```
-
-- `cache(value)`: Enables fast switching between multiple templates by caching previous results. Since it's generally not desireable to cache between requests, this is a no-op:
-
-```js
-const cache = require('@popeindustries/lit-html-server/directives/cache.js');
-cache(
-  loggedIn
-    ? html`
-        You are logged in
-      `
-    : html`
-        Please log in
-      `
-);
 ```
 
 ## Thanks!
