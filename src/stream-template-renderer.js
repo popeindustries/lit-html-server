@@ -48,6 +48,7 @@ export class StreamTemplateRenderer extends Readable {
     }
     this.emit('close');
 
+    this.stack.length = 0;
     this.stack = [];
     this.processor = null;
     this.removeAllListeners();

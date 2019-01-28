@@ -2,7 +2,6 @@
 
 const { html, renderToStream, renderToString } = require('../index.js');
 const http = require('http');
-// const lorem = require('lorem-ipsum');
 
 http
   .createServer((req, res) => {
