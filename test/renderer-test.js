@@ -3,7 +3,7 @@ import { html as h, renderToStream, renderToString } from '../src/index.js';
 import { expect } from 'chai';
 import getStream from 'get-stream';
 
-describe.only('Template render', () => {
+describe('Template render', () => {
   describe('text', () => {
     it('should render a plain text template', async () => {
       const result = () => h`text`;

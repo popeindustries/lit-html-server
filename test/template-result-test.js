@@ -6,53 +6,53 @@ describe('Template Result', () => {
   describe('text', () => {
     it('should process a plain text template', () => {
       const result = h`text`;
-      expect(result.read()).to.equal('text');
+      expect(result.read().toString()).to.equal('text');
     });
     it('should process a template with value', () => {
       const result = h`some ${'text'} here`;
-      expect(result.read()).to.equal('some text here');
+      expect(result.read().toString()).to.equal('some text here');
     });
     it('should process a template with number value', async () => {
       const result = h`some number ${1}`;
-      expect(result.read()).to.equal('some number 1');
+      expect(result.read().toString()).to.equal('some number 1');
     });
     it('should process a template with boolean value', async () => {
       const result = h`this is ${true}`;
-      expect(result.read()).to.equal('this is true');
+      expect(result.read().toString()).to.equal('this is true');
     });
     it('should process a template with null value', async () => {
       const result = h`${null}`;
-      expect(result.read()).to.equal('null');
+      expect(result.read().toString()).to.equal('null');
     });
     it('should process a template with undefined value', async () => {
       const result = h`${undefined}`;
-      expect(result.read()).to.equal('');
+      expect(result.read().toString()).to.equal('');
     });
     it('should process a template with array value', async () => {
       const result = h`some numbers ${[1, 2, 3]}`;
-      expect(result.read()).to.equal('some numbers 123');
+      expect(result.read().toString()).to.equal('some numbers 123');
     });
     it('should process a template with deeply nested array value', async () => {
       const result = h`a lot of numbers ${[1, 2, [3, [4, 5]]]} here`;
-      expect(result.read()).to.equal('a lot of numbers 12345 here');
+      expect(result.read().toString()).to.equal('a lot of numbers 12345 here');
     });
     it('should process a template with nested template value', () => {
       const result = h`some nested ${h`text`}`;
-      expect(result.read(true)).to.equal('some nested text');
+      expect(result.read(true).toString()).to.equal('some nested text');
     });
     it('should process a template with Promise value', async () => {
       const result = h`some ${Promise.resolve('text')} here`;
       const chunks = result.read();
-      expect(chunks[0]).to.equal('some ');
-      expect(await chunks[1]).to.equal('text');
-      expect(chunks[2]).to.equal(' here');
+      expect(chunks[0].toString()).to.equal('some ');
+      expect((await chunks[1]).toString()).to.equal('text');
+      expect(chunks[2].toString()).to.equal(' here');
     });
     it('should process a template with nested template with Promise value', async () => {
       const result = h`some nested ${h`${Promise.resolve('text')} in here too`}`;
       const chunks = result.read(true);
-      expect(chunks[0]).to.equal('some nested ');
-      expect(await chunks[1]).to.equal('text');
-      expect(chunks[2]).to.equal(' in here too');
+      expect(chunks[0].toString()).to.equal('some nested ');
+      expect((await chunks[1]).toString()).to.equal('text');
+      expect(chunks[2].toString()).to.equal(' in here too');
     });
   });
 
@@ -60,51 +60,51 @@ describe('Template Result', () => {
     it('should process a template with quoted attribute value', () => {
       const value = 'text';
       const result = h`<div a="${value}"></div>`;
-      expect(result.read()).to.equal('<div a="text"></div>');
+      expect(result.read().toString()).to.equal('<div a="text"></div>');
     });
     it('should process a template with unquoted attribute value', () => {
       const value = 'text';
       const result = h`<div a=${value}></div>`;
-      expect(result.read()).to.equal('<div a="text"></div>');
+      expect(result.read().toString()).to.equal('<div a="text"></div>');
     });
     it('should process a template with quoted attribute value and extra whitespace', () => {
       const value = 'text';
       const result = h`<div a = " ${value} "></div>`;
-      expect(result.read()).to.equal('<div a=" text "></div>');
+      expect(result.read().toString()).to.equal('<div a=" text "></div>');
     });
     it('should process a template with quoted attribute value and extra strings', () => {
       const value = 'text';
       const result = h`<div a="some ${value}"></div>`;
-      expect(result.read()).to.equal('<div a="some text"></div>');
+      expect(result.read().toString()).to.equal('<div a="some text"></div>');
     });
     it('should process a template with quoted attribute and multiple strings/values', () => {
       const value = 'text';
       const result = h`<div a="this is ${'some'} ${value}">${'node'}</div>`;
-      expect(result.read()).to.equal('<div a="this is some text">node</div>');
+      expect(result.read().toString()).to.equal('<div a="this is some text">node</div>');
     });
     it('should process a template with boolean attribute value', () => {
       const value = true;
       const result = h`<div ?a="${value}"></div>`;
-      expect(result.read()).to.equal('<div a></div>');
+      expect(result.read().toString()).to.equal('<div a></div>');
     });
     it('should process a template with event attribute value', () => {
       const result = h`<div @a="${'some event'}"></div>`;
-      expect(result.read()).to.equal('<div ></div>');
+      expect(result.read().toString()).to.equal('<div ></div>');
     });
     it('should process a template with property attribute value', () => {
       const result = h`<div .a="${'some prop'}"></div>`;
-      expect(result.read()).to.equal('<div ></div>');
+      expect(result.read().toString()).to.equal('<div ></div>');
     });
     it('should process a template with nested template attribute value', () => {
       const result = h`<div a="some ${h`text`}"></div>`;
-      expect(result.read()).to.equal('<div a="some text"></div>');
+      expect(result.read().toString()).to.equal('<div a="some text"></div>');
     });
     it('should process a template with Promise attribute value', async () => {
       const result = h`<div a="some ${Promise.resolve('text')}"></div>`;
       const chunks = result.read();
-      expect(chunks[0]).to.equal('<div ');
-      expect(await chunks[1]).to.equal('a="some text"');
-      expect(chunks[2]).to.equal('></div>');
+      expect(chunks[0].toString()).to.equal('<div ');
+      expect((await chunks[1]).toString()).to.equal('a="some text"');
+      expect(chunks[2].toString()).to.equal('></div>');
     });
   });
 });
