@@ -25,16 +25,14 @@ export class StreamTemplateRenderer extends Readable {
   constructor(result, processor) {
     super({ autoDestroy: true });
 
-    this.awaitingPromise = false;
-    this.processor = processor;
-    this.stack = [result];
+    this.process = processor.getProcessor(this, [result], 16384);
   }
 
   /**
    * Extend Readable.read()
    */
   _read() {
-    this.processor.process(this, this.stack);
+    this.process();
   }
 
   /**
@@ -48,9 +46,7 @@ export class StreamTemplateRenderer extends Readable {
     }
     this.emit('close');
 
-    this.stack.length = 0;
-    this.stack = [];
-    this.processor = null;
+    this.process = null;
     this.removeAllListeners();
   }
 }

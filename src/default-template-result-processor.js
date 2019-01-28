@@ -1,10 +1,9 @@
 /**
  * @typedef TemplateResultProcessor
- * @property { (renderer: TemplateResultRenderer, stack: Array<any>) => void } process
+ * @property { (renderer: TemplateResultRenderer, stack: Array<any>, [highWaterMark: number]) => function } getProcessor
  */
 /**
  * @typedef TemplateResultRenderer
- * @property { boolean } awaitingPromise
  * @property { (chunk: Buffer) => boolean } push
  * @property { (err: Error) => void } destroy
  */
@@ -23,64 +22,91 @@ export class DefaultTemplateResultProcessor {
    *
    * @param { TemplateResultRenderer } renderer
    * @param { Array<any> } stack
+   * @param { number } [highWaterMark] - byte length to buffer before pushing data
+   * @returns { () => void }
    */
-  process(renderer, stack) {
-    while (!renderer.awaitingPromise) {
-      let chunk = stack[0];
-      let breakLoop = false;
-      let popStack = true;
+  getProcessor(renderer, stack, highWaterMark = 0) {
+    const buffer = [];
+    let bufferLength = 0;
+    let awaitingPromise = false;
 
-      if (chunk === undefined) {
-        return renderer.push(null);
-      }
+    return function process() {
+      while (!awaitingPromise) {
+        let chunk = stack[0];
+        let breakLoop = false;
+        let popStack = true;
 
-      if (isTemplateResult(chunk)) {
-        popStack = false;
-        chunk = getTemplateResultChunk(chunk, stack);
-      }
+        if (chunk === undefined) {
+          if (highWaterMark > 0 && buffer.length > 0) {
+            renderer.push(Buffer.concat(buffer));
+          }
+          return renderer.push(null);
+        }
 
-      // Skip if finished reading TemplateResult (null)
-      if (chunk !== null) {
-        if (Buffer.isBuffer(chunk)) {
-          if (!renderer.push(chunk)) {
+        if (isTemplateResult(chunk)) {
+          popStack = false;
+          chunk = getTemplateResultChunk(chunk, stack);
+        }
+
+        // Skip if finished reading TemplateResult (null)
+        if (chunk !== null) {
+          if (Buffer.isBuffer(chunk)) {
+            // Buffer if respecting highWaterMark
+            if (highWaterMark > 0) {
+              buffer.push(chunk);
+              bufferLength += chunk.length;
+              if (bufferLength > highWaterMark) {
+                chunk = Buffer.concat(buffer);
+                buffer.length = 0;
+                bufferLength = 0;
+                // Pause if backpressure triggered
+                if (!renderer.push(chunk)) {
+                  breakLoop = true;
+                }
+              }
+            } else {
+              // Pause if backpressure triggered
+              if (!renderer.push(chunk)) {
+                breakLoop = true;
+              }
+            }
+          } else if (isPromise(chunk)) {
             breakLoop = true;
+            awaitingPromise = true;
+            stack.unshift(chunk);
+            chunk
+              .then((chunk) => {
+                awaitingPromise = false;
+                stack[0] = chunk;
+                process();
+              })
+              .catch((err) => {
+                destroy(stack);
+                renderer.destroy(err);
+              });
+          } else if (Array.isArray(chunk)) {
+            // An existing TemplateResult will have already set this to "false",
+            // so only remove existing Array if there is no active TemplateResult
+            if (popStack === true) {
+              popStack = false;
+              stack.shift();
+            }
+            stack.unshift(...chunk);
+          } else {
+            destroy(stack);
+            return renderer.destroy(Error('unknown chunk type:', chunk));
           }
-        } else if (isPromise(chunk)) {
-          breakLoop = true;
-          renderer.awaitingPromise = true;
-          stack.unshift(chunk);
-          chunk
-            .then((chunk) => {
-              renderer.awaitingPromise = false;
-              stack[0] = chunk;
-              this.process(renderer, stack);
-            })
-            .catch((err) => {
-              destroy(stack);
-              renderer.destroy(err);
-            });
-        } else if (Array.isArray(chunk)) {
-          // An existing TemplateResult will have already set this to "false",
-          // so only remove existing Array if there is no active TemplateResult
-          if (popStack === true) {
-            popStack = false;
-            stack.shift();
-          }
-          stack.unshift(...chunk);
-        } else {
-          destroy(stack);
-          return renderer.destroy(Error('unknown chunk type:', chunk));
+        }
+
+        if (popStack) {
+          stack.shift();
+        }
+
+        if (breakLoop) {
+          break;
         }
       }
-
-      if (popStack) {
-        stack.shift();
-      }
-
-      if (breakLoop) {
-        break;
-      }
-    }
+    };
   }
 }
 
@@ -98,6 +124,7 @@ function destroy(stack) {
       }
     }
   }
+  stack.length = 0;
 }
 
 /**

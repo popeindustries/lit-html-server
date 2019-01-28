@@ -24,9 +24,8 @@ export class PromiseTemplateRenderer {
       let stack = [result];
       let chunks = [];
 
-      processor.process(
+      processor.getProcessor(
         {
-          awaitingPromise: false,
           push(chunk) {
             if (chunk === null) {
               resolve(Buffer.concat(chunks).toString());
@@ -44,7 +43,7 @@ export class PromiseTemplateRenderer {
           }
         },
         stack
-      );
+      )();
     });
   }
 }
