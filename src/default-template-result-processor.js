@@ -66,7 +66,7 @@ export class DefaultTemplateResultProcessor {
             popStack = false;
             stack.shift();
           }
-          stack = chunk.concat(stack);
+          stack.unshift(...chunk);
         } else {
           destroy(stack);
           return renderer.destroy(Error('unknown chunk type:', chunk));
@@ -115,16 +115,13 @@ function getTemplateResultChunk(result, stack) {
     chunk = result.readChunk();
   }
 
-  // Handle nested result
-  if (isTemplateResult(chunk)) {
-    // Add to top of stack
-    stack.unshift(chunk);
-    chunk = getTemplateResultChunk(chunk, stack);
-  }
-
   // Finished reading, dispose
   if (chunk === null) {
     stack.shift();
+  } else if (isTemplateResult(chunk)) {
+    // Add to top of stack
+    stack.unshift(chunk);
+    chunk = getTemplateResultChunk(chunk, stack);
   }
 
   return chunk;
