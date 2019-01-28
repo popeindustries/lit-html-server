@@ -1,17 +1,8 @@
+import { emptyStringBuffer, nothingString, unsafeStringPrefix } from './string.js';
 import { isPrimitive, isPromise, isSyncIterator } from './is.js';
 import escapeHTML from './escape.js';
 import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';
-
-/**
- * A value for strings that signals a Part to clear its content
- */
-export const nothingString = '__nothing-lit-html-server-string__';
-
-/**
- * A prefix value for strings that should not be escaped
- */
-export const unsafeStringPrefix = '__unsafe-lit-html-server-string__';
 
 /**
  * Base class interface for Node/Attribute parts
@@ -75,50 +66,48 @@ export class AttributePart extends Part {
    * Constructor
    *
    * @param { string } name
-   * @param { Array<string> } strings
+   * @param { Array<Buffer> } strings
    */
   constructor(name, strings) {
     super();
     this.name = name;
     this.strings = strings;
     this.length = strings.length - 1;
+    this.prefix = Buffer.from(`${this.name}="`);
+    this.suffix = Buffer.from(`${this.strings[this.length]}"`);
   }
 
   /**
-   * Retrieve resolved string from passed "values".
+   * Retrieve resolved string Buffer from passed "values".
    * Resolves to a single string, or Promise for a single string,
    * even when responsible for multiple values.
    *
    * @param { Array<any> } values
-   * @returns { string|Promise<string> }
+   * @returns { Buffer|Promise<Buffer> }
    */
   getValue(values) {
-    const endIndex = this.strings.length - 1;
-    let buffer = `${this.name}="`;
-    let chunks, pendingChunks;
+    let chunks = [this.prefix];
+    let pendingChunks;
 
-    for (let i = 0; i < endIndex; i++) {
+    for (let i = 0; i < this.length; i++) {
       const string = this.strings[i];
       let value = resolveAttributeValue(values[i], this);
 
-      buffer += string;
-
       // Bail if 'nothing'
       if (value === nothingString) {
-        return '';
+        return emptyStringBuffer;
       }
 
-      if (typeof value === 'string') {
-        buffer += value;
+      chunks.push(string);
+
+      if (Buffer.isBuffer(value)) {
+        chunks.push(value);
       } else if (isPromise(value)) {
         // Lazy init for uncommon scenario
-        if (chunks === undefined) {
-          chunks = [];
+        if (pendingChunks === undefined) {
           pendingChunks = [];
         }
 
-        chunks.push(buffer);
-        buffer = '';
         const index = chunks.push(value) - 1;
 
         pendingChunks.push(
@@ -127,18 +116,16 @@ export class AttributePart extends Part {
           })
         );
       } else if (Array.isArray(value)) {
-        buffer += value.join('');
+        chunks = chunks.concat(value);
       }
     }
 
-    buffer += `${this.strings[endIndex]}"`;
+    chunks.push(this.suffix);
 
     if (pendingChunks !== undefined) {
-      chunks.push(buffer);
-      return Promise.all(pendingChunks).then(() => chunks.join(''));
+      return Promise.all(pendingChunks).then(() => Buffer.concat(chunks));
     }
-
-    return buffer;
+    return Buffer.concat(chunks);
   }
 }
 
@@ -151,22 +138,28 @@ export class BooleanAttributePart extends AttributePart {
    * Constructor
    *
    * @param { string } name
-   * @param { Array<string> } strings
+   * @param { Array<Buffer> } strings
    * @throws error when multiple expressions
    */
   constructor(name, strings) {
     super(name, strings);
 
-    if (strings.length !== 2 || strings[0] !== '' || strings[1] !== '') {
+    this.name = Buffer.from(this.name);
+
+    if (
+      strings.length !== 2 ||
+      !strings[0].equals(emptyStringBuffer) ||
+      !strings[1].equals(emptyStringBuffer)
+    ) {
       throw Error('Boolean attributes can only contain a single expression');
     }
   }
 
   /**
-   * Retrieve resolved string from passed "values".
+   * Retrieve resolved string Buffer from passed "values".
    *
    * @param { Array<any> } values
-   * @returns { string|Promise<string> }
+   * @returns { Buffer|Promise<Buffer> }
    */
   getValue(values) {
     let value = values[0];
@@ -176,10 +169,10 @@ export class BooleanAttributePart extends AttributePart {
     }
 
     if (isPromise(value)) {
-      return value.then((value) => (value ? this.name : ''));
+      return value.then((value) => (value ? this.name : emptyStringBuffer));
     }
 
-    return value ? this.name : '';
+    return value ? this.name : emptyStringBuffer;
   }
 }
 
@@ -189,7 +182,7 @@ export class BooleanAttributePart extends AttributePart {
  */
 export class PropertyAttributePart extends AttributePart {
   /**
-   * Retrieve resolved string from passed "values".
+   * Retrieve resolved string Buffer from passed "values".
    * Properties have no server-side representation,
    * so always returns an empty string.
    *
@@ -197,7 +190,7 @@ export class PropertyAttributePart extends AttributePart {
    * @returns { string }
    */
   getValue(/* values */) {
-    return '';
+    return emptyStringBuffer;
   }
 }
 
@@ -207,7 +200,7 @@ export class PropertyAttributePart extends AttributePart {
  */
 export class EventAttributePart extends AttributePart {
   /**
-   * Retrieve resolved string from passed "values".
+   * Retrieve resolved string Buffer from passed "values".
    * Event bindings have no server-side representation,
    * so always returns an empty string.
    *
@@ -215,7 +208,7 @@ export class EventAttributePart extends AttributePart {
    * @returns { string }
    */
   getValue(/* values */) {
-    return '';
+    return emptyStringBuffer;
   }
 }
 
@@ -242,15 +235,19 @@ function resolveAttributeValue(value, part) {
   if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
     // Escape if not prefixed with unsafeStringPrefix, otherwise strip prefix
-    return string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string);
+    return Buffer.from(
+      string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string)
+    );
+  } else if (Buffer.isBuffer(value)) {
+    return value;
   } else if (isPromise(value)) {
     return value.then((value) => resolveAttributeValue(value, part));
   } else if (isSyncIterator(value)) {
     if (!Array.isArray(value)) {
       value = Array.from(value);
     }
-    return value
-      .reduce((values, value) => {
+    return Buffer.concat(
+      value.reduce((values, value) => {
         value = resolveAttributeValue(value, part);
         // Flatten
         if (Array.isArray(value)) {
@@ -259,12 +256,12 @@ function resolveAttributeValue(value, part) {
         values.push(value);
         return values;
       }, [])
-      .join('');
+    );
   }
 }
 
 /**
- * Resolve "value" to string if possible
+ * Resolve "value" to string Buffer if possible
  *
  * @param { any } value
  * @param { NodePart } part
@@ -276,16 +273,17 @@ function resolveNodeValue(value, part) {
   }
 
   if (value === nothingString || value === undefined) {
-    return '';
+    return emptyStringBuffer;
   }
 
-  // Pass-through template result
-  if (isTemplateResult(value)) {
-    return value;
-  } else if (isPrimitive(value)) {
+  if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
     // Escape if not prefixed with unsafeStringPrefix, otherwise strip prefix
-    return string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string);
+    return Buffer.from(
+      string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string)
+    );
+  } else if (isTemplateResult(value) || Buffer.isBuffer(value)) {
+    return value;
   } else if (isPromise(value)) {
     return value.then((value) => resolveNodeValue(value, part));
   } else if (isSyncIterator(value)) {
@@ -302,7 +300,8 @@ function resolveNodeValue(value, part) {
       return values;
     }, []);
   } else {
-    return value;
+    throw Error('unknown Node part value', value);
+    // return value;
   }
 }
 

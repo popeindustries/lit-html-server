@@ -1,6 +1,7 @@
 /**
  * @typedef TemplateProcessor { import('./default-template-processor.js').TemplateProcessor }
  */
+import { emptyStringBuffer } from './string.js';
 import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
 const RE_QUOTE = /"[^"]*|'[^']*$/;
@@ -63,7 +64,7 @@ export class Template {
           if (matchQuote) {
             const quoteCharacter = matchQuote[0].charAt(0);
             // Store any text between quote character and value
-            const attributeStrings = [suffix.slice(matchQuote.index + 1)];
+            const attributeStrings = [Buffer.from(suffix.slice(matchQuote.index + 1))];
             let open = true;
             skip = 0;
             let attributeString;
@@ -74,10 +75,10 @@ export class Template {
               const closingQuoteIndex = attributeString.indexOf(quoteCharacter);
 
               if (closingQuoteIndex === -1) {
-                attributeStrings.push(attributeString);
+                attributeStrings.push(Buffer.from(attributeString));
                 skip++;
               } else {
-                attributeStrings.push(attributeString.slice(0, closingQuoteIndex));
+                attributeStrings.push(Buffer.from(attributeString.slice(0, closingQuoteIndex)));
                 nextString = attributeString.slice(closingQuoteIndex + 1);
                 i += skip;
                 open = false;
@@ -86,24 +87,27 @@ export class Template {
 
             part = processor.handleAttributeExpressions(name, attributeStrings);
           } else {
-            part = processor.handleAttributeExpressions(name, ['', '']);
+            part = processor.handleAttributeExpressions(name, [
+              emptyStringBuffer,
+              emptyStringBuffer
+            ]);
           }
         }
       } else {
         part = processor.handleTextExpression();
       }
 
-      this.strings.push(string);
+      this.strings.push(Buffer.from(string));
       this.parts.push(part);
       // Add placehholders for strings/parts that wil be skipped due to multple values in a single AttributePart
       if (skip > 0) {
-        this.strings.push('');
+        this.strings.push(null);
         this.parts.push(null);
         skip = 0;
       }
     }
 
-    this.strings.push(nextString);
+    this.strings.push(Buffer.from(nextString));
   }
 }
 

@@ -9,7 +9,7 @@ const url = `http://localhost:3000?${async ? 'async' : ''}${
   buffer ? `${async ? '&' : ''}buffer` : ''
 }`;
 
-const child = fork(path.resolve(__dirname, './server.js'), { silent: true });
+const child = fork(path.resolve(__dirname, './server.js'), { silent: false });
 
 (async () => {
   await stress();

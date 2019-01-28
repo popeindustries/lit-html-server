@@ -2,7 +2,7 @@
 
 const { html, renderToStream, renderToString } = require('../index.js');
 const http = require('http');
-const lorem = require('lorem-ipsum');
+// const lorem = require('lorem-ipsum');
 
 http
   .createServer((req, res) => {
@@ -18,7 +18,16 @@ http
         res.end(html);
       });
     } else {
-      renderToStream(template(data)).pipe(res);
+      const stream = renderToStream(template(data));
+      stream.on('readable', () => {
+        let chunk;
+        while (null !== (chunk = stream.read())) {
+          res.write(chunk);
+        }
+      });
+      stream.on('end', () => {
+        res.end();
+      });
     }
   })
   .listen(3000);
@@ -82,7 +91,14 @@ function template(data) {
 
 function nestedTemplate(data) {
   const t = html`
-    ${lorem({ count: 2, units: 'paragraphs' })}
+    <p>
+      Lorem ipsum ${data.number} sit amet, consectetur adipiscing elit. Nunc molestie lacus eget
+      ipsum pellentesque, quis ullamcorper enim semper.
+    </p>
+    <p>
+      Lorem ipsum dolor sit ${data.number}, consectetur adipiscing elit. Nunc molestie lacus eget
+      ipsum pellentesque, quis ullamcorper enim semper.
+    </p>
   `;
   if (data.async) {
     return wait(t);

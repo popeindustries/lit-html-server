@@ -31,7 +31,7 @@ export class PromiseTemplateRenderer {
             if (chunk === null) {
               resolve(buffer);
             } else {
-              buffer += chunk;
+              buffer += chunk.toString();
             }
             return true;
           },

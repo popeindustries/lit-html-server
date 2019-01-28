@@ -8,6 +8,7 @@
  * @property { (chunk: string) => boolean } push
  * @property { (err: Error) => void } destroy
  */
+import { emptyStringBuffer } from './string.js';
 import { isPromise } from './is.js';
 import { isTemplateResult } from './template-result.js';
 
@@ -39,9 +40,9 @@ export class DefaultTemplateResultProcessor {
         chunk = getTemplateResultChunk(chunk, stack);
       }
 
-      // Skip if finished reading TemplateResult (null) or empty string
-      if (chunk !== null && chunk !== '') {
-        if (typeof chunk === 'string') {
+      // Skip if finished reading TemplateResult (null)
+      if (chunk !== null) {
+        if (Buffer.isBuffer(chunk)) {
           if (!renderer.push(chunk)) {
             breakLoop = true;
           }
@@ -85,7 +86,8 @@ export class DefaultTemplateResultProcessor {
 }
 
 /**
- * Destroy all remaining TemplateResults in "stack"
+ * Permanently destroy all remaining TemplateResults in "stack".
+ * (Triggered on error)
  *
  * @param { Array<any> } stack
  */
@@ -110,7 +112,7 @@ function getTemplateResultChunk(result, stack) {
   let chunk = result.readChunk();
 
   // Skip empty strings
-  if (chunk === '') {
+  if (Buffer.isBuffer(chunk) && chunk.equals(emptyStringBuffer)) {
     chunk = result.readChunk();
   }
 

@@ -1,4 +1,5 @@
 import { AttributePart } from './parts.js';
+import { emptyStringBuffer } from './string.js';
 import { isPromise } from './is.js';
 
 const pool = [];
@@ -62,12 +63,12 @@ class TemplateResult {
    * @returns { any }
    */
   read(deep) {
-    let buffer = '';
+    let buffer = emptyStringBuffer;
     let chunk, chunks;
 
     while ((chunk = this.readChunk()) !== null) {
-      if (typeof chunk === 'string') {
-        buffer += chunk;
+      if (Buffer.isBuffer(chunk)) {
+        buffer = Buffer.concat([buffer, chunk]);
       } else {
         if (chunks === undefined) {
           chunks = [];
@@ -95,6 +96,7 @@ class TemplateResult {
     const isString = this.index % 2 === 0;
     const index = (this.index / 2) | 0;
 
+    // Finished
     if (!isString && index >= this.template.strings.length - 1) {
       this.destroy();
       return null;
@@ -111,7 +113,7 @@ class TemplateResult {
 
     if (part instanceof AttributePart) {
       // AttributeParts can have multiple values, so slice based on length
-      // (strings in-between values are already stored in the instance)
+      // (strings in-between values are already handled the instance)
       if (part.length > 1) {
         value = part.getValue(this.values.slice(index, index + part.length));
         this.index += part.length;
@@ -156,27 +158,26 @@ class TemplateResult {
  * Commit "chunk" to string "buffer".
  * Returns new "buffer" value.
  *
- * @param { string } buffer
+ * @param { Buffer } buffer
  * @param { Array<any> } chunks
  * @param { any } chunk
  * @param { boolean } [deep]
- * @returns { string }
+ * @returns { Buffer }
  */
 function reduce(buffer, chunks, chunk, deep = false) {
-  if (typeof chunk === 'string') {
-    buffer += chunk;
-    return buffer;
+  if (Buffer.isBuffer(chunk)) {
+    return Buffer.concat([buffer, chunk]);
   } else if (isTemplateResult(chunk)) {
     if (deep) {
       return reduce(buffer, chunks, chunk.read(deep), deep);
     } else {
       chunks.push(buffer, chunk);
-      return '';
+      return emptyStringBuffer;
     }
   } else if (Array.isArray(chunk)) {
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
   } else if (isPromise(chunk)) {
     chunks.push(buffer, chunk);
-    return '';
+    return emptyStringBuffer;
   }
 }
