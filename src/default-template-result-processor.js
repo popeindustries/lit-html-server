@@ -5,10 +5,9 @@
 /**
  * @typedef TemplateResultRenderer
  * @property { boolean } awaitingPromise
- * @property { (chunk: string) => boolean } push
+ * @property { (chunk: Buffer) => boolean } push
  * @property { (err: Error) => void } destroy
  */
-import { emptyStringBuffer } from './string.js';
 import { isPromise } from './is.js';
 import { isTemplateResult } from './template-result.js';
 
@@ -112,7 +111,7 @@ function getTemplateResultChunk(result, stack) {
   let chunk = result.readChunk();
 
   // Skip empty strings
-  if (Buffer.isBuffer(chunk) && chunk.equals(emptyStringBuffer)) {
+  if (Buffer.isBuffer(chunk) && chunk.length === 0) {
     chunk = result.readChunk();
   }
 

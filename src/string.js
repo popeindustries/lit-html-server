@@ -11,4 +11,4 @@ export const nothingString = '__nothing-lit-html-server-string__';
 /**
  * A prefix value for strings that should not be escaped
  */
-export const unsafeStringPrefix = '__unsafe-lit-html-server-string__';
+export const unsafePrefixString = '__unsafe-lit-html-server-string__';

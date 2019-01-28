@@ -1,4 +1,4 @@
-import { emptyStringBuffer, nothingString, unsafeStringPrefix } from './string.js';
+import { emptyStringBuffer, nothingString, unsafePrefixString } from './string.js';
 import { isPrimitive, isPromise, isSyncIterator } from './is.js';
 import escapeHTML from './escape.js';
 import { isDirective } from './directive.js';
@@ -234,9 +234,9 @@ function resolveAttributeValue(value, part) {
 
   if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
-    // Escape if not prefixed with unsafeStringPrefix, otherwise strip prefix
+    // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
     return Buffer.from(
-      string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string)
+      string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escapeHTML(string)
     );
   } else if (Buffer.isBuffer(value)) {
     return value;
@@ -257,6 +257,8 @@ function resolveAttributeValue(value, part) {
         return values;
       }, [])
     );
+  } else {
+    throw Error('unknown AttributPart value', value);
   }
 }
 
@@ -278,9 +280,9 @@ function resolveNodeValue(value, part) {
 
   if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
-    // Escape if not prefixed with unsafeStringPrefix, otherwise strip prefix
+    // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
     return Buffer.from(
-      string.indexOf(unsafeStringPrefix) === 0 ? string.slice(33) : escapeHTML(string)
+      string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escapeHTML(string)
     );
   } else if (isTemplateResult(value) || Buffer.isBuffer(value)) {
     return value;
@@ -300,8 +302,7 @@ function resolveNodeValue(value, part) {
       return values;
     }, []);
   } else {
-    throw Error('unknown Node part value', value);
-    // return value;
+    throw Error('unknown NodePart value', value);
   }
 }
 

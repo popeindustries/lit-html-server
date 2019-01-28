@@ -5,7 +5,7 @@ import {
   NodePart,
   PropertyAttributePart
 } from '../src/parts.js';
-import { nothingString, unsafeStringPrefix } from '../src/string.js';
+import { nothingString, unsafePrefixString } from '../src/string.js';
 import { directive } from '../src/directive.js';
 import { expect } from 'chai';
 
@@ -21,7 +21,7 @@ describe('Parts', () => {
     });
     it('should resolve and not escape a string value with unsafe prefix', () => {
       const part = new NodePart();
-      expect(part.getValue(`${unsafeStringPrefix}<text>`).toString()).to.equal('<text>');
+      expect(part.getValue(`${unsafePrefixString}<text>`).toString()).to.equal('<text>');
     });
     it('should resolve a number value', () => {
       const part = new NodePart();
