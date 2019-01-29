@@ -1,4 +1,4 @@
-import { directive, unsafePrefixString } from '../index.js';
+import { directive, isNodePart, unsafePrefixString } from '../index.js';
 
 export const unsafeHTML = directive(unsafeHTMLDirective);
 
@@ -10,7 +10,7 @@ export const unsafeHTML = directive(unsafeHTMLDirective);
  */
 function unsafeHTMLDirective(value) {
   return function(part) {
-    if (part.constructor.name !== 'NodePart') {
+    if (!isNodePart(part)) {
       throw Error('unsafeHTML can only be used in text bindings');
     }
     part.setValue(`${unsafePrefixString}${value}`);

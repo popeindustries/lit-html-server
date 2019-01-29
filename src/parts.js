@@ -5,6 +5,26 @@ import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';
 
 /**
+ * Determine if "part" is a NodePart
+ *
+ * @param { Part } part
+ * @returns { boolean }
+ */
+export function isNodePart(part) {
+  return part instanceof NodePart;
+}
+
+/**
+ * Determine if "part" is an AttributePart
+ *
+ * @param { Part } part
+ * @returns { boolean }
+ */
+export function isAttributePart(part) {
+  return part instanceof AttributePart;
+}
+
+/**
  * Base class interface for Node/Attribute parts
  */
 export class Part {

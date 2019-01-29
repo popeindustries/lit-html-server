@@ -9,7 +9,7 @@ import { PromiseTemplateRenderer } from './promise-template-renderer.js';
 import { StreamTemplateRenderer } from './stream-template-renderer.js';
 import { Template } from './template.js';
 
-export { AttributePart, NodePart } from './parts.js';
+export { isAttributePart, isNodePart } from './parts.js';
 export { nothingString, unsafePrefixString } from './string.js';
 export { directive } from './directive.js';
 export {
