@@ -107,6 +107,7 @@ export class AttributePart extends Part {
    */
   getValue(values) {
     let chunks = [this.prefix];
+    let chunkLength = this.prefix.length;
     let pendingChunks;
 
     for (let i = 0; i < this.length; i++) {
@@ -119,9 +120,11 @@ export class AttributePart extends Part {
       }
 
       chunks.push(string);
+      chunkLength += string.length;
 
       if (Buffer.isBuffer(value)) {
         chunks.push(value);
+        chunkLength += value.length;
       } else if (isPromise(value)) {
         // Lazy init for uncommon scenario
         if (pendingChunks === undefined) {
@@ -133,19 +136,23 @@ export class AttributePart extends Part {
         pendingChunks.push(
           value.then((value) => {
             chunks[index] = value;
+            chunkLength += value.length;
           })
         );
       } else if (Array.isArray(value)) {
-        chunks = chunks.concat(value);
+        for (const chunk of value) {
+          chunks.push(chunk);
+          chunkLength += chunk.length;
+        }
       }
     }
 
     chunks.push(this.suffix);
-
+    chunkLength += this.suffix.length;
     if (pendingChunks !== undefined) {
-      return Promise.all(pendingChunks).then(() => Buffer.concat(chunks));
+      return Promise.all(pendingChunks).then(() => Buffer.concat(chunks, chunkLength));
     }
-    return Buffer.concat(chunks);
+    return Buffer.concat(chunks, chunkLength);
   }
 }
 

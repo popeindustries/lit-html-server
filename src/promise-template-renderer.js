@@ -22,22 +22,23 @@ export class PromiseTemplateRenderer {
   constructor(result, processor) {
     return new Promise((resolve, reject) => {
       let stack = [result];
-      let chunks = [];
+      let buffer = [];
+      let bufferLength = 0;
 
       processor.getProcessor(
         {
           push(chunk) {
             if (chunk === null) {
-              resolve(Buffer.concat(chunks).toString());
+              resolve(Buffer.concat(buffer, bufferLength).toString());
             } else {
-              chunks.push(chunk);
+              buffer.push(chunk);
+              bufferLength += chunk.length;
             }
             return true;
           },
           destroy(err) {
-            chunks.length = 0;
-            chunks = undefined;
-            stack.length = 0;
+            buffer.length = stack.length = bufferLength = 0;
+            buffer = undefined;
             stack = undefined;
             reject(err);
           }

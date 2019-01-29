@@ -68,7 +68,7 @@ class TemplateResult {
 
     while ((chunk = this.readChunk()) !== null) {
       if (Buffer.isBuffer(chunk)) {
-        buffer = Buffer.concat([buffer, chunk]);
+        buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length);
       } else {
         if (chunks === undefined) {
           chunks = [];
@@ -166,7 +166,7 @@ class TemplateResult {
  */
 function reduce(buffer, chunks, chunk, deep = false) {
   if (Buffer.isBuffer(chunk)) {
-    return Buffer.concat([buffer, chunk]);
+    return Buffer.concat([buffer, chunk], buffer.length + chunk.length);
   } else if (isTemplateResult(chunk)) {
     if (deep) {
       return reduce(buffer, chunks, chunk.read(deep), deep);
