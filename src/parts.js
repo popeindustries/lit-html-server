@@ -11,7 +11,7 @@ import { isTemplateResult } from './template-result.js';
  * @returns { boolean }
  */
 export function isNodePart(part) {
-  return part instanceof NodePart;
+  return part instanceof NodePart || typeof part.name === 'undefined';
 }
 
 /**
@@ -21,7 +21,7 @@ export function isNodePart(part) {
  * @returns { boolean }
  */
 export function isAttributePart(part) {
-  return part instanceof AttributePart;
+  return part instanceof AttributePart || typeof part.name !== 'undefined';
 }
 
 /**
