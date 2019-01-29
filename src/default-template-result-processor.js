@@ -28,17 +28,17 @@ export class DefaultTemplateResultProcessor {
   getProcessor(renderer, stack, highWaterMark = 0) {
     const buffer = [];
     let bufferLength = 0;
-    let awaitingPromise = false;
+    let paused = false;
 
     return function process() {
-      while (!awaitingPromise) {
+      while (!paused) {
         let chunk = stack[0];
         let breakLoop = false;
         let popStack = true;
 
         if (chunk === undefined) {
           if (highWaterMark > 0 && buffer.length > 0) {
-            renderer.push(Buffer.concat(buffer));
+            renderer.push(Buffer.concat(buffer, bufferLength));
           }
           return renderer.push(null);
         }
@@ -51,32 +51,38 @@ export class DefaultTemplateResultProcessor {
         // Skip if finished reading TemplateResult (null)
         if (chunk !== null) {
           if (Buffer.isBuffer(chunk)) {
-            // Buffer if respecting highWaterMark
+            let shouldPush = true;
+
+            // Buffer data if highWaterMark set
             if (highWaterMark > 0) {
               buffer.push(chunk);
               bufferLength += chunk.length;
+              // Flush buffered data if over highWaterMark
               if (bufferLength > highWaterMark) {
-                chunk = Buffer.concat(buffer);
-                buffer.length = 0;
-                bufferLength = 0;
-                // Pause if backpressure triggered
-                if (!renderer.push(chunk)) {
-                  breakLoop = true;
-                }
+                chunk = Buffer.concat(buffer, bufferLength + chunk.length);
+                bufferLength = buffer.length = 0;
+              } else {
+                shouldPush = false;
               }
-            } else {
+            }
+            if (shouldPush) {
               // Pause if backpressure triggered
               if (!renderer.push(chunk)) {
                 breakLoop = true;
               }
             }
           } else if (isPromise(chunk)) {
+            // Flush buffered data before waiting for Promise
+            if (highWaterMark > 0) {
+              renderer.push(Buffer.concat(buffer, bufferLength));
+              bufferLength = buffer.length = 0;
+            }
             breakLoop = true;
-            awaitingPromise = true;
+            paused = true;
             stack.unshift(chunk);
             chunk
               .then((chunk) => {
-                awaitingPromise = false;
+                paused = false;
                 stack[0] = chunk;
                 process();
               })
