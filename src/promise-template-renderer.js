@@ -17,9 +17,10 @@ export class PromiseTemplateRenderer {
    *
    * @param { TemplateResult } result
    * @param { TemplateResultProcessor } processor
+   * @param { boolean } [asBuffer]
    * @returns { Promise<string> }
    */
-  constructor(result, processor) {
+  constructor(result, processor, asBuffer = false) {
     return new Promise((resolve, reject) => {
       let stack = [result];
       let buffer = [];
@@ -29,7 +30,8 @@ export class PromiseTemplateRenderer {
         {
           push(chunk) {
             if (chunk === null) {
-              resolve(Buffer.concat(buffer, bufferLength).toString());
+              buffer = Buffer.concat(buffer, bufferLength);
+              resolve(asBuffer ? buffer : buffer.toString());
             } else {
               buffer.push(chunk);
               bufferLength += chunk.length;

@@ -17,6 +17,7 @@ export {
   defaultTemplateResultProcessor,
   html,
   isTemplateResult,
+  renderToBuffer,
   renderToStream,
   renderToString,
   html as svg,
@@ -65,5 +66,16 @@ function renderToStream(result) {
  * @returns { Promise<string> }
  */
 function renderToString(result) {
-  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor);
+  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, false);
+}
+
+/**
+ * Render a template result to a Buffer resolving Promise.
+ * *Note* that TemplateResults are single use, and can only be rendered once.
+ *
+ * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @returns { Promise<Buffer> }
+ */
+function renderToBuffer(result) {
+  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, true);
 }

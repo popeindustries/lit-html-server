@@ -112,6 +112,19 @@ const markup = await renderToString(
 response.end(markup);
 ```
 
+### `renderToBuffer(TemplateResult): Promise<Buffer>`
+
+Returns the result of the template tagged by `html` as a Promise which resolves to a Buffer of markup.
+
+```js
+const markup = await renderToBuffer(
+  html`
+    <h1>Hello ${name}!</h1>
+  `
+);
+response.end(markup);
+```
+
 ## Writing templates
 
 In general, all of the standard **lit-html** rules and semantics apply when rendering templates on the server with **lit-html-server** (read more about [**lit-html**](https://polymer.github.io/lit-html/guide/) and writing templates [here](https://polymer.github.io/lit-html/guide/writing-templates.html)).
