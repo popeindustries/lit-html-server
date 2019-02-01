@@ -100,7 +100,7 @@ export class DefaultTemplateResultProcessor {
             stack.unshift(...chunk);
           } else {
             destroy(stack);
-            return renderer.destroy(Error('unknown chunk type:', chunk));
+            return renderer.destroy(Error(`unknown chunk type: ${chunk}`));
           }
         }
 

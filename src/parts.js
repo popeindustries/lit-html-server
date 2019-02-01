@@ -73,7 +73,50 @@ export class NodePart extends Part {
    * @returns { any }
    */
   getValue(value) {
-    return resolveNodeValue(value, this);
+    return this.resolveValue(value);
+  }
+
+  /**
+   * Resolve "value" to string Buffer if possible
+   *
+   * @param { any } value
+   * @returns { any }
+   */
+  resolveValue(value) {
+    if (isDirective(value)) {
+      value = getDirectiveValue(value, this);
+    }
+
+    if (value === nothingString || value === undefined) {
+      return emptyStringBuffer;
+    }
+
+    if (isPrimitive(value)) {
+      const string = typeof value !== 'string' ? String(value) : value;
+      // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
+      return Buffer.from(
+        string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escapeHTML(string)
+      );
+    } else if (isTemplateResult(value) || Buffer.isBuffer(value)) {
+      return value;
+    } else if (isPromise(value)) {
+      return value.then((value) => this.resolveValue(value));
+    } else if (isSyncIterator(value)) {
+      if (!Array.isArray(value)) {
+        value = Array.from(value);
+      }
+      return value.reduce((values, value) => {
+        value = this.resolveValue(value);
+        // Flatten
+        if (Array.isArray(value)) {
+          return values.concat(value);
+        }
+        values.push(value);
+        return values;
+      }, []);
+    } else {
+      throw Error('unknown NodePart value', value);
+    }
   }
 }
 
@@ -112,7 +155,7 @@ export class AttributePart extends Part {
 
     for (let i = 0; i < this.length; i++) {
       const string = this.strings[i];
-      let value = resolveAttributeValue(values[i], this);
+      let value = this.resolveValue(values[i]);
 
       // Bail if 'nothing'
       if (value === nothingString) {
@@ -153,6 +196,55 @@ export class AttributePart extends Part {
       return Promise.all(pendingChunks).then(() => Buffer.concat(chunks, chunkLength));
     }
     return Buffer.concat(chunks, chunkLength);
+  }
+
+  /**
+   * Resolve "value" to string if possible
+   *
+   * @param { any } value
+   * @returns { any }
+   */
+  resolveValue(value) {
+    if (isDirective(value)) {
+      value = getDirectiveValue(value, this);
+    }
+
+    if (value === nothingString) {
+      return value;
+    }
+
+    if (isTemplateResult(value)) {
+      value = value.read();
+    }
+
+    if (isPrimitive(value)) {
+      const string = typeof value !== 'string' ? String(value) : value;
+      // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
+      return Buffer.from(
+        string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escapeHTML(string)
+      );
+    } else if (Buffer.isBuffer(value)) {
+      return value;
+    } else if (isPromise(value)) {
+      return value.then((value) => this.resolveValue(value));
+    } else if (isSyncIterator(value)) {
+      if (!Array.isArray(value)) {
+        value = Array.from(value);
+      }
+      return Buffer.concat(
+        value.reduce((values, value) => {
+          value = this.resolveValue(value);
+          // Flatten
+          if (Array.isArray(value)) {
+            return values.concat(value);
+          }
+          values.push(value);
+          return values;
+        }, [])
+      );
+    } else {
+      throw Error('unknown AttributPart value', value);
+    }
   }
 }
 
@@ -236,100 +328,6 @@ export class EventAttributePart extends AttributePart {
    */
   getValue(/* values */) {
     return emptyStringBuffer;
-  }
-}
-
-/**
- * Resolve "value" to string if possible
- *
- * @param { any } value
- * @param { AttributePart } part
- * @returns { any }
- */
-function resolveAttributeValue(value, part) {
-  if (isDirective(value)) {
-    value = getDirectiveValue(value, part);
-  }
-
-  if (value === nothingString) {
-    return value;
-  }
-
-  if (isTemplateResult(value)) {
-    value = value.read();
-  }
-
-  if (isPrimitive(value)) {
-    const string = typeof value !== 'string' ? String(value) : value;
-    // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
-    return Buffer.from(
-      string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escapeHTML(string)
-    );
-  } else if (Buffer.isBuffer(value)) {
-    return value;
-  } else if (isPromise(value)) {
-    return value.then((value) => resolveAttributeValue(value, part));
-  } else if (isSyncIterator(value)) {
-    if (!Array.isArray(value)) {
-      value = Array.from(value);
-    }
-    return Buffer.concat(
-      value.reduce((values, value) => {
-        value = resolveAttributeValue(value, part);
-        // Flatten
-        if (Array.isArray(value)) {
-          return values.concat(value);
-        }
-        values.push(value);
-        return values;
-      }, [])
-    );
-  } else {
-    throw Error('unknown AttributPart value', value);
-  }
-}
-
-/**
- * Resolve "value" to string Buffer if possible
- *
- * @param { any } value
- * @param { NodePart } part
- * @returns { any }
- */
-function resolveNodeValue(value, part) {
-  if (isDirective(value)) {
-    value = getDirectiveValue(value, part);
-  }
-
-  if (value === nothingString || value === undefined) {
-    return emptyStringBuffer;
-  }
-
-  if (isPrimitive(value)) {
-    const string = typeof value !== 'string' ? String(value) : value;
-    // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
-    return Buffer.from(
-      string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escapeHTML(string)
-    );
-  } else if (isTemplateResult(value) || Buffer.isBuffer(value)) {
-    return value;
-  } else if (isPromise(value)) {
-    return value.then((value) => resolveNodeValue(value, part));
-  } else if (isSyncIterator(value)) {
-    if (!Array.isArray(value)) {
-      value = Array.from(value);
-    }
-    return value.reduce((values, value) => {
-      value = resolveNodeValue(value, part);
-      // Flatten
-      if (Array.isArray(value)) {
-        return values.concat(value);
-      }
-      values.push(value);
-      return values;
-    }, []);
-  } else {
-    throw Error('unknown NodePart value', value);
   }
 }
 
