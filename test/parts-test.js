@@ -105,6 +105,15 @@ describe('Parts', () => {
         expect(err).to.have.property('message', 'errored!');
       }
     });
+    it.only('should resolve an async iterator value', async () => {
+      const part = new NodePart();
+      const iterator = createAsyncIterable(['some', ' text']);
+      let result = '';
+      for await (const value of iterator) {
+        result += (await part.getValue(value)).toString();
+      }
+      expect(result).to.equal('some text');
+    });
     it('should resolve a directive value', () => {
       const d = directive(() => (part) => {
         part.setValue('directive');
@@ -247,3 +256,9 @@ describe('Parts', () => {
     });
   });
 });
+
+async function* createAsyncIterable(syncIterable) {
+  for (const elem of syncIterable) {
+    yield elem;
+  }
+}
