@@ -244,6 +244,17 @@ html`
 
 Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server context):
 
+- `asyncAppend(value)`: Renders the items of an AsyncIterable, appending new values after previous values:
+
+```js
+const asyncAppend = require('@popeindustries/lit-html-server/directives/async-append.js');
+html`
+  <ul>
+    ${asyncAppend(someListIterator)}
+  </ul>
+`;
+```
+
 - `cache(value)`: Enables fast switching between multiple templates by caching previous results. Since it's generally not desireable to cache between requests, this is a no-op:
 
 ```js
