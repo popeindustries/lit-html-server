@@ -1,4 +1,4 @@
-export { isAsyncIterator, isPrimitive, isPromise, isSyncIterator };
+export { isAsyncIterator, isIteratorResult, isPrimitive, isPromise, isSyncIterator };
 
 /**
  * Determine if "promise" is a Promise instance
@@ -33,6 +33,16 @@ function isSyncIterator(iterator) {
  */
 function isAsyncIterator(iterator) {
   return iterator != null && typeof iterator[Symbol.asyncIterator] === 'function';
+}
+
+/**
+ * Determine if "result" is an iterator result object
+ *
+ * @param { object } result
+ * @returns { boolean }
+ */
+function isIteratorResult(result) {
+  return typeof result === 'object' && 'value' in result && 'done' in result;
 }
 
 /**

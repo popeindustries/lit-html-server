@@ -1,7 +1,7 @@
 /**
  * @typedef NodePart { import('../parts.js').NodePart }
  */
-import { directive, isAttributePart } from '../index.js';
+import { directive, isNodePart } from '../index.js';
 
 export const cache = directive(cacheDirective);
 
@@ -14,8 +14,8 @@ export const cache = directive(cacheDirective);
  */
 function cacheDirective(value) {
   return function(part) {
-    if (isAttributePart(part)) {
-      throw Error('The `cache` directive must be only be used in text nodes');
+    if (!isNodePart(part)) {
+      throw Error('The `cache` directive can only be used in text nodes');
     }
     part.setValue(value);
   };

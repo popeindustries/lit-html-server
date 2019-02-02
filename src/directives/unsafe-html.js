@@ -11,7 +11,7 @@ export const unsafeHTML = directive(unsafeHTMLDirective);
 function unsafeHTMLDirective(value) {
   return function(part) {
     if (!isNodePart(part)) {
-      throw Error('unsafeHTML can only be used in text bindings');
+      throw Error('The `unsafeHTML` directive can only be used in text nodes');
     }
     part.setValue(`${unsafePrefixString}${value}`);
   };

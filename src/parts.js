@@ -1,5 +1,5 @@
 import { emptyStringBuffer, nothingString, unsafePrefixString } from './string.js';
-import { isPrimitive, isPromise, isSyncIterator } from './is.js';
+import { isAsyncIterator, isPrimitive, isPromise, isSyncIterator } from './is.js';
 import escapeHTML from './escape.js';
 import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';
@@ -192,7 +192,7 @@ export class BooleanAttributePart extends AttributePart {
     let value = values[0];
 
     if (isDirective(value)) {
-      value = getDirectiveValue(value, this);
+      value = resolveDirectiveValue(value, this);
     }
 
     if (isPromise(value)) {
@@ -248,7 +248,7 @@ export class EventAttributePart extends AttributePart {
  */
 function resolveAttributeValue(value, part) {
   if (isDirective(value)) {
-    value = getDirectiveValue(value, part);
+    value = resolveDirectiveValue(value, part);
   }
 
   if (value === nothingString) {
@@ -298,7 +298,7 @@ function resolveAttributeValue(value, part) {
  */
 function resolveNodeValue(value, part) {
   if (isDirective(value)) {
-    value = getDirectiveValue(value, part);
+    value = resolveDirectiveValue(value, part);
   }
 
   if (value === nothingString || value === undefined) {
@@ -328,19 +328,34 @@ function resolveNodeValue(value, part) {
       values.push(value);
       return values;
     }, []);
+  } else if (isAsyncIterator(value)) {
+    return resolveAsyncIteratorValue(value, part);
   } else {
     throw Error('unknown NodePart value', value);
   }
 }
 
 /**
- * Retrieve value from "directive"
+ * Resolve values of async "iterator"
+ *
+ * @param { AsyncIterator } iterator
+ * @param { NodePart } part
+ * @returns { AsyncGenerator }
+ */
+async function* resolveAsyncIteratorValue(iterator, part) {
+  for await (const value of iterator) {
+    yield resolveNodeValue(value, part);
+  }
+}
+
+/**
+ * Resolve value of "directive"
  *
  * @param { function } directive
  * @param { Part } part
  * @returns { any }
  */
-function getDirectiveValue(directive, part) {
+function resolveDirectiveValue(directive, part) {
   // Directives are synchronous, so it's safe to read and delete value
   directive(part);
   const value = part._value;
