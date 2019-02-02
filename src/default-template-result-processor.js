@@ -7,7 +7,7 @@
  * @property { (chunk: Buffer) => boolean } push
  * @property { (err: Error) => void } destroy
  */
-import { isPromise } from './is.js';
+import { isAsyncIterator, isIteratorResult, isPromise } from './is.js';
 import { isTemplateResult } from './template-result.js';
 
 /**
@@ -30,6 +30,13 @@ export class DefaultTemplateResultProcessor {
     let bufferLength = 0;
     let paused = false;
 
+    function flushBuffer() {
+      if (highWaterMark > 0 && buffer.length > 0) {
+        renderer.push(Buffer.concat(buffer, bufferLength));
+        bufferLength = buffer.length = 0;
+      }
+    }
+
     return function process() {
       while (!paused) {
         let chunk = stack[0];
@@ -37,9 +44,7 @@ export class DefaultTemplateResultProcessor {
         let popStack = true;
 
         if (chunk === undefined) {
-          if (highWaterMark > 0 && buffer.length > 0) {
-            renderer.push(Buffer.concat(buffer, bufferLength));
-          }
+          flushBuffer();
           return renderer.push(null);
         }
 
@@ -59,8 +64,7 @@ export class DefaultTemplateResultProcessor {
               bufferLength += chunk.length;
               // Flush buffered data if over highWaterMark
               if (bufferLength > highWaterMark) {
-                chunk = Buffer.concat(buffer, bufferLength + chunk.length);
-                bufferLength = buffer.length = 0;
+                flushBuffer();
               } else {
                 shouldPush = false;
               }
@@ -73,17 +77,29 @@ export class DefaultTemplateResultProcessor {
             }
           } else if (isPromise(chunk)) {
             // Flush buffered data before waiting for Promise
-            if (highWaterMark > 0) {
-              renderer.push(Buffer.concat(buffer, bufferLength));
-              bufferLength = buffer.length = 0;
-            }
+            flushBuffer();
             breakLoop = true;
             paused = true;
+            // Add pending Promise for value to stack
             stack.unshift(chunk);
             chunk
               .then((chunk) => {
                 paused = false;
-                stack[0] = chunk;
+                // Handle IteratorResults from AsyncIterator
+                if (isIteratorResult(chunk)) {
+                  if (chunk.done) {
+                    // Clear resolved Promise
+                    stack.shift();
+                    // Clear AsyncIterator
+                    stack.shift();
+                  } else {
+                    // Replace resolved Promise with IteratorResult value
+                    stack[0] = chunk.value;
+                  }
+                } else {
+                  // Replace resolved Promise with value
+                  stack[0] = chunk;
+                }
                 process();
               })
               .catch((err) => {
@@ -98,6 +114,14 @@ export class DefaultTemplateResultProcessor {
               stack.shift();
             }
             stack.unshift(...chunk);
+          } else if (isAsyncIterator(chunk)) {
+            popStack = false;
+            // Add AsyncIterator to stack (will be cleared when done iterating)
+            if (stack[0] !== chunk) {
+              stack.unshift(chunk);
+            }
+            // Add pending Promise for IteratorResult to stack
+            stack.unshift(chunk[Symbol.asyncIterator]().next());
           } else {
             destroy(stack);
             return renderer.destroy(Error(`unknown chunk type: ${chunk}`));

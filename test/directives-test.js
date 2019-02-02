@@ -1,6 +1,8 @@
 import { directive, html as h, renderToString as render } from '../src/index.js';
+import { asyncAppend } from '../src/directives/async-append.js';
 import { cache } from '../src/directives/cache.js';
 import { classMap } from '../src/directives/class-map.js';
+import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 import { guard } from '../src/directives/guard.js';
 import { ifDefined } from '../src/directives/if-defined.js';
@@ -10,6 +12,13 @@ import { unsafeHTML } from '../src/directives/unsafe-html.js';
 import { until } from '../src/directives/until.js';
 
 describe('directives', () => {
+  describe('asyncAppend', () => {
+    it('should render an AsyncIterable value', async () => {
+      const result = h`some ${asyncAppend(createAsyncIterable(['async', ' text']))}`;
+      expect(await render(result)).to.equal('some async text');
+    });
+  });
+
   describe('cache', () => {
     it('should render a cached value', async () => {
       const result = h`some ${cache('text')}`;

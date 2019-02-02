@@ -6,6 +6,7 @@ import {
   PropertyAttributePart
 } from '../src/parts.js';
 import { nothingString, unsafePrefixString } from '../src/string.js';
+import { createAsyncIterable } from './utils.js';
 import { directive } from '../src/directive.js';
 import { expect } from 'chai';
 
@@ -105,12 +106,12 @@ describe('Parts', () => {
         expect(err).to.have.property('message', 'errored!');
       }
     });
-    it.only('should resolve an async iterator value', async () => {
+    it('should resolve an async iterator value', async () => {
       const part = new NodePart();
       const iterator = createAsyncIterable(['some', ' text']);
       let result = '';
-      for await (const value of iterator) {
-        result += (await part.getValue(value)).toString();
+      for await (const value of part.getValue(iterator)) {
+        result += value;
       }
       expect(result).to.equal('some text');
     });
@@ -256,9 +257,3 @@ describe('Parts', () => {
     });
   });
 });
-
-async function* createAsyncIterable(syncIterable) {
-  for (const elem of syncIterable) {
-    yield elem;
-  }
-}

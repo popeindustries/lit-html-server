@@ -12,7 +12,7 @@ export const classMap = directive(classMapDirective);
 function classMapDirective(classInfo) {
   return function(part) {
     if (!isAttributePart(part) || part.name !== 'class') {
-      throw Error('The `classMap` directive must be used in the `class` attribute');
+      throw Error('The `classMap` directive can only be used in the `class` attribute');
     }
 
     let value = '';

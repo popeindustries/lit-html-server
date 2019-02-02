@@ -1,5 +1,6 @@
 // Disable Prettier
 import { html as h, renderToStream, renderToString } from '../src/index.js';
+import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 import getStream from 'get-stream';
 
@@ -116,6 +117,18 @@ describe('Template render', () => {
       } catch (err) {
         expect(err).to.have.property('message', 'errored!');
       }
+    });
+    it('should render a template with AsyncIterator value', async () => {
+      const result = () => h`${createAsyncIterable(['some', ' async'])} text`;
+      const expected = 'some async text';
+      expect(await renderToString(result())).to.equal(expected);
+      expect(await getStream(renderToStream(result()))).to.equal(expected);
+    });
+    it('should render a template with AsyncIterator template value', async () => {
+      const result = () => h`${createAsyncIterable([h`some`, h` async`])} text`;
+      const expected = 'some async text';
+      expect(await renderToString(result())).to.equal(expected);
+      expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
     it('should render a template with deeply nested sync/async templates', async () => {
       const data = { title: 'title', body: 'this is body text' };

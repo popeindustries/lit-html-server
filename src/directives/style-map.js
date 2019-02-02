@@ -12,7 +12,7 @@ export const styleMap = directive(styleMapDirective);
 function styleMapDirective(styleInfo) {
   return function(part) {
     if (!isAttributePart(part) || part.name !== 'style') {
-      throw Error('The `styleMap` directive must be used in the `style` attribute');
+      throw Error('The `styleMap` directive can only be used in the `style` attribute');
     }
 
     let value = '';
