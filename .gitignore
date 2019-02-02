@@ -11,3 +11,4 @@ directives/repeat.js
 directives/style-map.js
 directives/unsafe-html.js
 directives/until.js
+directives/async-append.js
