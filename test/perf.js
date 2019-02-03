@@ -25,7 +25,7 @@ function stress() {
         url,
         connections: 100,
         pipelining: 10,
-        duration: 5
+        duration: 10
       },
       async (err, results) => {
         // console.log(results);
