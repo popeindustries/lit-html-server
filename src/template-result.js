@@ -1,9 +1,19 @@
+import { isAsyncIterator, isPromise } from './is.js';
 import { AttributePart } from './parts.js';
 import { emptyStringBuffer } from './string.js';
-import { isPromise } from './is.js';
 
 const pool = [];
 let id = 0;
+
+/**
+ * Determine whether "result" is a TemplateResult
+ *
+ * @param { TemplateResult } result
+ * @returns { boolean }
+ */
+export function isTemplateResult(result) {
+  return result instanceof TemplateResult;
+}
 
 /**
  * Retrieve TemplateResult instance.
@@ -24,16 +34,6 @@ export function templateResult(template, values) {
   }
 
   return instance;
-}
-
-/**
- * Determine whether "result" is a TemplateResult
- *
- * @param { TemplateResult } result
- * @returns { boolean }
- */
-export function isTemplateResult(result) {
-  return result instanceof TemplateResult;
 }
 
 /**
@@ -176,7 +176,7 @@ function reduce(buffer, chunks, chunk, deep = false) {
     }
   } else if (Array.isArray(chunk)) {
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
-  } else if (isPromise(chunk)) {
+  } else if (isPromise(chunk) || isAsyncIterator(chunk)) {
     chunks.push(buffer, chunk);
     return emptyStringBuffer;
   }
