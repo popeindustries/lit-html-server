@@ -1,3 +1,4 @@
+import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 // Disable Prettier
 import { html as h } from '../src/index.js';
@@ -53,6 +54,13 @@ describe('Template Result', () => {
       expect(chunks[0].toString()).to.equal('some nested ');
       expect((await chunks[1]).toString()).to.equal('text');
       expect(chunks[2].toString()).to.equal(' in here too');
+    });
+    it('should process a template with AsyncIterator value', async () => {
+      const result = h`some ${createAsyncIterable(['async', ' text'])} in here`;
+      const chunks = result.read(true);
+      expect(chunks[0].toString()).to.equal('some ');
+      expect(chunks[1]).to.be.an('AsyncGenerator');
+      expect(chunks[2].toString()).to.equal(' in here');
     });
   });
 
