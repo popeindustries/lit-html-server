@@ -31,9 +31,11 @@ export class DefaultTemplateResultProcessor {
     let paused = false;
 
     function flushBuffer() {
-      if (highWaterMark > 0 && buffer.length > 0) {
-        renderer.push(Buffer.concat(buffer, bufferLength));
+      if (buffer.length > 0) {
+        const keepPushing = renderer.push(Buffer.concat(buffer, bufferLength));
+
         bufferLength = buffer.length = 0;
+        return keepPushing;
       }
     }
 
@@ -56,24 +58,12 @@ export class DefaultTemplateResultProcessor {
         // Skip if finished reading TemplateResult (null)
         if (chunk !== null) {
           if (Buffer.isBuffer(chunk)) {
-            let shouldPush = true;
-
-            // Buffer data if highWaterMark set
-            if (highWaterMark > 0) {
-              buffer.push(chunk);
-              bufferLength += chunk.length;
-              // Flush buffered data if over highWaterMark
-              if (bufferLength > highWaterMark) {
-                flushBuffer();
-              } else {
-                shouldPush = false;
-              }
-            }
-            if (shouldPush) {
+            buffer.push(chunk);
+            bufferLength += chunk.length;
+            // Flush buffered data if over highWaterMark
+            if (bufferLength > highWaterMark) {
               // Pause if backpressure triggered
-              if (!renderer.push(chunk)) {
-                breakLoop = true;
-              }
+              breakLoop = !flushBuffer();
             }
           } else if (isPromise(chunk)) {
             // Flush buffered data before waiting for Promise
@@ -107,9 +97,8 @@ export class DefaultTemplateResultProcessor {
                 renderer.destroy(err);
               });
           } else if (Array.isArray(chunk)) {
-            // An existing TemplateResult will have already set this to "false",
-            // so only remove existing Array if there is no active TemplateResult
-            if (popStack === true) {
+            // First remove existing Array if at top of stack (not added by pending TemplateResult)
+            if (stack[0] === chunk) {
               popStack = false;
               stack.shift();
             }
