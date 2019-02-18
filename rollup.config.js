@@ -8,7 +8,7 @@ const plugins = [commonjs(), resolve({ preferBuiltins: true })];
 module.exports = [
   ...configDirectives(),
   {
-    external: ['stream', 'fs'],
+    external: ['stream'],
     input: 'src/index.js',
     plugins,
     output: {
