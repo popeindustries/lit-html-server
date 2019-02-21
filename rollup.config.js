@@ -8,13 +8,21 @@ const plugins = [commonjs(), resolve({ preferBuiltins: true })];
 module.exports = [
   ...configDirectives(),
   {
-    external: ['stream'],
     input: 'src/index.js',
     plugins,
     output: {
       exports: 'named',
       file: 'index.js',
       format: 'cjs'
+    }
+  },
+  {
+    input: 'src/browser.js',
+    plugins,
+    output: {
+      exports: 'named',
+      file: 'browser.js',
+      format: 'es'
     }
   }
 ];

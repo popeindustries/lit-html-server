@@ -1,14 +1,6 @@
 .npm
 node_modules
 .DS_Store
-browser.js
-index.js
-directives/cache.js
-directives/class-map.js
-directives/guard.js
-directives/if-defined.js
-directives/repeat.js
-directives/style-map.js
-directives/unsafe-html.js
-directives/until.js
-directives/async-append.js
+/index.js
+/browser.js
+/directives/
