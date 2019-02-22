@@ -54,3 +54,5 @@ function html(strings, ...values) {
 function renderToString(result) {
   return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, false);
 }
+
+// TODO: renderToStream using browser ReadableStream
