@@ -1,10 +1,8 @@
-/* global window */
 /**
  * @typedef Readable { import('stream').Readable }
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
 import { isTemplateResult, templateResult } from './template-result.js';
-import { Buffer } from './browser-buffer-polyfill.js';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
 import { PromiseTemplateRenderer } from './promise-template-renderer.js';
@@ -26,8 +24,6 @@ export {
 const defaultTemplateProcessor = new DefaultTemplateProcessor();
 const defaultTemplateResultProcessor = new DefaultTemplateResultProcessor();
 const templateCache = new Map();
-
-window.Buffer = Buffer;
 
 /**
  * Interprets a template literal as an HTML template that can be

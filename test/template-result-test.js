@@ -1,7 +1,7 @@
 import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 // Disable Prettier
-import { html as h } from '../src/index.js';
+import { html as h } from '../index.mjs';
 
 describe('Template Result', () => {
   describe('text', () => {

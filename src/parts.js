@@ -175,8 +175,8 @@ export class BooleanAttributePart extends AttributePart {
 
     if (
       strings.length !== 2 ||
-      !strings[0].equals(emptyStringBuffer) ||
-      !strings[1].equals(emptyStringBuffer)
+      !strings[0] === emptyStringBuffer ||
+      !strings[1] === emptyStringBuffer
     ) {
       throw Error('Boolean attributes can only contain a single expression');
     }

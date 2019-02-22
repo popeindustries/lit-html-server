@@ -1,13 +1,15 @@
-export class Buffer {
+/* global window */
+/* eslint no-unused-vars: 0 */
+const Buffer = (typeof window !== 'undefined' && window.Buffer) || {
   /**
    * Determine if 'buffer' is a buffer
    *
    * @param { any } buffer
    * @returns { boolean }
    */
-  static isBuffer(buffer) {
+  isBuffer(buffer) {
     return typeof buffer === 'string';
-  }
+  },
 
   /**
    * Create buffer from 'string'
@@ -15,9 +17,9 @@ export class Buffer {
    * @param { string } string
    * @returns { string }
    */
-  static from(string) {
+  from(string) {
     return typeof string === 'string' ? string : String(string);
-  }
+  },
 
   /**
    * Join 'buffers' into a single string
@@ -26,7 +28,7 @@ export class Buffer {
    * @param { number } [length]
    * @returns { string }
    */
-  static concat(buffers, length) {
+  concat(buffers, length) {
     let string = '';
 
     for (let i = 0, n = buffers.length; i < n; i++) {
@@ -41,13 +43,4 @@ export class Buffer {
 
     return string;
   }
-
-  /**
-   * Constructor
-   *
-   * @throws { TypeError }
-   */
-  constructor() {
-    throw TypeError("Buffer's should not be instansiated. Use Buffer.from() instead");
-  }
-}
+};

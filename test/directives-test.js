@@ -1,15 +1,15 @@
-import { directive, html as h, renderToString as render } from '../src/index.js';
-import { asyncAppend } from '../src/directives/async-append.js';
-import { cache } from '../src/directives/cache.js';
-import { classMap } from '../src/directives/class-map.js';
+import { directive, html as h, renderToString as render } from '../index.mjs';
+import { asyncAppend } from '../directives/async-append.mjs';
+import { cache } from '../directives/cache.mjs';
+import { classMap } from '../directives/class-map.mjs';
 import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
-import { guard } from '../src/directives/guard.js';
-import { ifDefined } from '../src/directives/if-defined.js';
-import { repeat } from '../src/directives/repeat.js';
-import { styleMap } from '../src/directives/style-map.js';
-import { unsafeHTML } from '../src/directives/unsafe-html.js';
-import { until } from '../src/directives/until.js';
+import { guard } from '../directives/guard.mjs';
+import { ifDefined } from '../directives/if-defined.mjs';
+import { repeat } from '../directives/repeat.mjs';
+import { styleMap } from '../directives/style-map.mjs';
+import { unsafeHTML } from '../directives/unsafe-html.mjs';
+import { until } from '../directives/until.mjs';
 
 describe('directives', () => {
   describe('asyncAppend', () => {

@@ -1,6 +1,8 @@
+.dvlp
 .npm
 node_modules
 .DS_Store
 /index.js
-/browser.js
+/index.mjs
+/browser/
 /directives/
