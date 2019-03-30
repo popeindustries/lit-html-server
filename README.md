@@ -44,7 +44,7 @@ async function body(apiPath) {
   return html`
     <h1>${data.title}</h1>
     <x-widget ?enabled="${data.hasWidget}"></x-widget>
-    <p class="${classMap({ 'negative': data.invertedText }">${data.text}</p>
+    <p class="${classMap({ 'negative': data.invertedText })}">${data.text}</p>
   `;
 }
 ```
