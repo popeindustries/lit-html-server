@@ -45,6 +45,7 @@ export class DefaultTemplateResultProcessor {
         let breakLoop = false;
         let popStack = true;
 
+        // Done
         if (chunk === undefined) {
           flushBuffer();
           return renderer.push(null);
