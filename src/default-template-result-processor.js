@@ -1,3 +1,4 @@
+/* eslint no-constant-condition:0 */
 /**
  * @typedef TemplateResultProcessor
  * @property { (renderer: TemplateResultRenderer, stack: Array<any>, [highWaterMark: number]) => function } getProcessor
@@ -28,7 +29,7 @@ export class DefaultTemplateResultProcessor {
   getProcessor(renderer, stack, highWaterMark = 0) {
     const buffer = [];
     let bufferLength = 0;
-    let paused = false;
+    let processing = false;
 
     function flushBuffer() {
       if (buffer.length > 0) {
@@ -40,7 +41,12 @@ export class DefaultTemplateResultProcessor {
     }
 
     return function process() {
-      while (!paused) {
+      if (processing) {
+        return;
+      }
+
+      while (true) {
+        processing = true;
         let chunk = stack[0];
         let breakLoop = false;
         let popStack = true;
@@ -63,19 +69,19 @@ export class DefaultTemplateResultProcessor {
             bufferLength += chunk.length;
             // Flush buffered data if over highWaterMark
             if (bufferLength > highWaterMark) {
-              // Pause if backpressure triggered
+              // Break if backpressure triggered
               breakLoop = !flushBuffer();
+              processing = !breakLoop;
             }
           } else if (isPromise(chunk)) {
             // Flush buffered data before waiting for Promise
             flushBuffer();
+            // "processing" is still true, so prevented from restarting until Promise resolved
             breakLoop = true;
-            paused = true;
             // Add pending Promise for value to stack
             stack.unshift(chunk);
             chunk
               .then((chunk) => {
-                paused = false;
                 // Handle IteratorResults from AsyncIterator
                 if (isIteratorResult(chunk)) {
                   if (chunk.done) {
@@ -91,6 +97,7 @@ export class DefaultTemplateResultProcessor {
                   // Replace resolved Promise with value
                   stack[0] = chunk;
                 }
+                processing = false;
                 process();
               })
               .catch((err) => {
@@ -106,7 +113,7 @@ export class DefaultTemplateResultProcessor {
             stack.unshift(...chunk);
           } else if (isAsyncIterator(chunk)) {
             popStack = false;
-            // Add AsyncIterator to stack (will be cleared when done iterating)
+            // Add AsyncIterator back to stack (will be cleared when done iterating)
             if (stack[0] !== chunk) {
               stack.unshift(chunk);
             }
