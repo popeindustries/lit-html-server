@@ -1,15 +1,15 @@
-import { directive, html as h, renderToString as render } from '../index.mjs';
-import { asyncAppend } from '../directives/async-append.mjs';
-import { cache } from '../directives/cache.mjs';
-import { classMap } from '../directives/class-map.mjs';
+import { directive, html as h, renderToString as render } from '../index.js';
+import { asyncAppend } from '../directives/async-append.js';
+import { cache } from '../directives/cache.js';
+import { classMap } from '../directives/class-map.js';
 import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
-import { guard } from '../directives/guard.mjs';
-import { ifDefined } from '../directives/if-defined.mjs';
-import { repeat } from '../directives/repeat.mjs';
-import { styleMap } from '../directives/style-map.mjs';
-import { unsafeHTML } from '../directives/unsafe-html.mjs';
-import { until } from '../directives/until.mjs';
+import { guard } from '../directives/guard.js';
+import { ifDefined } from '../directives/if-defined.js';
+import { repeat } from '../directives/repeat.js';
+import { styleMap } from '../directives/style-map.js';
+import { unsafeHTML } from '../directives/unsafe-html.js';
+import { until } from '../directives/until.js';
 
 describe('directives', () => {
   describe('asyncAppend', () => {
