@@ -1,9 +1,15 @@
 /* eslint no-constant-condition:0 */
-import 'text-encoding';
 import 'web-streams-polyfill';
 import { html as h, renderToStream, renderToString } from '../browser/index.js';
 import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
+
+if (typeof TextDecoder === 'undefined') {
+  const { TextDecoder, TextEncoder } = require('text-encoding');
+
+  global.TextDecoder = TextDecoder;
+  global.TextEncoder = TextEncoder;
+}
 
 function getStream(stream) {
   const decoder = new TextDecoder();
