@@ -1,6 +1,6 @@
 /* eslint no-constant-condition:0 */
 import 'web-streams-polyfill';
-import { html as h, renderToStream, renderToString } from '../browser/index.mjs';
+import { html as h, renderToStream, renderToString } from '../browser/index.js';
 import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 

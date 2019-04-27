@@ -12,7 +12,7 @@
   ],
   "main": "index.js",
   "module": "index.mjs",
-  "browser": "browser/index.mjs",
+  "browser": "browser/index.js",
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",

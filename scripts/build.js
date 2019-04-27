@@ -28,17 +28,8 @@ const tasks = [
     { input: 'src/browser.js', plugins },
     {
       intro: bufferPolyfill,
-      file: 'browser/index.mjs',
-      format: 'esm'
-    }
-  ],
-  [
-    { input: 'src/browser.js', plugins },
-    {
-      intro: bufferPolyfill,
       file: 'browser/index.js',
-      format: 'umd',
-      name: 'litHtmlServer'
+      format: 'esm'
     }
   ],
   ...configDirectives(),
@@ -66,37 +57,22 @@ function configDirectives(outputdir = '') {
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
   const indexpath = path.resolve('src/index.js');
-  const preWrite = (content) => content.replace('../index.js', '../index.mjs');
 
   for (const directive of directives) {
     if (path.extname(directive) === '.js') {
       const input = path.join(dir, directive);
       const filename = path.join(outputdir, 'directives', directive);
-      config.push(
-        [
-          {
-            external: [indexpath],
-            input,
-            plugins
-          },
-          {
-            file: filename,
-            format: 'cjs'
-          }
-        ],
-        [
-          {
-            external: [indexpath],
-            input,
-            plugins
-          },
-          {
-            file: filename.replace('.js', '.mjs'),
-            format: 'esm'
-          },
-          preWrite
-        ]
-      );
+      config.push([
+        {
+          external: [indexpath],
+          input,
+          plugins
+        },
+        {
+          file: filename,
+          format: 'esm'
+        }
+      ]);
     }
   }
 
