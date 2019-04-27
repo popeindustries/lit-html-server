@@ -3,9 +3,9 @@
 
 # lit-html-server
 
-Render [**lit-html**](https://polymer.github.io/lit-html/) templates on the server as Node.js streams. Supports all **lit-html** types, special attribute expressions, and many of the standard directives.
+Render [**lit-html**](https://polymer.github.io/lit-html/) templates on the server as strings or streams (and in the browser too!). Supports all **lit-html** types, special attribute expressions, and many of the standard directives.
 
-> Although based on **lit-html** semantics, **lit-html-server** is a great general purpose HTML template streaming library. Tagged template literals are a native JavaScript feature, and the HTML rendered is 100% standard markup, with no special syntax or client-side runtime required!
+> Although based on **lit-html** semantics, **lit-html-server** is a great general purpose HTML template streaming library. Tagged template literals are a native JavaScript feature, and the HTML rendered is 100% standard markup, with no special syntax or runtime required!
 
 ## Usage
 
@@ -65,7 +65,7 @@ http
   }
 ```
 
-## API - Node.js
+## API (Node.js)
 
 ### `html`
 
@@ -138,7 +138,7 @@ const markup = await renderToBuffer(
 response.end(markup);
 ```
 
-## API - Browser
+## API (Browser)
 
 **lit-html-server** may also be used in the browser to render strings of markup, or in a Service Worker script to render streams of markup.
 
