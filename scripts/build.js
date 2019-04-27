@@ -32,8 +32,9 @@ const tasks = [
       format: 'esm'
     }
   ],
-  ...configDirectives(),
-  ...configDirectives('browser')
+  ...configDirectives('', 'cjs', '.js'),
+  ...configDirectives('', 'esm', '.mjs'),
+  ...configDirectives('browser', 'esm', '.js')
 ];
 
 (async function() {
@@ -52,16 +53,22 @@ const tasks = [
   }
 })();
 
-function configDirectives(outputdir = '') {
+function configDirectives(outputdir = '', format, extension) {
   const config = [];
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
   const indexpath = path.resolve('src/index.js');
+  const preWrite = (content) => content.replace('../index.js', '../index.mjs');
 
   for (const directive of directives) {
     if (path.extname(directive) === '.js') {
       const input = path.join(dir, directive);
-      const filename = path.join(outputdir, 'directives', directive);
+      let filename = path.join(outputdir, 'directives', directive);
+
+      if (extension === '.mjs') {
+        filename = filename.replace('.js', '.mjs');
+      }
+
       config.push([
         {
           external: [indexpath],
@@ -70,8 +77,9 @@ function configDirectives(outputdir = '') {
         },
         {
           file: filename,
-          format: 'esm'
-        }
+          format
+        },
+        extension === '.mjs' ? preWrite : undefined
       ]);
     }
   }
