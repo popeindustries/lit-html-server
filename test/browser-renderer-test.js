@@ -1,10 +1,13 @@
 /* eslint no-constant-condition:0 */
+import 'text-encoding';
 import 'web-streams-polyfill';
 import { html as h, renderToStream, renderToString } from '../browser/index.js';
 import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 
 function getStream(stream) {
+  const decoder = new TextDecoder();
+
   return new Promise(async (resolve, reject) => {
     const reader = stream.getReader();
     let result = '';
@@ -17,7 +20,7 @@ function getStream(stream) {
           return resolve(result);
         }
 
-        result += value;
+        result += decoder.decode(value);
       } catch (err) {
         return reject(err);
       }

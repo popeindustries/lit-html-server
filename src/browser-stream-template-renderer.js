@@ -17,10 +17,14 @@ export class StreamTemplateRenderer {
     if (typeof ReadableStream === 'undefined') {
       throw Error('ReadableStream not supported on this platform');
     }
+    if (typeof TextEncoder === 'undefined') {
+      throw Error('TextEncoder not supported on this platform');
+    }
 
     return new ReadableStream({
       process: null,
       start(controller) {
+        const encoder = new TextEncoder();
         const underlyingSource = this;
         let stack = [result];
 
@@ -32,7 +36,7 @@ export class StreamTemplateRenderer {
                 return false;
               }
 
-              controller.enqueue(chunk);
+              controller.enqueue(encoder.encode(chunk.toString()));
               // Pause processing (return "false") if stream is full
               return controller.desiredSize > 0;
             },
