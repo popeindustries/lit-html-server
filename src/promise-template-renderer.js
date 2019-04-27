@@ -1,10 +1,6 @@
 /**
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
- */
-/**
  * @typedef TemplateResultProcessor { import('./default-template-result-processor.js).TemplateResultProcessor }
- */
-/**
  * @typedef TemplateResultRenderer { import('./default-template-result-renderer.js).TemplateResultRenderer }
  */
 

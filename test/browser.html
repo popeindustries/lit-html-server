@@ -10,8 +10,8 @@
   <main></main>
   <script>
     (async function() {
-      const { html, renderToString } = await import('../browser/index.mjs');
-      const { ifDefined } = await import('../browser/directives/if-defined.mjs')
+      const { html, renderToString } = await import('../browser/index.js');
+      const { ifDefined } = await import('../browser/directives/if-defined.js')
       const elMain = document.querySelector('main');
       const attr = 'attr';
       elMain.innerHTML = await renderToString(html`<div attr=${ifDefined(attr)}>Hello, test!</div>`);

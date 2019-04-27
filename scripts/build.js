@@ -28,21 +28,13 @@ const tasks = [
     { input: 'src/browser.js', plugins },
     {
       intro: bufferPolyfill,
-      file: 'browser/index.mjs',
+      file: 'browser/index.js',
       format: 'esm'
     }
   ],
-  [
-    { input: 'src/browser.js', plugins },
-    {
-      intro: bufferPolyfill,
-      file: 'browser/index.js',
-      format: 'umd',
-      name: 'litHtmlServer'
-    }
-  ],
-  ...configDirectives(),
-  ...configDirectives('browser')
+  ...configDirectives('', 'cjs', '.js'),
+  ...configDirectives('', 'esm', '.mjs'),
+  ...configDirectives('browser', 'esm', '.js')
 ];
 
 (async function() {
@@ -61,7 +53,7 @@ const tasks = [
   }
 })();
 
-function configDirectives(outputdir = '') {
+function configDirectives(outputdir = '', format, extension) {
   const config = [];
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
@@ -71,32 +63,24 @@ function configDirectives(outputdir = '') {
   for (const directive of directives) {
     if (path.extname(directive) === '.js') {
       const input = path.join(dir, directive);
-      const filename = path.join(outputdir, 'directives', directive);
-      config.push(
-        [
-          {
-            external: [indexpath],
-            input,
-            plugins
-          },
-          {
-            file: filename,
-            format: 'cjs'
-          }
-        ],
-        [
-          {
-            external: [indexpath],
-            input,
-            plugins
-          },
-          {
-            file: filename.replace('.js', '.mjs'),
-            format: 'esm'
-          },
-          preWrite
-        ]
-      );
+      let filename = path.join(outputdir, 'directives', directive);
+
+      if (extension === '.mjs') {
+        filename = filename.replace('.js', '.mjs');
+      }
+
+      config.push([
+        {
+          external: [indexpath],
+          input,
+          plugins
+        },
+        {
+          file: filename,
+          format
+        },
+        extension === '.mjs' ? preWrite : undefined
+      ]);
     }
   }
 

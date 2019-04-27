@@ -44,7 +44,7 @@ async function body(apiPath) {
   return html`
     <h1>${data.title}</h1>
     <x-widget ?enabled="${data.hasWidget}"></x-widget>
-    <p class="${classMap({ 'negative': data.invertedText })}">${data.text}</p>
+    <p class="${classMap({ negative: data.invertedText })}">${data.text}</p>
   `;
 }
 ```
@@ -65,13 +65,15 @@ http
   }
 ```
 
-## API
+## API - Node.js
 
 ### `html`
 
-The tag function to apply to HTML template literals (also aliased as `svg`)
+The tag function to apply to HTML template literals (also aliased as `svg`):
 
 ```js
+const { html } = require('@popeindustries/lit-html-server');
+
 const name = 'Bob';
 html`
   <h1>Hello ${name}!</h1>
@@ -81,17 +83,22 @@ html`
 All template expressions (values interpolated with `${value}`) are escaped for securely including in HTML by default. An `unsafe-html` [directive](#directives) is available to disable escaping:
 
 ```js
+const { html } = require('@popeindustries/lit-html-server');
 const { unsafeHTML } = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
+
 html`
-  <div>${unsafeHTML('<span>dangerous!</span>')}</div>
+  <div>${unsafeHTML('<span>danger!</span>')}</div>
 `;
 ```
 
 ### `renderToStream(TemplateResult): Readable`
 
-Returns the result of the template tagged by `html` as a Node.js `Readable` stream of markup.
+Returns the result of the template tagged by `html` as a Node.js `Readable` stream of markup:
 
 ```js
+const { html, renderToStream } = require('@popeindustries/lit-html-server');
+
+const name = 'Bob';
 renderToStream(
   html`
     <h1>Hello ${name}!</h1>
@@ -101,9 +108,12 @@ renderToStream(
 
 ### `renderToString(TemplateResult): Promise<string>`
 
-Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup.
+Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup:
 
 ```js
+const { html, renderToString } = require('@popeindustries/lit-html-server');
+
+const name = 'Bob';
 const markup = await renderToString(
   html`
     <h1>Hello ${name}!</h1>
@@ -114,15 +124,76 @@ response.end(markup);
 
 ### `renderToBuffer(TemplateResult): Promise<Buffer>`
 
-Returns the result of the template tagged by `html` as a Promise which resolves to a Buffer of markup.
+Returns the result of the template tagged by `html` as a Promise which resolves to a Buffer of markup:
 
 ```js
+const { html, renderToBuffer } = require('@popeindustries/lit-html-server');
+
+const name = 'Bob';
 const markup = await renderToBuffer(
   html`
     <h1>Hello ${name}!</h1>
   `
 );
 response.end(markup);
+```
+
+## API - Browser
+
+**lit-html-server** may also be used in the browser to render strings of markup, or in a Service Worker script to render streams of markup.
+
+### `html`
+
+The tag function to apply to HTML template literals (also aliased as `svg`):
+
+```js
+import { html } from '@popeindustries/lit-html-server';
+
+const name = 'Bob';
+html`
+  <h1>Hello ${name}!</h1>
+`;
+```
+
+### `renderToStream(TemplateResult): ReadableStream`
+
+Returns the result of the template tagged by `html` as a `ReadableStream` stream of markup. This may be used in a Service Worker script to stream an html response to the browser:
+
+```js
+import { html, renderToStream } from '@popeindustries/lit-html-server');
+
+self.addEventListener('fetch', (event) => {
+  const name = 'Bob';
+  const stream = renderToStream(
+    html`
+      <h1>Hello ${name}!</h1>
+    `
+  );
+  const response = new Response(stream, {
+    headers: {
+      'content-type': 'text/html'
+    }
+  });
+
+  event.respondWith(response);
+});
+```
+
+> _NOTE: a bundler is required to package modules for use in a Service Worker_
+
+### `renderToString(TemplateResult): Promise<string>`
+
+Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup:
+
+```js
+import { html, renderToString } from '@popeindustries/lit-html-server';
+const name = 'Bob';
+const markup = await renderToString(
+  html`
+    <h1>Hello ${name}!</h1>
+  `
+);
+document.body.innerHtml = markup;
 ```
 
 ## Writing templates
@@ -242,12 +313,15 @@ html`
 
 ### Directives
 
-Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server context):
+Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server rendered context):
+
+> _NOTE: directives for use in the browser are imported from `@popeindustries/lit-html-server/browser/directives`_
 
 - `asyncAppend(value)`: Renders the items of an AsyncIterable, appending new values after previous values:
 
 ```js
 const asyncAppend = require('@popeindustries/lit-html-server/directives/async-append.js');
+
 html`
   <ul>
     ${asyncAppend(someListIterator)}
@@ -259,6 +333,7 @@ html`
 
 ```js
 const cache = require('@popeindustries/lit-html-server/directives/cache.js');
+
 cache(
   loggedIn
     ? html`
@@ -274,6 +349,7 @@ cache(
 
 ```js
 const classMap = require('@popeindustries/lit-html-server/directives/class-map.js');
+
 html`
   <div class="${classMap({ red: true })}"></div>
 `;
@@ -283,6 +359,7 @@ html`
 
 ```js
 const guard = require('@popeindustries/lit-html-server/directives/guard.js');
+
 html`
   <div>
     ${guard(items, () =>
@@ -301,6 +378,7 @@ html`
 
 ```js
 const ifDefined = require('@popeindustries/lit-html-server/directives/if-defined.js');
+
 html`
   <div class="${ifDefined(className)}"></div>
 `;
@@ -310,6 +388,7 @@ html`
 
 ```js
 const repeat = require('@popeindustries/lit-html-server/directives/repeat.js');
+
 html`
   <ul>
     ${repeat(
@@ -328,15 +407,17 @@ html`
 
 ```js
 const styleMap = require('@popeindustries/lit-html-server/directives/style-map.js');
+
 html`
   <div style="${styleMap({ color: 'red' })}"></div>
 `;
 ```
 
-- `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive sync values are prioritised over async Promises, unless there are no more pending values, in which case the last value is rendered regardless of type:
+- `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive synchronous values are prioritised over asynchronous Promises. If no synchronous values are passed, the last value is rendered regardless of type:
 
 ```js
 const until = require('@popeindustries/lit-html-server/directives/until.js');
+
 html`
   <p>
     ${until(

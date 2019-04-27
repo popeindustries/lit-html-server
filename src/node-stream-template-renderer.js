@@ -1,10 +1,6 @@
 /**
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
- */
-/**
  * @typedef TemplateResultProcessor { import('./default-template-result-processor.js).TemplateResultProcessor }
- */
-/**
  * @typedef TemplateResultRenderer { import('./default-template-result-renderer.js).TemplateResultRenderer }
  */
 import { Readable } from 'stream';
@@ -25,7 +21,8 @@ export class StreamTemplateRenderer extends Readable {
   constructor(result, processor) {
     super({ autoDestroy: true });
 
-    this.process = processor.getProcessor(this, [result], 16384);
+    this.stack = [result];
+    this.process = processor.getProcessor(this, this.stack, 16384);
   }
 
   /**
@@ -46,7 +43,8 @@ export class StreamTemplateRenderer extends Readable {
     }
     this.emit('close');
 
-    this.process = null;
+    this.process = undefined;
+    this.stack = undefined;
     this.removeAllListeners();
   }
 }

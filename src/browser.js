@@ -1,11 +1,11 @@
 /**
- * @typedef Readable { import('stream').Readable }
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
 import { isTemplateResult, templateResult } from './template-result.js';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
 import { PromiseTemplateRenderer } from './promise-template-renderer.js';
+import { StreamTemplateRenderer } from './browser-stream-template-renderer.js';
 import { Template } from './template.js';
 
 export { isAttributePart, isNodePart } from './parts.js';
@@ -16,6 +16,7 @@ export {
   defaultTemplateResultProcessor,
   html,
   isTemplateResult,
+  renderToStream,
   renderToString,
   html as svg,
   templateCache
@@ -45,6 +46,17 @@ function html(strings, ...values) {
 }
 
 /**
+ * Render a template result to a Readable stream
+ * *Note* that TemplateResults are single use, and can only be rendered once.
+ *
+ * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @returns { Readable }
+ */
+function renderToStream(result) {
+  return new StreamTemplateRenderer(result, defaultTemplateResultProcessor);
+}
+
+/**
  * Render a template result to a string resolving Promise.
  * *Note* that TemplateResults are single use, and can only be rendered once.
  *
@@ -54,5 +66,3 @@ function html(strings, ...values) {
 function renderToString(result) {
   return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, false);
 }
-
-// TODO: renderToStream using browser ReadableStream
