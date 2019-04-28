@@ -22,7 +22,7 @@ const { html } = require('@popeindustries/lit-html-server');
 const { classMap } = require('@popeindustries/lit-html-server/directives/class-map.js');
 const { until } = require('@popeindustries/lit-html-server/directives/until.js');
 
-function layout(data) {
+function Layout(data) {
   return html`
     <!DOCTYPE html>
     <html lang="en">
@@ -31,15 +31,15 @@ function layout(data) {
         <title>${data.title}</title>
       </head>
       <body>
-        ${until(body(data.api))}
+        ${until(Body(data.api))}
       </body>
     </html>
   `;
 }
 
-async function body(apiPath) {
+async function Body(api) {
   // Some Promise-based request method
-  const data = await fetchRemoteData(apiPath);
+  const data = await fetchRemoteData(api);
 
   return html`
     <h1>${data.title}</h1>
@@ -61,8 +61,91 @@ http
 
     res.writeHead(200);
     // Returns a Node.js Readable stream which can be piped to "response"
-    renderToStream(layout(data)).pipe(response);
+    renderToStream(Layout(data)).pipe(response);
   }
+```
+
+## Universal Templates
+
+With **lit-html-server** and **lit-html** it's possible to write a single template and render it on the server, in a ServiceWorker, and in the browser. In order to be able to render the same template in three different runtime environments, it's necessary to change the version of `html` and `directives` used to process the template. It would certainly be possible to alias imports using a build process (so that `import { html } from 'lit-html'` points to `@popeindustries/lit-html-server` for bundles run in server/ServiceWorker), but a more flexible approach would be to pass references directly to the templates (dependency injection):
+
+```js
+/**
+ * layout.js
+ */
+import Body from './body.js';
+
+export function Layout(context, data) {
+  const {
+    html,
+    directives: { until }
+  } = context;
+
+  return html`
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <title>${data.title}</title>
+      </head>
+      <body>
+        ${until(Body(context, data.api))}
+      </body>
+    </html>
+  `;
+}
+
+/**
+ * server.js
+ * (bundler or experimental modules required)
+ */
+import { html, renderToStream } from '@popeindustries/lit-html-server';
+import { Layout } from './layout.js';
+import { until } from '@popeindustries/lit-html-server/directives/until.js';
+
+const context = {
+  html,
+  directives: {
+    until
+  }
+};
+
+// ...in request handler
+renderToStream(Layout(context, { title: 'Home', api: '/api/home' }));
+
+/**
+ * service-worker.js
+ * (bundler required)
+ */
+import { html, renderToStream } from '@popeindustries/lit-html-server/browser/index.js';
+import { Layout } from './layout.js';
+import { until } from '@popeindustries/lit-html-server/browser/directives/until.js';
+
+const context = {
+  html,
+  directives: {
+    until
+  }
+};
+
+// ...in fetch event handler
+renderToStream(Layout(context, { title: 'Home', api: '/api/home' }));
+
+/**
+ * browser.js
+ */
+import { html, render } from 'lit-html';
+import { Layout } from './layout.js';
+import { until } from 'lit-html/directives/until.js';
+
+const context = {
+  html,
+  directives: {
+    until
+  }
+};
+
+render(Layout(context, { title: 'Home', api: '/api/home' }), document.body);
 ```
 
 ## API (Node.js)
@@ -413,7 +496,7 @@ html`
 `;
 ```
 
-- `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive synchronous values are prioritised over asynchronous Promises. If no synchronous values are passed, the last value is rendered regardless of type:
+- `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive synchronous values are prioritized over asynchronous Promises. If no synchronous values are passed, the last value is rendered regardless of type:
 
 ```js
 const until = require('@popeindustries/lit-html-server/directives/until.js');
