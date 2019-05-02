@@ -97,7 +97,7 @@ export function Layout(context, data) {
 
 /**
  * server.js
- * (bundler or experimental modules required)
+ * (transpiler or experimental modules required)
  */
 import { html, renderToStream } from '@popeindustries/lit-html-server';
 import { Layout } from './layout.js';
@@ -110,8 +110,11 @@ const context = {
   }
 };
 
-// ...in request handler
-renderToStream(Layout(context, { title: 'Home', api: '/api/home' }));
+http
+  .createServer((request, response) => {
+    res.writeHead(200);
+    renderToStream(Layout(context, data)).pipe(response);
+  }
 
 /**
  * service-worker.js
@@ -128,8 +131,16 @@ const context = {
   }
 };
 
-// ...in fetch event handler
-renderToStream(Layout(context, { title: 'Home', api: '/api/home' }));
+self.addEventListener('fetch', (event) => {
+  const stream = renderToStream(Layout(context, data));
+  const response = new Response(stream, {
+    headers: {
+      'content-type': 'text/html'
+    }
+  });
+
+  event.respondWith(response);
+});
 
 /**
  * browser.js
@@ -145,7 +156,7 @@ const context = {
   }
 };
 
-render(Layout(context, { title: 'Home', api: '/api/home' }), document.body);
+render(Layout(context, data), document.body);
 ```
 
 ## API (Node.js)
