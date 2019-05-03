@@ -59,7 +59,7 @@ http
   .createServer((request, response) => {
     const data = { title: 'Home', api: '/api/home' };
 
-    res.writeHead(200);
+    response.writeHead(200);
     // Returns a Node.js Readable stream which can be piped to "response"
     renderToStream(Layout(data)).pipe(response);
   }
@@ -112,7 +112,7 @@ const context = {
 
 http
   .createServer((request, response) => {
-    res.writeHead(200);
+    response.writeHead(200);
     renderToStream(Layout(context, data)).pipe(response);
   }
 
@@ -254,7 +254,7 @@ html`
 Returns the result of the template tagged by `html` as a `ReadableStream` stream of markup. This may be used in a Service Worker script to stream an html response to the browser:
 
 ```js
-import { html, renderToStream } from '@popeindustries/lit-html-server');
+import { html, renderToStream } from '@popeindustries/lit-html-server';
 
 self.addEventListener('fetch', (event) => {
   const name = 'Bob';
