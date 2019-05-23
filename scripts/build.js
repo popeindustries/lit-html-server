@@ -57,7 +57,6 @@ function configDirectives(outputdir = '', format, extension) {
   const config = [];
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
-  const indexpath = path.resolve('src/index.js');
   const preWrite = (content) => content.replace('../index.js', '../index.mjs');
 
   for (const directive of directives) {
@@ -71,7 +70,7 @@ function configDirectives(outputdir = '', format, extension) {
 
       config.push([
         {
-          external: ['stream', indexpath],
+          external: (id) => id === '../index.js',
           input,
           plugins
         },
