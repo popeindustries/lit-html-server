@@ -11,7 +11,10 @@ import { isTemplateResult } from './template-result.js';
  * @returns { boolean }
  */
 export function isNodePart(part) {
-  return part instanceof NodePart || typeof part.name === 'undefined';
+  return (
+    part instanceof NodePart ||
+    (part && part.getValue !== undefined && typeof part.name === 'undefined')
+  );
 }
 
 /**
@@ -21,7 +24,10 @@ export function isNodePart(part) {
  * @returns { boolean }
  */
 export function isAttributePart(part) {
-  return part instanceof AttributePart || typeof part.name !== 'undefined';
+  return (
+    part instanceof AttributePart ||
+    (part && part.getValue !== undefined && typeof part.name !== 'undefined')
+  );
 }
 
 /**

@@ -1,6 +1,6 @@
 import { isAsyncIterator, isPromise } from './is.js';
-import { AttributePart } from './parts.js';
 import { emptyStringBuffer } from './string.js';
+import { isAttributePart } from './parts.js';
 
 const pool = [];
 let id = 0;
@@ -12,7 +12,10 @@ let id = 0;
  * @returns { boolean }
  */
 export function isTemplateResult(result) {
-  return result instanceof TemplateResult;
+  return (
+    result instanceof TemplateResult ||
+    (result && typeof result.template !== 'undefined' && typeof result.values !== 'undefined')
+  );
 }
 
 /**
@@ -111,7 +114,7 @@ class TemplateResult {
     const part = this.template.parts[index];
     let value;
 
-    if (part instanceof AttributePart) {
+    if (isAttributePart(part)) {
       // AttributeParts can have multiple values, so slice based on length
       // (strings in-between values are already handled the instance)
       if (part.length > 1) {
