@@ -11,14 +11,14 @@ const bufferPolyfill = fs.readFileSync(
 );
 const tasks = [
   [
-    { input: 'src/index.js', plugins },
+    { external: ['stream'], input: 'src/index.js', plugins },
     {
       file: 'index.js',
       format: 'cjs'
     }
   ],
   [
-    { input: 'src/index.js', plugins },
+    { external: ['stream'], input: 'src/index.js', plugins },
     {
       file: 'index.mjs',
       format: 'esm'
@@ -71,7 +71,7 @@ function configDirectives(outputdir = '', format, extension) {
 
       config.push([
         {
-          external: [indexpath],
+          external: ['stream', indexpath],
           input,
           plugins
         },
