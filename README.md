@@ -407,7 +407,7 @@ html`
 
 ### Directives
 
-Most of the built-in **lit-html** [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server rendered context):
+Most of the built-in **lit-html** [directives](https://lit-html.polymer-project.org/guide/template-reference#built-in-directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server rendered context):
 
 > _NOTE: directives for use in the browser are imported from `@popeindustries/lit-html-server/browser/directives`_
 
