@@ -27,7 +27,7 @@
     "esm": "^3.2.25",
     "get-stream": "^5.1.0",
     "husky": "^2.3.0",
-    "lint-staged": "^8.1.7",
+    "lint-staged": "^9.0.0",
     "lit-html": "^1.1.0",
     "mocha": "^6.1.4",
     "prettier": "^1.17.1",
