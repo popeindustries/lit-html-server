@@ -30,8 +30,8 @@ const templateCache = new Map();
  * Interprets a template literal as an HTML template that can be
  * rendered as a Readable stream or String
  *
- * @param { Array<string> } strings
- * @param  { ...any } values
+ * @param { Array<TemplateStringsArray> } strings
+ * @param  { ...unknown } values
  * @returns { TemplateResult }
  */
 function html(strings, ...values) {

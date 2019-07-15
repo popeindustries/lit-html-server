@@ -14,7 +14,7 @@ export class Template {
   /**
    * Create Template instance
    *
-   * @param { Array<string> } strings
+   * @param { Array<TemplateStringsArray> } strings
    * @param { TemplateProcessor } processor
    */
   constructor(strings, processor) {
@@ -29,7 +29,7 @@ export class Template {
    * and create Part instances for the dynamic values,
    * based on lit-html syntax.
    *
-   * @param { Array<string> } strings
+   * @param { Array<TemplateStringsArray> } strings
    * @param { TemplateProcessor } processor
    */
   _prepare(strings, processor) {

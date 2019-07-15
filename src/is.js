@@ -3,7 +3,7 @@ export { isAsyncIterator, isIteratorResult, isPrimitive, isPromise, isSyncIterat
 /**
  * Determine if "promise" is a Promise instance
  *
- * @param { Promise<any> } promise
+ * @param { Promise<unknown> } promise
  * @returns { boolean }
  */
 function isPromise(promise) {
@@ -48,7 +48,7 @@ function isIteratorResult(result) {
 /**
  * Determine if "value" is a primitive
  *
- * @param { any } value
+ * @param { unknown } value
  * @returns { boolean }
  */
 function isPrimitive(value) {

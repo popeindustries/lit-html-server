@@ -108,7 +108,7 @@ export class AttributePart extends Part {
    * Resolves to a single string, or Promise for a single string,
    * even when responsible for multiple values.
    *
-   * @param { Array<any> } values
+   * @param { Array<unknown> } values
    * @returns { Buffer|Promise<Buffer> }
    */
   getValue(values) {
@@ -191,7 +191,7 @@ export class BooleanAttributePart extends AttributePart {
   /**
    * Retrieve resolved string Buffer from passed "values".
    *
-   * @param { Array<any> } values
+   * @param { Array<unknown> } values
    * @returns { Buffer|Promise<Buffer> }
    */
   getValue(values) {
@@ -219,7 +219,7 @@ export class PropertyAttributePart extends AttributePart {
    * Properties have no server-side representation,
    * so always returns an empty string.
    *
-   * @param { Array<any> } values
+   * @param { Array<unknown> } values
    * @returns { string }
    */
   getValue(/* values */) {
@@ -237,7 +237,7 @@ export class EventAttributePart extends AttributePart {
    * Event bindings have no server-side representation,
    * so always returns an empty string.
    *
-   * @param { Array<any> } values
+   * @param { Array<unknown> } values
    * @returns { string }
    */
   getValue(/* values */) {
@@ -248,9 +248,9 @@ export class EventAttributePart extends AttributePart {
 /**
  * Resolve "value" to string if possible
  *
- * @param { any } value
+ * @param { unknown } value
  * @param { AttributePart } part
- * @returns { any }
+ * @returns { unknown }
  */
 function resolveAttributeValue(value, part) {
   if (isDirective(value)) {
@@ -298,9 +298,9 @@ function resolveAttributeValue(value, part) {
 /**
  * Resolve "value" to string Buffer if possible
  *
- * @param { any } value
+ * @param { unknown } value
  * @param { NodePart } part
- * @returns { any }
+ * @returns { unknown }
  */
 function resolveNodeValue(value, part) {
   if (isDirective(value)) {
@@ -359,7 +359,7 @@ async function* resolveAsyncIteratorValue(iterator, part) {
  *
  * @param { function } directive
  * @param { Part } part
- * @returns { any }
+ * @returns { unknown }
  */
 function resolveDirectiveValue(directive, part) {
   // Directives are synchronous, so it's safe to read and delete value
