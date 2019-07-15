@@ -31,7 +31,7 @@
     "lit-html": "^1.1.0",
     "mocha": "^6.1.4",
     "prettier": "^1.17.1",
-    "rollup": "^1.12.3",
+    "rollup": "^1.17.0",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.0",
     "text-encoding": "^0.7.0",
@@ -45,8 +45,23 @@
     "format": "prettier --write './{directives,src,test}/**/*.{js,json}'",
     "lint": "eslint './{directives,src,test}/**/*.js'",
     "perf": "node test/perf.js",
-    "precommit": "lint-staged",
     "prepublishOnly": "npm run build",
     "test": "npm run build && NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
