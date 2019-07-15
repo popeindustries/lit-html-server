@@ -6,7 +6,7 @@ export const ifDefined = directive(ifDefinedDirective);
  * Sets the attribute if 'value' is defined,
  * removes the attribute if undefined.
  *
- * @param { any } value
+ * @param { unknown } value
  * @returns { (part: AttributePart) => void }
  */
 function ifDefinedDirective(value) {

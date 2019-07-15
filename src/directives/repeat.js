@@ -7,9 +7,9 @@ export const repeat = directive(repeatDirective);
  * No concept of efficient re-ordering possible in server context,
  * so this is a simple no-op map operation.
  *
- * @param { Array<any> } items
+ * @param { Array<unknown> } items
  * @param { function } keyFnOrTemplate
- * @param { (item: any, index: number) => TemplateResult } [template]
+ * @param { (item: unknown, index: number) => TemplateResult } [template]
  * @returns { (part: Part) => void }
  */
 function repeatDirective(items, keyFnOrTemplate, template) {
