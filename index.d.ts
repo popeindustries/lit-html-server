@@ -1,16 +1,16 @@
-type Directive = (...args: Array<unknown>) => (part: Part) => void;
-
-interface TemplateProcessor {
-  handleAttributeExpressions: (name: string, strings: TemplateStringsArray) => AttributePart;
-  handleTextExpression: () => NodePart;
-}
-
-interface TemplateResultRenderer {
-  push: (chunk: Buffer) => boolean;
-  destroy: (err: Error) => void;
-}
-
 declare module '@popeindustries/lit-html-server' {
+  type Directive = (...args: Array<unknown>) => (part: Part) => void;
+
+  interface TemplateProcessor {
+    handleAttributeExpressions: (name: string, strings: TemplateStringsArray) => AttributePart;
+    handleTextExpression: () => NodePart;
+  }
+
+  interface TemplateResultRenderer {
+    push: (chunk: Buffer) => boolean;
+    destroy: (err: Error) => void;
+  }
+
   const defaultTemplateProcessor: DefaultTemplateProcessor;
   const defaultTemplateResultProcessor: DefaultTemplateResultProcessor;
 
