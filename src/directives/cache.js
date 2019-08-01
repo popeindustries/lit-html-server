@@ -9,7 +9,7 @@ export const cache = directive(cacheDirective);
  * Enables fast switching between multiple templates by caching previous results.
  * Not possible/desireable to cache between server-side requests, so this is a no-op.
  *
- * @param { any } value
+ * @param { unknown } value
  * @returns { (part: NodePart) => void }
  */
 function cacheDirective(value) {

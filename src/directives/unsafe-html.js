@@ -5,7 +5,7 @@ export const unsafeHTML = directive(unsafeHTMLDirective);
 /**
  * Render "value" without HTML escaping
  *
- * @param { string } value
+ * @param { unknown } value
  * @returns { (part: NodePart) => void }
  */
 function unsafeHTMLDirective(value) {

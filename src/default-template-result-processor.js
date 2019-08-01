@@ -22,7 +22,7 @@ export class DefaultTemplateResultProcessor {
    * Process "stack" and push chunks to "renderer"
    *
    * @param { TemplateResultRenderer } renderer
-   * @param { Array<any> } stack
+   * @param { Array<unknown> } stack
    * @param { number } [highWaterMark] - byte length to buffer before pushing data
    * @returns { () => void }
    */
@@ -141,7 +141,7 @@ export class DefaultTemplateResultProcessor {
  * Permanently destroy all remaining TemplateResults in "stack".
  * (Triggered on error)
  *
- * @param { Array<any> } stack
+ * @param { Array<unknown> } stack
  */
 function destroy(stack) {
   if (stack.length > 0) {
@@ -159,7 +159,7 @@ function destroy(stack) {
  * Adds nested TemplateResults to the stack if necessary.
  *
  * @param { TemplateResult } result
- * @param { Array<any> } stack
+ * @param { Array<unknown> } stack
  */
 function getTemplateResultChunk(result, stack) {
   let chunk = result.readChunk();

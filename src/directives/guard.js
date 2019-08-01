@@ -7,8 +7,8 @@ export const guard = directive(guardDirective);
  * Not possible to compare against previous render in a server context,
  * so this is a no-op.
  *
- * @param { any } value
- * @param { () => any } fn
+ * @param { unknown } value
+ * @param { () => unknown } fn
  * @returns { (part: NodePart) => void }
  */
 function guardDirective(value, fn) {

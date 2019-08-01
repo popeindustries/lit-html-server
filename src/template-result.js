@@ -23,7 +23,7 @@ export function isTemplateResult(result) {
  * Uses an object pool to recycle instances.
  *
  * @param { Template } template
- * @param { Array<any> } values
+ * @param { Array<unknown> } values
  * @returns { TemplateResult }
  */
 export function templateResult(template, values) {
@@ -48,7 +48,7 @@ class TemplateResult {
    * Constructor
    *
    * @param { Template } template
-   * @param { Array<any> } values
+   * @param { Array<unknown> } values
    */
   constructor(template, values) {
     this.template = template;
@@ -63,7 +63,7 @@ class TemplateResult {
    * and will be destroyed upon completion.
    *
    * @param { boolean } deep - recursively resolve nested TemplateResults
-   * @returns { any }
+   * @returns { unknown }
    */
   read(deep) {
     let buffer = emptyStringBuffer;
@@ -93,7 +93,7 @@ class TemplateResult {
    * *Note* that instances may only be read once,
    * and will be destroyed when the last chunk is read.
    *
-   * @returns { any }
+   * @returns { unknown }
    */
   readChunk() {
     const isString = this.index % 2 === 0;
@@ -162,8 +162,8 @@ class TemplateResult {
  * Returns new "buffer" value.
  *
  * @param { Buffer } buffer
- * @param { Array<any> } chunks
- * @param { any } chunk
+ * @param { Array<unknown> } chunks
+ * @param { unknown } chunk
  * @param { boolean } [deep]
  * @returns { Buffer }
  */
