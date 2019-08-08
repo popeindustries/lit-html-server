@@ -62,7 +62,7 @@ http
     response.writeHead(200);
     // Returns a Node.js Readable stream which can be piped to "response"
     renderToStream(Layout(data)).pipe(response);
-  }
+  });
 ```
 
 ## Universal Templates
