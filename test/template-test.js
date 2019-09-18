@@ -62,4 +62,12 @@ describe('Template', () => {
     expect(template.strings[1].toString()).to.equal('></div>');
     expect(template.parts[0]).to.be.an.instanceOf(AttributePart);
   });
+  it('should prepare a template with parts tag names', () => {
+    const template = new Template(
+      ['<div a="', '"><span b="', '"</span></div>'],
+      defaultTemplateProcessor
+    );
+    expect(template.parts[0].tagName).to.equal('div');
+    expect(template.parts[1].tagName).to.equal('span');
+  });
 });

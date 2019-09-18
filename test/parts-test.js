@@ -24,6 +24,12 @@ describe('Parts', () => {
       const part = new NodePart();
       expect(part.getValue(`${unsafePrefixString}<text>`).toString()).to.equal('<text>');
     });
+    it('should resolve and escape a string value for script tag', () => {
+      const part = new NodePart('script');
+      expect(part.getValue("const t = '<script>alert(' + foo + ')</script>';").toString()).to.equal(
+        "const t = '<script>alert(' + foo + ')<\\/script>';"
+      );
+    });
     it('should resolve a number value', () => {
       const part = new NodePart();
       expect(part.getValue(1).toString()).to.equal('1');

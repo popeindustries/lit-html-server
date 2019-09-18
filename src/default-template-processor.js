@@ -22,28 +22,30 @@ export class DefaultTemplateProcessor {
    *
    * @param { string } name
    * @param { Array<string> } strings
+   * @param { string } tagName
    * @returns { AttributePart }
    */
-  handleAttributeExpressions(name, strings = []) {
+  handleAttributeExpressions(name, strings = [], tagName) {
     const prefix = name[0];
 
     if (prefix === '.') {
-      return new PropertyAttributePart(name.slice(1), strings);
+      return new PropertyAttributePart(name.slice(1), strings, tagName);
     } else if (prefix === '@') {
-      return new EventAttributePart(name.slice(1), strings);
+      return new EventAttributePart(name.slice(1), strings, tagName);
     } else if (prefix === '?') {
-      return new BooleanAttributePart(name.slice(1), strings);
+      return new BooleanAttributePart(name.slice(1), strings, tagName);
     }
 
-    return new AttributePart(name, strings);
+    return new AttributePart(name, strings, tagName);
   }
 
   /**
    * Create part instance for dynamic text values
    *
+   * @param { string } tagName
    * @returns { NodePart }
    */
-  handleTextExpression() {
-    return new NodePart();
+  handleTextExpression(tagName) {
+    return new NodePart(tagName);
   }
 }

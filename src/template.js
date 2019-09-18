@@ -5,6 +5,8 @@ import { emptyStringBuffer } from './string.js';
 import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
 const RE_QUOTE = /"[^"]*|'[^']*$/;
+/* eslint no-control-regex: 0 */
+const RE_TAG_WHITESPACE = /[ \x09\x0a\x0c\x0d]/;
 
 /**
  * A cacheable Template that stores the "strings" and "parts" associated with a
@@ -36,6 +38,7 @@ export class Template {
     const endIndex = strings.length - 1;
     let attributeMode = false;
     let nextString = strings[0];
+    let tagName = '';
 
     for (let i = 0; i < endIndex; i++) {
       let string = nextString;
@@ -46,7 +49,10 @@ export class Template {
 
       // Open/close tag found at end of string
       if (tagState !== -1) {
-        attributeMode = tagState === 1;
+        attributeMode = tagState !== 0;
+        if (attributeMode) {
+          tagName = getTagName(string, tagState);
+        }
       }
 
       if (attributeMode) {
@@ -85,16 +91,17 @@ export class Template {
               }
             }
 
-            part = processor.handleAttributeExpressions(name, attributeStrings);
+            part = processor.handleAttributeExpressions(name, attributeStrings, tagName);
           } else {
-            part = processor.handleAttributeExpressions(name, [
-              emptyStringBuffer,
-              emptyStringBuffer
-            ]);
+            part = processor.handleAttributeExpressions(
+              name,
+              [emptyStringBuffer, emptyStringBuffer],
+              tagName
+            );
           }
         }
       } else {
-        part = processor.handleTextExpression();
+        part = processor.handleTextExpression(tagName);
       }
 
       this.strings.push(Buffer.from(string));
@@ -118,7 +125,7 @@ export class Template {
  * and is better than the alternative (using "indexOf/lastIndexOf") which is potentially O(2n).
  *
  * @param { string } string
- * @returns { number } - returns "-1" if no tag, "0" if closed tag, or "1" if open tag
+ * @returns { number } - returns "-1" if no tag, "0" if closed tag, or index "{i + 1}" if open tag
  */
 function getTagState(string) {
   for (let i = string.length - 1; i >= 0; i--) {
@@ -127,9 +134,31 @@ function getTagState(string) {
     if (char === '>') {
       return 0;
     } else if (char === '<') {
-      return 1;
+      return i + 1;
     }
   }
 
   return -1;
+}
+
+/**
+ * Retrieve tag name from "string" starting at "index" position
+ *
+ * @param { string } string
+ * @param { number } index
+ */
+function getTagName(string, index) {
+  let tagName = '';
+
+  for (let i = index; i < string.length; i++) {
+    const char = string[i];
+
+    if (RE_TAG_WHITESPACE.test(char)) {
+      break;
+    }
+
+    tagName += char;
+  }
+
+  return tagName;
 }

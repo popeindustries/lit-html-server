@@ -1,6 +1,6 @@
 import { emptyStringBuffer, nothingString, unsafePrefixString } from './string.js';
 import { isAsyncIterator, isPrimitive, isPromise, isSyncIterator } from './is.js';
-import escapeHTML from './escape.js';
+import { escape } from './escape.js';
 import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';
 
@@ -36,8 +36,11 @@ export function isAttributePart(part) {
 export class Part {
   /**
    * Constructor
+   *
+   * @param { string } tagName
    */
-  constructor() {
+  constructor(tagName) {
+    this.tagName = tagName;
     this._value;
   }
 
@@ -93,9 +96,10 @@ export class AttributePart extends Part {
    *
    * @param { string } name
    * @param { Array<Buffer> } strings
+   * @param { string } tagName
    */
-  constructor(name, strings) {
-    super();
+  constructor(name, strings, tagName) {
+    super(tagName);
     this.name = name;
     this.strings = strings;
     this.length = strings.length - 1;
@@ -172,10 +176,11 @@ export class BooleanAttributePart extends AttributePart {
    *
    * @param { string } name
    * @param { Array<Buffer> } strings
+   * @param { string } tagName
    * @throws error when multiple expressions
    */
-  constructor(name, strings) {
-    super(name, strings);
+  constructor(name, strings, tagName) {
+    super(name, strings, tagName);
 
     this.name = Buffer.from(this.name);
 
@@ -269,7 +274,7 @@ function resolveAttributeValue(value, part) {
     const string = typeof value !== 'string' ? String(value) : value;
     // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
     return Buffer.from(
-      string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escapeHTML(string)
+      string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escape(string, 'attribute')
     );
   } else if (Buffer.isBuffer(value)) {
     return value;
@@ -315,7 +320,12 @@ function resolveNodeValue(value, part) {
     const string = typeof value !== 'string' ? String(value) : value;
     // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
     return Buffer.from(
-      string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escapeHTML(string)
+      string.indexOf(unsafePrefixString) === 0
+        ? string.slice(33)
+        : escape(
+            string,
+            part.tagName === 'script' || part.tagName === 'style' ? part.tagName : 'text'
+          )
     );
   } else if (isTemplateResult(value) || Buffer.isBuffer(value)) {
     return value;
