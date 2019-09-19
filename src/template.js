@@ -6,7 +6,7 @@ import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
 const RE_QUOTE = /"[^"]*|'[^']*$/;
 /* eslint no-control-regex: 0 */
-const RE_TAG_NAME = /[a-z0-9._-]/;
+const RE_TAG_NAME = /[a-zA-Z0-9._-]/;
 const TAG_OPEN = 1;
 const TAG_CLOSED = 0;
 const TAG_NONE = -1;
