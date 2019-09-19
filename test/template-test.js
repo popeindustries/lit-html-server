@@ -62,7 +62,19 @@ describe('Template', () => {
     expect(template.strings[1].toString()).to.equal('></div>');
     expect(template.parts[0]).to.be.an.instanceOf(AttributePart);
   });
-  it('should prepare a template with parts tag names', () => {
+  it('should prepare a template with text part tag names', () => {
+    const template = new Template(['<div>', '</div>'], defaultTemplateProcessor);
+    expect(template.parts[0].tagName).to.equal('div');
+  });
+  it('should prepare a template with attribute parts tag names', () => {
+    const template = new Template(['<div a="', '"></div>'], defaultTemplateProcessor);
+    expect(template.parts[0].tagName).to.equal('div');
+  });
+  it('should prepare a template with node part tag names', () => {
+    const template = new Template(['<div></div>', ''], defaultTemplateProcessor);
+    expect(template.parts[0].tagName).to.equal('div');
+  });
+  it('should prepare a template with multiple nested parts tag names', () => {
     const template = new Template(
       ['<div a="', '"><span b="', '"</span></div>'],
       defaultTemplateProcessor

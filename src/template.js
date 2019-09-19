@@ -6,7 +6,10 @@ import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
 const RE_QUOTE = /"[^"]*|'[^']*$/;
 /* eslint no-control-regex: 0 */
-const RE_TAG_WHITESPACE = /[ \x09\x0a\x0c\x0d]/;
+const RE_TAG_NAME_END = /[ <>/\x09\x0a\x0c\x0d]/;
+const TAG_OPEN = 1;
+const TAG_CLOSED = 0;
+const TAG_NONE = -1;
 
 /**
  * A cacheable Template that stores the "strings" and "parts" associated with a
@@ -43,16 +46,14 @@ export class Template {
     for (let i = 0; i < endIndex; i++) {
       let string = nextString;
       nextString = strings[i + 1];
-      const tagState = getTagState(string);
+      const [tagState, tagStateIndex] = getTagState(string);
       let skip = 0;
       let part;
 
       // Open/close tag found at end of string
-      if (tagState !== -1) {
-        attributeMode = tagState !== 0;
-        if (attributeMode) {
-          tagName = getTagName(string, tagState);
-        }
+      if (tagState !== TAG_NONE) {
+        attributeMode = tagState !== TAG_CLOSED;
+        tagName = getTagName(string, tagState, tagStateIndex);
       }
 
       if (attributeMode) {
@@ -125,39 +126,53 @@ export class Template {
  * and is better than the alternative (using "indexOf/lastIndexOf") which is potentially O(2n).
  *
  * @param { string } string
- * @returns { number } - returns "-1" if no tag, "0" if closed tag, or index "{i + 1}" if open tag
+ * @returns { Array<number> } - returns tuple "[-1, -1]" if no tag, "[0, i]" if closed tag, or "[1, i]" if open tag
  */
 function getTagState(string) {
   for (let i = string.length - 1; i >= 0; i--) {
     const char = string[i];
 
     if (char === '>') {
-      return 0;
+      return [TAG_CLOSED, i];
     } else if (char === '<') {
-      return i + 1;
+      return [TAG_OPEN, i];
     }
   }
 
-  return -1;
+  return [TAG_NONE, -1];
 }
 
 /**
- * Retrieve tag name from "string" starting at "index" position
+ * Retrieve tag name from "string" starting at "tagStateIndex" position
+ * Walks forward or backward based on "tagState" open or closed
  *
  * @param { string } string
- * @param { number } index
+ * @param { number } tagState
+ * @param { number } tagStateIndex
  */
-function getTagName(string, index) {
+function getTagName(string, tagState, tagStateIndex) {
   let tagName = '';
 
-  for (let i = index; i < string.length; i++) {
-    const char = string[i];
+  if (tagState === TAG_OPEN) {
+    for (let i = tagStateIndex + 1; i < string.length; i++) {
+      const char = string[i];
 
-    if (RE_TAG_WHITESPACE.test(char)) {
-      break;
+      if (RE_TAG_NAME_END.test(char)) {
+        break;
+      }
+
+      tagName += char;
     }
+  } else {
+    for (let i = tagStateIndex - 1; i >= 0; i--) {
+      const char = string[i];
 
-    tagName += char;
+      if (RE_TAG_NAME_END.test(char)) {
+        break;
+      }
+
+      tagName = char + tagName;
+    }
   }
 
   return tagName;
