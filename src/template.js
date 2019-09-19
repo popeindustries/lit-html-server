@@ -6,7 +6,7 @@ import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
 const RE_QUOTE = /"[^"]*|'[^']*$/;
 /* eslint no-control-regex: 0 */
-const RE_TAG_NAME_END = /[ <>/\x09\x0a\x0c\x0d]/;
+const RE_TAG_NAME = /[a-z0-9._-]/;
 const TAG_OPEN = 1;
 const TAG_CLOSED = 0;
 const TAG_NONE = -1;
@@ -157,7 +157,7 @@ function getTagName(string, tagState, tagStateIndex) {
     for (let i = tagStateIndex + 1; i < string.length; i++) {
       const char = string[i];
 
-      if (RE_TAG_NAME_END.test(char)) {
+      if (!RE_TAG_NAME.test(char)) {
         break;
       }
 
@@ -167,7 +167,7 @@ function getTagName(string, tagState, tagStateIndex) {
     for (let i = tagStateIndex - 1; i >= 0; i--) {
       const char = string[i];
 
-      if (RE_TAG_NAME_END.test(char)) {
+      if (!RE_TAG_NAME.test(char)) {
         break;
       }
 
