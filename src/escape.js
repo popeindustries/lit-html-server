@@ -20,13 +20,12 @@ const RE_SCRIPT_STYLE_TAG = /<\/(script|style)/gi;
  */
 export function escape(string, context = 'text') {
   switch (context) {
-    case 'text':
-    case 'attribute':
-      return string.replace(RE_HTML, (match) => HTML_ESCAPES[match]);
     case 'script':
     case 'style':
       return string.replace(RE_SCRIPT_STYLE_TAG, '<\\/$1').replace(/<!--/g, '\\x3C!--');
+    case 'text':
+    case 'attribute':
     default:
-      return string;
+      return string.replace(RE_HTML, (match) => HTML_ESCAPES[match]);
   }
 }
