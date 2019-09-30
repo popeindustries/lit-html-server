@@ -55,14 +55,13 @@ async function Body(api) {
 const http = require('http');
 const { renderToStream } = require('@popeindustries/lit-html-server');
 
-http
-  .createServer((request, response) => {
-    const data = { title: 'Home', api: '/api/home' };
+http.createServer((request, response) => {
+  const data = { title: 'Home', api: '/api/home' };
 
-    response.writeHead(200);
-    // Returns a Node.js Readable stream which can be piped to "response"
-    renderToStream(Layout(data)).pipe(response);
-  });
+  response.writeHead(200);
+  // Returns a Node.js Readable stream which can be piped to "response"
+  renderToStream(Layout(data)).pipe(response);
+});
 ```
 
 ## Universal Templates
@@ -403,7 +402,7 @@ html`
 `;
 ```
 
-> Note that **lit-html** no longer supports Promise values. Though **lit-html-server** does, it's recommended to use the `until` directive instead.
+> Note that **lit-html** no longer supports Promise values. Though **lit-html-server** does, it's recommended to use the `until` directive instead when authoring templates to be used in both environments.
 
 ### Directives
 
@@ -414,7 +413,7 @@ Most of the built-in **lit-html** [directives](https://lit-html.polymer-project.
 - `asyncAppend(value)`: Renders the items of an AsyncIterable, appending new values after previous values:
 
 ```js
-const asyncAppend = require('@popeindustries/lit-html-server/directives/async-append.js');
+const { asyncAppend } = require('@popeindustries/lit-html-server/directives/async-append.js');
 
 html`
   <ul>
@@ -426,7 +425,7 @@ html`
 - `cache(value)`: Enables fast switching between multiple templates by caching previous results. Since it's generally not desireable to cache between requests, this is a no-op:
 
 ```js
-const cache = require('@popeindustries/lit-html-server/directives/cache.js');
+const { cache } = require('@popeindustries/lit-html-server/directives/cache.js');
 
 cache(
   loggedIn
@@ -442,7 +441,7 @@ cache(
 - `classMap(classInfo)`: applies css classes to the `class` attribute. 'classInfo' keys are added as class names if values are truthy:
 
 ```js
-const classMap = require('@popeindustries/lit-html-server/directives/class-map.js');
+const { classMap } = require('@popeindustries/lit-html-server/directives/class-map.js');
 
 html`
   <div class="${classMap({ red: true })}"></div>
@@ -452,7 +451,7 @@ html`
 - `guard(value, fn)`: no-op since re-rendering does not apply (renders result of `fn`):
 
 ```js
-const guard = require('@popeindustries/lit-html-server/directives/guard.js');
+const { guard } = require('@popeindustries/lit-html-server/directives/guard.js');
 
 html`
   <div>
@@ -471,7 +470,7 @@ html`
 - `ifDefined(value)`: sets the attribute if the value is defined and removes the attribute if the value is undefined:
 
 ```js
-const ifDefined = require('@popeindustries/lit-html-server/directives/if-defined.js');
+const { ifDefined } = require('@popeindustries/lit-html-server/directives/if-defined.js');
 
 html`
   <div class="${ifDefined(className)}"></div>
@@ -481,7 +480,7 @@ html`
 - `repeat(items, keyfnOrTemplate, template))`: no-op since re-rendering does not apply (maps `items` over `template`)
 
 ```js
-const repeat = require('@popeindustries/lit-html-server/directives/repeat.js');
+const { repeat } = require('@popeindustries/lit-html-server/directives/repeat.js');
 
 html`
   <ul>
@@ -500,7 +499,7 @@ html`
 - `styleMap(styleInfo)`: applies css properties to the `style` attribute. 'styleInfo' keys and values are added as style properties:
 
 ```js
-const styleMap = require('@popeindustries/lit-html-server/directives/style-map.js');
+const { styleMap } = require('@popeindustries/lit-html-server/directives/style-map.js');
 
 html`
   <div style="${styleMap({ color: 'red' })}"></div>
@@ -510,7 +509,7 @@ html`
 - `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive synchronous values are prioritized over asynchronous Promises. If no synchronous values are passed, the last value is rendered regardless of type:
 
 ```js
-const until = require('@popeindustries/lit-html-server/directives/until.js');
+const { until } = require('@popeindustries/lit-html-server/directives/until.js');
 
 html`
   <p>
