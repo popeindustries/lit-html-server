@@ -156,5 +156,50 @@ describe('directives', () => {
       const result = h`<p>${custom()}</p>`;
       expect(await render(result)).to.equal('<p>custom&#x27;s</p>');
     });
+    it('should give correct tagName', async () => {
+      let actualTagName = 'not-set';
+      const custom = directive(() => (part) => {
+        const { tagName } = part;
+        actualTagName = tagName;
+        part.setValue(tagName);
+      });
+      const result = h`<my-static-element>${custom()}</my-static-element>`;
+      await render(result);
+      expect(actualTagName).to.equal('my-static-element');
+    });
+    it('should give correct tagName when tag has space', async () => {
+      let actualTagName = 'not-set';
+      const custom = directive(() => (part) => {
+        const { tagName } = part;
+        actualTagName = tagName;
+        part.setValue(tagName);
+      });
+      const result = h`<my-static-element >${custom()}</my-static-element>`;
+      await render(result);
+      expect(actualTagName).to.equal('my-static-element');
+    });
+    it('should give correct tagName when tag has attribute', async () => {
+      let actualTagName = 'not-set';
+      const custom = directive(() => (part) => {
+        const { tagName } = part;
+        actualTagName = tagName;
+        part.setValue(tagName);
+      });
+      const result = h`<my-static-element class="something">${custom()}</my-static-element>`;
+      await render(result);
+      expect(actualTagName).to.equal('my-static-element');
+    });
+    it('should give correct tagName with dynamic attribute value', async () => {
+      let actualTagName = 'not-set';
+      const custom = directive(() => (part) => {
+        const { tagName } = part;
+        actualTagName = tagName;
+        part.setValue(tagName);
+      });
+      const myClass = 'something';
+      const result = h`<my-static-element class="${myClass}">${custom()}</my-static-element>`;
+      await render(result);
+      expect(actualTagName).to.equal('my-static-element');
+    });
   });
 });

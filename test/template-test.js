@@ -70,10 +70,6 @@ describe('Template', () => {
     const template = new Template(['<div a="', '"></div>'], defaultTemplateProcessor);
     expect(template.parts[0].tagName).to.equal('div');
   });
-  it('should prepare a template with node part tag names', () => {
-    const template = new Template(['<div></div>', ''], defaultTemplateProcessor);
-    expect(template.parts[0].tagName).to.equal('div');
-  });
   it('should prepare a template with multiple nested parts tag names', () => {
     const template = new Template(
       ['<div a="', '"><span b="', '"</span></div>'],

@@ -53,7 +53,10 @@ export class Template {
       // Open/close tag found at end of string
       if (tagState !== TAG_NONE) {
         attributeMode = tagState !== TAG_CLOSED;
-        tagName = getTagName(string, tagState, tagStateIndex);
+        // Find tag name if open, or if closed and no existing tag name
+        if (tagState === TAG_OPEN || tagName === '') {
+          tagName = getTagName(string, tagState, tagStateIndex);
+        }
       }
 
       if (attributeMode) {
@@ -153,7 +156,16 @@ function getTagState(string) {
 function getTagName(string, tagState, tagStateIndex) {
   let tagName = '';
 
-  if (tagState === TAG_OPEN) {
+  if (tagState === TAG_CLOSED) {
+    // Walk backwards until open tag
+    for (let i = tagStateIndex - 1; i >= 0; i--) {
+      const char = string[i];
+
+      if (char === '<') {
+        return getTagName(string, TAG_OPEN, i);
+      }
+    }
+  } else {
     for (let i = tagStateIndex + 1; i < string.length; i++) {
       const char = string[i];
 
@@ -162,16 +174,6 @@ function getTagName(string, tagState, tagStateIndex) {
       }
 
       tagName += char;
-    }
-  } else {
-    for (let i = tagStateIndex - 1; i >= 0; i--) {
-      const char = string[i];
-
-      if (!RE_TAG_NAME.test(char)) {
-        break;
-      }
-
-      tagName = char + tagName;
     }
   }
 
