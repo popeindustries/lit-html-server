@@ -1,4 +1,4 @@
-/* eslint no-constant-condition:0 */
+/* eslint no-constant-condition:0 no-async-promise-executor:0 */
 import 'web-streams-polyfill';
 import { html as h, renderToStream, renderToString } from '../browser/index.js';
 import { createAsyncIterable } from './utils.js';
@@ -170,26 +170,6 @@ describe('Browser template render', () => {
         '<main><h1>title</h1><div>this is body text <div>this too and don&#x27;t forget this</div></div></main>';
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);
-    });
-    it('should destroy template result when rendered', async () => {
-      const result = h`text`;
-      const expected = 'text';
-      expect(await renderToString(result)).to.equal(expected);
-      expect(result).to.have.property('template', undefined);
-      expect(result).to.have.property('values', undefined);
-    });
-    it('should destroy template result on error', async () => {
-      const result = () => h`oops! ${h`${Promise.reject(Error('errored!'))}`}`;
-      let chunks;
-      try {
-        chunks = result();
-        const html = await renderToString(chunks);
-        expect(html).to.not.exist;
-      } catch (err) {
-        expect(chunks).to.have.property('template', undefined);
-        expect(chunks).to.have.property('values', undefined);
-        expect(err).to.have.property('message', 'errored!');
-      }
     });
   });
 

@@ -2,7 +2,6 @@ import { isAsyncIterator, isPromise } from './is.js';
 import { emptyStringBuffer } from './string.js';
 import { isAttributePart } from './parts.js';
 
-const pool = [];
 let id = 0;
 
 /**
@@ -20,23 +19,13 @@ export function isTemplateResult(result) {
 
 /**
  * Retrieve TemplateResult instance.
- * Uses an object pool to recycle instances.
  *
  * @param { Template } template
  * @param { Array<unknown> } values
  * @returns { TemplateResult }
  */
 export function templateResult(template, values) {
-  let instance = pool.pop();
-
-  if (instance) {
-    instance.template = template;
-    instance.values = values;
-  } else {
-    instance = new TemplateResult(template, values);
-  }
-
-  return instance;
+  return new TemplateResult(template, values);
 }
 
 /**
@@ -59,8 +48,6 @@ class TemplateResult {
 
   /**
    * Consume template result content.
-   * *Note* that instances may only be read once,
-   * and will be destroyed upon completion.
    *
    * @param { boolean } deep - recursively resolve nested TemplateResults
    * @returns { unknown }
@@ -90,8 +77,6 @@ class TemplateResult {
 
   /**
    * Consume template result content one chunk at a time.
-   * *Note* that instances may only be read once,
-   * and will be destroyed when the last chunk is read.
    *
    * @returns { unknown }
    */
@@ -101,7 +86,8 @@ class TemplateResult {
 
     // Finished
     if (!isString && index >= this.template.strings.length - 1) {
-      this.destroy();
+      // Reset
+      this.index = 0;
       return null;
     }
 
@@ -128,32 +114,6 @@ class TemplateResult {
     }
 
     return value;
-  }
-
-  /**
-   * Destroy the instance,
-   * returning it to the object pool
-   *
-   * @param { boolean } permanent - permanently destroy instance and it's children
-   * @returns { void }
-   */
-  destroy(permanent) {
-    if (this.values !== undefined) {
-      if (permanent) {
-        for (const value of this.values) {
-          if (isTemplateResult(value)) {
-            value.destroy(permanent);
-          }
-        }
-      }
-      this.values.length = 0;
-    }
-    this.values = undefined;
-    this.template = undefined;
-    this.index = 0;
-    if (!permanent) {
-      pool.push(this);
-    }
   }
 }
 
