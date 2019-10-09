@@ -1,5 +1,5 @@
 declare module '@popeindustries/lit-html-server' {
-  type Directive = (...args: Array<unknown>) => (part: Part) => void;
+  type Directive = (...args: Array<any>) => (part: Part) => void;
 
   interface TemplateProcessor {
     handleAttributeExpressions: (name: string, strings: TemplateStringsArray) => AttributePart;
