@@ -195,23 +195,13 @@ declare module '@popeindustries/lit-html-server' {
 
     /**
      * Consume template result content.
-     * *Note* that instances may only be read once,
-     * and will be destroyed upon completion.
      */
     read(deep: boolean): unknown;
 
     /**
      * Consume template result content one chunk at a time.
-     * *Note* that instances may only be read once,
-     * and will be destroyed when the last chunk is read.
      */
     readChunk(): unknown;
-
-    /**
-     * Destroy the instance,
-     * returning it to the object pool
-     */
-    destroy(permanent: boolean): void;
   }
 
   /**

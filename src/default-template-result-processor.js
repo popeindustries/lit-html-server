@@ -101,7 +101,7 @@ export class DefaultTemplateResultProcessor {
                 process();
               })
               .catch((err) => {
-                destroy(stack);
+                stack.length = 0;
                 renderer.destroy(err);
               });
           } else if (Array.isArray(chunk)) {
@@ -120,7 +120,7 @@ export class DefaultTemplateResultProcessor {
             // Add pending Promise for IteratorResult to stack
             stack.unshift(chunk[Symbol.asyncIterator]().next());
           } else {
-            destroy(stack);
+            stack.length = 0;
             return renderer.destroy(Error(`unknown chunk type: ${chunk}`));
           }
         }
@@ -135,23 +135,6 @@ export class DefaultTemplateResultProcessor {
       }
     };
   }
-}
-
-/**
- * Permanently destroy all remaining TemplateResults in "stack".
- * (Triggered on error)
- *
- * @param { Array<unknown> } stack
- */
-function destroy(stack) {
-  if (stack.length > 0) {
-    for (const chunk of stack) {
-      if (isTemplateResult(chunk)) {
-        chunk.destroy(true);
-      }
-    }
-  }
-  stack.length = 0;
 }
 
 /**
