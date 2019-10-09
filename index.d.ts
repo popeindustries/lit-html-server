@@ -1,6 +1,4 @@
 declare module '@popeindustries/lit-html-server' {
-  type Directive = (...args: Array<any>) => (part: Part) => void;
-
   interface TemplateProcessor {
     handleAttributeExpressions: (name: string, strings: TemplateStringsArray) => AttributePart;
     handleTextExpression: () => NodePart;
@@ -19,7 +17,7 @@ declare module '@popeindustries/lit-html-server' {
    * The passed function should be a factory function,
    * and must return a function that will eventually be called with a Part instance
    */
-  export function directive(fn: Directive): Directive;
+  export function directive<F extends (...args: Array<any>) => object>(f: F): F;
 
   /**
    * Determine if "part" is an AttributePart
