@@ -11,71 +11,71 @@ declare module '@popeindustries/lit-html-server' {
     destroy: (err: Error) => void;
   }
 
-  const defaultTemplateProcessor: DefaultTemplateProcessor;
-  const defaultTemplateResultProcessor: DefaultTemplateResultProcessor;
+  export const defaultTemplateProcessor: DefaultTemplateProcessor;
+  export const defaultTemplateResultProcessor: DefaultTemplateResultProcessor;
 
   /**
    * Define new directive for "fn".
    * The passed function should be a factory function,
    * and must return a function that will eventually be called with a Part instance
    */
-  function directive(fn: Directive): Directive;
+  export function directive(fn: Directive): Directive;
 
   /**
    * Determine if "part" is an AttributePart
    */
-  function isAttributePart(part: Part): boolean;
+  export function isAttributePart(part: Part): boolean;
 
   /**
    * Determine if "part" is a NodePart
    */
-  function isNodePart(part: Part): boolean;
+  export function isNodePart(part: Part): boolean;
 
   /**
    * Determine whether "result" is a TemplateResult
    */
-  function isTemplateResult(result: TemplateResult): boolean;
+  export function isTemplateResult(result: TemplateResult): boolean;
 
   /**
    * A value for strings that signals a Part to clear its content
    */
-  const nothingString: string;
-  const templateCache: Map<TemplateStringsArray, Template>;
+  export const nothingString: string;
+  export const templateCache: Map<TemplateStringsArray, Template>;
 
   /**
    * A prefix value for strings that should not be escaped
    */
-  const unsafePrefixString: string;
+  export const unsafePrefixString: string;
 
   /**
    * Interprets a template literal as an HTML template that can be
    * rendered as a Readable stream or String
    */
-  function html(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
-  function svg(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
+  export function html(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
+  export function svg(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
 
   /**
    * Render a template result to a string resolving Promise.
    * *Note* that TemplateResults are single use, and can only be rendered once.
    */
-  function renderToString(result: TemplateResult): Promise<string>;
+  export function renderToString(result: TemplateResult): Promise<string>;
 
   /**
    * Render a template result to a Readable stream
    * *Note* that TemplateResults are single use, and can only be rendered once.
    */
-  function renderToStream(result: TemplateResult): import('stream').Readable;
+  export function renderToStream(result: TemplateResult): import('stream').Readable;
 
   /**
    * Render a template result to a Buffer resolving Promise.
    * *Note* that TemplateResults are single use, and can only be rendered once.
    */
-  function renderToBuffer(result: TemplateResult): Promise<Buffer>;
+  export function renderToBuffer(result: TemplateResult): Promise<Buffer>;
 
   /**
    * Base class interface for Node/Attribute parts
    */
-  class Part {
+  export class Part {
     /**
      * Store the current value.
      * Used by directives to temporarily transfer value
@@ -87,7 +87,7 @@ declare module '@popeindustries/lit-html-server' {
   /**
    * A dynamic template part for text nodes
    */
-  class NodePart extends Part {
+  export class NodePart extends Part {
     /**
      * Retrieve resolved value given passed "value"
      */
@@ -98,7 +98,7 @@ declare module '@popeindustries/lit-html-server' {
    * A dynamic template part for attributes.
    * Unlike text nodes, attributes may contain multiple strings and parts.
    */
-  class AttributePart extends Part {
+  export class AttributePart extends Part {
     /*
      * @param { Array<any> } values
      * @returns { Buffer|Promise<Buffer> }
@@ -110,7 +110,7 @@ declare module '@popeindustries/lit-html-server' {
    * A dynamic template part for boolean attributes.
    * Boolean attributes are prefixed with "?"
    */
-  class BooleanAttributePart extends AttributePart {
+  export class BooleanAttributePart extends AttributePart {
     /**
      * Retrieve resolved string Buffer from passed "values".
      */
@@ -121,7 +121,7 @@ declare module '@popeindustries/lit-html-server' {
    * A dynamic template part for property attributes.
    * Property attributes are prefixed with "."
    */
-  class PropertyAttributePart extends AttributePart {
+  export class PropertyAttributePart extends AttributePart {
     /**
      * Retrieve resolved string Buffer from passed "values".
      * Properties have no server-side representation,
@@ -134,7 +134,7 @@ declare module '@popeindustries/lit-html-server' {
    * A dynamic template part for event attributes.
    * Event attributes are prefixed with "@"
    */
-  class EventAttributePart extends AttributePart {
+  export class EventAttributePart extends AttributePart {
     /**
      * Retrieve resolved string Buffer from passed "values".
      * Event bindings have no server-side representation,
@@ -148,7 +148,7 @@ declare module '@popeindustries/lit-html-server' {
    * Exposes factory functions for generating Part instances to use for
    * resolving a template's dynamic values.
    */
-  class DefaultTemplateProcessor {
+  export class DefaultTemplateProcessor {
     /**
      * Create part instance for dynamic attribute values
      */
@@ -166,7 +166,7 @@ declare module '@popeindustries/lit-html-server' {
    *
    * @implements TemplateResultProcessor
    */
-  class DefaultTemplateResultProcessor {
+  export class DefaultTemplateResultProcessor {
     /**
      * Process "stack" and push chunks to "renderer"
      */
@@ -221,4 +221,64 @@ declare module '@popeindustries/lit-html-server' {
      */
     _prepare(strings: Array<TemplateStringsArray>, processor: TemplateProcessor): void;
   }
+}
+
+declare module '@popeindustres/lit-html-server/directives/async-append.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const asyncAppend: (value: AsyncIterable<unknown>) => (part: Part) => void;
+}
+
+declare module '@popeindustres/lit-html-server/directives/cache.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const cache: (value: unknown) => (part: Part) => void;
+}
+
+declare module '@popeindustres/lit-html-server/directives/class-map.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const classMap: (classInfo: {
+    [name: string]: string | boolean | number;
+  }) => (part: Part) => void;
+}
+
+declare module '@popeindustres/lit-html-server/directives/guard.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const guard: (value: unknown, fn: () => unknown) => (part: Part) => void;
+}
+
+declare module '@popeindustres/lit-html-server/directives/if-defined.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const ifDefined: (value: unknown) => (part: Part) => void;
+}
+
+declare module '@popeindustres/lit-html-server/directives/repeat.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const repeat: (
+    items: Array<unknown>,
+    keyFnOrTemplate: (item: unknown, index: number) => unknown,
+    template?: (item: unknown, index: number) => unknown
+  ) => (part: Part) => void;
+}
+
+declare module '@popeindustres/lit-html-server/directives/style-map.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const styleMap: (styleInfo: { [name: string]: string }) => (part: Part) => void;
+}
+
+declare module '@popeindustres/lit-html-server/directives/unsafe-html.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const unsafeHTML: (value: unknown) => (part: Part) => void;
+}
+
+declare module '@popeindustres/lit-html-server/directives/until.js' {
+  import { Part } from '@popeindustries/lit-html-server';
+
+  export const until: (...args: Array<unknown>) => (part: Part) => void;
 }

@@ -1,22 +1,17 @@
 /**
- * @typedef NodePart { import('../parts.js').NodePart }
+ * @typedef Part { import('../parts.js').Part }
  */
 import { directive, isNodePart } from '../index.js';
-
-export const cache = directive(cacheDirective);
 
 /**
  * Enables fast switching between multiple templates by caching previous results.
  * Not possible/desireable to cache between server-side requests, so this is a no-op.
  *
- * @param { unknown } value
- * @returns { (part: NodePart) => void }
+ * @type { (value: unknown) => (part: Part) => void }
  */
-function cacheDirective(value) {
-  return function(part) {
-    if (!isNodePart(part)) {
-      throw Error('The `cache` directive can only be used in text nodes');
-    }
-    part.setValue(value);
-  };
-}
+export const cache = directive((value) => (part) => {
+  if (!isNodePart(part)) {
+    throw Error('The `cache` directive can only be used in text nodes');
+  }
+  part.setValue(value);
+});

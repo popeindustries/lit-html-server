@@ -1,18 +1,16 @@
+/**
+ * @typedef Part { import('../parts.js').Part }
+ */
 import { directive, isNodePart, unsafePrefixString } from '../index.js';
-
-export const unsafeHTML = directive(unsafeHTMLDirective);
 
 /**
  * Render "value" without HTML escaping
  *
- * @param { unknown } value
- * @returns { (part: NodePart) => void }
+ * @type { (value: unknown) => (part: Part) => void }
  */
-function unsafeHTMLDirective(value) {
-  return function(part) {
-    if (!isNodePart(part)) {
-      throw Error('The `unsafeHTML` directive can only be used in text nodes');
-    }
-    part.setValue(`${unsafePrefixString}${value}`);
-  };
-}
+export const unsafeHTML = directive((value) => (part) => {
+  if (!isNodePart(part)) {
+    throw Error('The `unsafeHTML` directive can only be used in text nodes');
+  }
+  part.setValue(`${unsafePrefixString}${value}`);
+});
