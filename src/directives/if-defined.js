@@ -1,19 +1,17 @@
+/**
+ * @typedef Part { import('../parts.js').Part }
+ */
 import { directive, isAttributePart, nothingString } from '../index.js';
-
-export const ifDefined = directive(ifDefinedDirective);
 
 /**
  * Sets the attribute if 'value' is defined,
  * removes the attribute if undefined.
  *
- * @param { unknown } value
- * @returns { (part: AttributePart) => void }
+ * @type { (value: unknown) => (part: Part) => void }
  */
-function ifDefinedDirective(value) {
-  return function(part) {
-    if (value === undefined && isAttributePart(part)) {
-      return part.setValue(nothingString);
-    }
-    part.setValue(value);
-  };
-}
+export const ifDefined = directive((value) => (part) => {
+  if (value === undefined && isAttributePart(part)) {
+    return part.setValue(nothingString);
+  }
+  part.setValue(value);
+});

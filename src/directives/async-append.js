@@ -1,21 +1,16 @@
 /**
- * @typedef NodePart { import('../parts.js').NodePart }
+ * @typedef Part { import('../parts.js').Part }
  */
 import { directive, isNodePart } from '../index.js';
-
-export const asyncAppend = directive(asyncAppendDirective);
 
 /**
  * Render items of an AsyncIterable
  *
- * @param { AsyncIterableIterator } value
- * @returns { (part: NodePart) => void }
+ * @type { (value: AsyncIterable<unknown>) => (part: Part) => void }
  */
-function asyncAppendDirective(value) {
-  return function(part) {
-    if (!isNodePart(part)) {
-      throw Error('The `asyncAppend` directive can only be used in text nodes');
-    }
-    part.setValue(value);
-  };
-}
+export const asyncAppend = directive((value) => (part) => {
+  if (!isNodePart(part)) {
+    throw Error('The `asyncAppend` directive can only be used in text nodes');
+  }
+  part.setValue(value);
+});

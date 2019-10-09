@@ -50,6 +50,7 @@
     "prepublishOnly": "npm run build",
     "test": "npm run build && NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm"
   },
+  "types": "index.d.ts",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
