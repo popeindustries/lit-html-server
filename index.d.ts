@@ -221,7 +221,7 @@ declare module '@popeindustries/lit-html-server' {
   }
 }
 
-declare module '@popeindustres/lit-html-server/directives/async-append.js' {
+declare module '@popeindustries/lit-html-server/directives/async-append.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const asyncAppend: (
@@ -230,7 +230,7 @@ declare module '@popeindustres/lit-html-server/directives/async-append.js' {
   ) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/async-replace.js' {
+declare module '@popeindustries/lit-html-server/directives/async-replace.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const asyncReplace: (
@@ -239,13 +239,13 @@ declare module '@popeindustres/lit-html-server/directives/async-replace.js' {
   ) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/cache.js' {
+declare module '@popeindustries/lit-html-server/directives/cache.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const cache: (value: unknown) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/class-map.js' {
+declare module '@popeindustries/lit-html-server/directives/class-map.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const classMap: (classInfo: {
@@ -253,19 +253,19 @@ declare module '@popeindustres/lit-html-server/directives/class-map.js' {
   }) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/guard.js' {
+declare module '@popeindustries/lit-html-server/directives/guard.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const guard: (value: unknown, fn: () => unknown) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/if-defined.js' {
+declare module '@popeindustries/lit-html-server/directives/if-defined.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const ifDefined: (value: unknown) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/repeat.js' {
+declare module '@popeindustries/lit-html-server/directives/repeat.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const repeat: (
@@ -275,19 +275,19 @@ declare module '@popeindustres/lit-html-server/directives/repeat.js' {
   ) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/style-map.js' {
+declare module '@popeindustries/lit-html-server/directives/style-map.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const styleMap: (styleInfo: { [name: string]: string }) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/unsafe-html.js' {
+declare module '@popeindustries/lit-html-server/directives/unsafe-html.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const unsafeHTML: (value: unknown) => (part: Part) => void;
 }
 
-declare module '@popeindustres/lit-html-server/directives/until.js' {
+declare module '@popeindustries/lit-html-server/directives/until.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
   export const until: (...args: Array<unknown>) => (part: Part) => void;
