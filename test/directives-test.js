@@ -17,6 +17,12 @@ describe('directives', () => {
       const result = h`some ${asyncAppend(createAsyncIterable(['async', ' text']))}`;
       expect(await render(result)).to.equal('some async text');
     });
+    it('should render a mapped AsyncIterable value', async () => {
+      const result = h`some ${asyncAppend(createAsyncIterable(['async', 'text']), (v, index) => {
+        return `${index}-${v.toUpperCase()}`;
+      })}`;
+      expect(await render(result)).to.equal('some 0-ASYNC1-TEXT');
+    });
   });
 
   describe('cache', () => {

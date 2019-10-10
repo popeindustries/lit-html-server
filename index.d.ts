@@ -224,7 +224,10 @@ declare module '@popeindustries/lit-html-server' {
 declare module '@popeindustres/lit-html-server/directives/async-append.js' {
   import { Part } from '@popeindustries/lit-html-server';
 
-  export const asyncAppend: (value: AsyncIterable<unknown>) => (part: Part) => void;
+  export const asyncAppend: (
+    value: AsyncIterable<unknown>,
+    mapper?: ((v: unknown, index?: number | undefined) => unknown) | undefined
+  ) => (part: Part) => void;
 }
 
 declare module '@popeindustres/lit-html-server/directives/cache.js' {
