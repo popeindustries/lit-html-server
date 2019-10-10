@@ -1,5 +1,6 @@
 import { directive, html as h, renderToString as render } from '../index.mjs';
 import { asyncAppend } from '../directives/async-append.mjs';
+import { asyncReplace } from '../directives/async-replace.mjs';
 import { cache } from '../directives/cache.mjs';
 import { classMap } from '../directives/class-map.mjs';
 import { createAsyncIterable } from './utils.js';
@@ -22,6 +23,19 @@ describe('directives', () => {
         return `${index}-${v.toUpperCase()}`;
       })}`;
       expect(await render(result)).to.equal('some 0-ASYNC1-TEXT');
+    });
+  });
+
+  describe('asyncReplace', () => {
+    it('should render an AsyncIterable value', async () => {
+      const result = h`some ${asyncReplace(createAsyncIterable(['async', ' text']))}`;
+      expect(await render(result)).to.equal('some async');
+    });
+    it('should render a mapped AsyncIterable value', async () => {
+      const result = h`some ${asyncReplace(createAsyncIterable(['async', 'text']), (v, index) => {
+        return `${index}-${v.toUpperCase()}`;
+      })}`;
+      expect(await render(result)).to.equal('some 0-ASYNC');
     });
   });
 
