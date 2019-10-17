@@ -31,6 +31,19 @@ export function isAttributePart(part) {
 }
 
 /**
+ * Determine if "part" is a PropertyAttributePart
+ *
+ * @param { Part } part
+ * @returns { boolean }
+ */
+export function isPropertyAttributePart(part) {
+  return (
+    part instanceof PropertyAttributePart ||
+    (part && part.getValue !== undefined && typeof part.name !== 'undefined')
+  );
+}
+
+/**
  * Base class interface for Node/Attribute parts
  */
 export class Part {
@@ -227,7 +240,13 @@ export class PropertyAttributePart extends AttributePart {
    * @param { Array<unknown> } values
    * @returns { string }
    */
-  getValue(/* values */) {
+  getValue(values) {
+    let value = values[0];
+
+    if (isDirective(value)) {
+      return `data-property-${this.name}="${resolveDirectiveValue(value, this)}"`;
+    }
+
     return emptyStringBuffer;
   }
 }

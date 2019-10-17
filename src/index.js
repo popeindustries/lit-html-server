@@ -14,6 +14,7 @@ export {
   BooleanAttributePart,
   EventAttributePart,
   isAttributePart,
+  isPropertyAttributePart,
   isNodePart,
   NodePart,
   Part,

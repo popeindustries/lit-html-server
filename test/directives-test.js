@@ -6,6 +6,7 @@ import { classMap } from '../directives/class-map.mjs';
 import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 import { guard } from '../directives/guard.mjs';
+// import { hydrate } from '../directives/hydrate.mjs';
 import { ifDefined } from '../directives/if-defined.mjs';
 import { repeat } from '../directives/repeat.mjs';
 import { styleMap } from '../directives/style-map.mjs';
@@ -93,6 +94,10 @@ describe('directives', () => {
       const result = h`some ${guard(items, () => items.map((item) => item))}`;
       expect(await render(result)).to.equal('some 123');
     });
+  });
+
+  describe('hydrate', () => {
+    it.only('should stringify property values', async () => {});
   });
 
   describe('if-defined', () => {
