@@ -2,6 +2,7 @@
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  * @typedef TemplateResultProcessor { import('./default-template-result-processor.js).TemplateResultProcessor }
  * @typedef TemplateResultRenderer { import('./default-template-result-renderer.js).TemplateResultRenderer }
+ * @typedef RenderOptions { import('./index.js).RenderOptions }
  */
 
 /**
@@ -14,9 +15,10 @@ export class PromiseTemplateRenderer {
    * @param { TemplateResult } result
    * @param { TemplateResultProcessor } processor
    * @param { boolean } [asBuffer]
+   * @param { RenderOptions } [options]
    * @returns { Promise<string> }
    */
-  constructor(result, processor, asBuffer = false) {
+  constructor(result, processor, asBuffer = false, options) {
     return new Promise((resolve, reject) => {
       let stack = [result];
       let buffer = [];
@@ -41,7 +43,9 @@ export class PromiseTemplateRenderer {
             reject(err);
           }
         },
-        stack
+        stack,
+        0,
+        options
       )();
     });
   }

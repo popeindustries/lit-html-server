@@ -1,12 +1,15 @@
 /* eslint no-constant-condition:0 */
 /**
  * @typedef TemplateResultProcessor
- * @property { (renderer: TemplateResultRenderer, stack: Array<any>, [highWaterMark: number]) => function } getProcessor
+ * @property { (renderer: TemplateResultRenderer, stack: Array<any>, [highWaterMark: number], [options: RenderOptions]) => function } getProcessor
  */
 /**
  * @typedef TemplateResultRenderer
  * @property { (chunk: Buffer) => boolean } push
  * @property { (err: Error) => void } destroy
+ */
+/**
+ * @typedef RenderOptions { import('./index.js).RenderOptions }
  */
 import { isAsyncIterator, isIteratorResult, isPromise } from './is.js';
 import { isTemplateResult } from './template-result.js';
@@ -24,9 +27,10 @@ export class DefaultTemplateResultProcessor {
    * @param { TemplateResultRenderer } renderer
    * @param { Array<unknown> } stack
    * @param { number } [highWaterMark] - byte length to buffer before pushing data
+   * @param { RenderOptions } [options]
    * @returns { () => void }
    */
-  getProcessor(renderer, stack, highWaterMark = 0) {
+  getProcessor(renderer, stack, highWaterMark = 0, options) {
     const buffer = [];
     let bufferLength = 0;
     let processing = false;
@@ -59,7 +63,7 @@ export class DefaultTemplateResultProcessor {
 
         if (isTemplateResult(chunk)) {
           popStack = false;
-          chunk = getTemplateResultChunk(chunk, stack);
+          chunk = getTemplateResultChunk(chunk, stack, options);
         }
 
         // Skip if finished reading TemplateResult (null)
@@ -143,13 +147,14 @@ export class DefaultTemplateResultProcessor {
  *
  * @param { TemplateResult } result
  * @param { Array<unknown> } stack
+ * @param { RenderOptions } [options]
  */
-function getTemplateResultChunk(result, stack) {
-  let chunk = result.readChunk();
+function getTemplateResultChunk(result, stack, options) {
+  let chunk = result.readChunk(options);
 
   // Skip empty strings
   if (Buffer.isBuffer(chunk) && chunk.length === 0) {
-    chunk = result.readChunk();
+    chunk = result.readChunk(options);
   }
 
   // Finished reading, dispose
@@ -158,7 +163,7 @@ function getTemplateResultChunk(result, stack) {
   } else if (isTemplateResult(chunk)) {
     // Add to top of stack
     stack.unshift(chunk);
-    chunk = getTemplateResultChunk(chunk, stack);
+    chunk = getTemplateResultChunk(chunk, stack, options);
   }
 
   return chunk;

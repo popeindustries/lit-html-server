@@ -2,6 +2,7 @@
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  * @typedef TemplateResultProcessor { import('./default-template-result-processor.js).TemplateResultProcessor }
  * @typedef TemplateResultRenderer { import('./default-template-result-renderer.js).TemplateResultRenderer }
+ * @typedef RenderOptions { import('./index.js).RenderOptions }
  */
 import { Readable } from 'stream';
 
@@ -16,13 +17,14 @@ export class StreamTemplateRenderer extends Readable {
    *
    * @param { TemplateResult } result - a template result returned from call to "html`...`"
    * @param { TemplateResultProcessor } processor
+   * @param { RenderOptions } [options]
    * @returns { Readable }
    */
-  constructor(result, processor) {
+  constructor(result, processor, options) {
     super({ autoDestroy: true });
 
     this.stack = [result];
-    this.process = processor.getProcessor(this, this.stack, 16384);
+    this.process = processor.getProcessor(this, this.stack, 16384, options);
   }
 
   /**

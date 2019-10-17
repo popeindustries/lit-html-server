@@ -1,3 +1,6 @@
+/**
+ * @typedef RenderOptions { import('./index.js).RenderOptions }
+ */
 import { isAsyncIterator, isPromise } from './is.js';
 import { emptyStringBuffer } from './string.js';
 import { isAttributePart } from './parts.js';
@@ -49,13 +52,14 @@ class TemplateResult {
   /**
    * Consume template result content.
    *
+   * @param { RenderOptions } [options]
    * @returns { unknown }
    */
-  read() {
+  read(options) {
     let buffer = emptyStringBuffer;
     let chunk, chunks;
 
-    while ((chunk = this.readChunk()) !== null) {
+    while ((chunk = this.readChunk(options)) !== null) {
       if (Buffer.isBuffer(chunk)) {
         buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length);
       } else {
@@ -76,10 +80,10 @@ class TemplateResult {
 
   /**
    * Consume template result content one chunk at a time.
-   *
+   * @param { RenderOptions } [options]
    * @returns { unknown }
    */
-  readChunk() {
+  readChunk(options) {
     const isString = this.index % 2 === 0;
     const index = (this.index / 2) | 0;
 
@@ -103,13 +107,13 @@ class TemplateResult {
       // AttributeParts can have multiple values, so slice based on length
       // (strings in-between values are already handled the instance)
       if (part.length > 1) {
-        value = part.getValue(this.values.slice(index, index + part.length));
+        value = part.getValue(this.values.slice(index, index + part.length), options);
         this.index += part.length;
       } else {
-        value = part.getValue([this.values[index]]);
+        value = part.getValue([this.values[index]], options);
       }
     } else {
-      value = part.getValue(this.values[index]);
+      value = part.getValue(this.values[index], options);
     }
 
     return value;

@@ -96,10 +96,6 @@ describe('directives', () => {
     });
   });
 
-  describe('hydrate', () => {
-    it.only('should stringify property values', async () => {});
-  });
-
   describe('if-defined', () => {
     it('should render an attribute value if defined', async () => {
       const className = 'hi';

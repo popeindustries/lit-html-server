@@ -2,6 +2,10 @@
  * @typedef Readable { import('stream').Readable }
  * @typedef TemplateResult { import('./template-result.js).TemplateResult }
  */
+/**
+ * @typedef RenderOptions
+ * @property { boolean } [serializePropertyAttributes] - JSON.stringify property attributes
+ */
 import { isTemplateResult, templateResult } from './template-result.js';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
@@ -59,33 +63,33 @@ function html(strings, ...values) {
 
 /**
  * Render a template result to a Readable stream
- * *Note* that TemplateResults are single use, and can only be rendered once.
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { RenderOptions } [options]
  * @returns { Readable }
  */
-function renderToStream(result) {
-  return new StreamTemplateRenderer(result, defaultTemplateResultProcessor);
+function renderToStream(result, options) {
+  return new StreamTemplateRenderer(result, defaultTemplateResultProcessor, options);
 }
 
 /**
  * Render a template result to a string resolving Promise.
- * *Note* that TemplateResults are single use, and can only be rendered once.
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { RenderOptions } [options]
  * @returns { Promise<string> }
  */
-function renderToString(result) {
-  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, false);
+function renderToString(result, options) {
+  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, false, options);
 }
 
 /**
  * Render a template result to a Buffer resolving Promise.
- * *Note* that TemplateResults are single use, and can only be rendered once.
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { RenderOptions } [options]
  * @returns { Promise<Buffer> }
  */
-function renderToBuffer(result) {
-  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, true);
+function renderToBuffer(result, options) {
+  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, true, options);
 }

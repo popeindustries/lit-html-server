@@ -1,5 +1,8 @@
+/**
+ * @typedef RenderOptions { import('./index.js).RenderOptions }
+ */
 import { emptyStringBuffer, nothingString, unsafePrefixString } from './string.js';
-import { isAsyncIterator, isPrimitive, isPromise, isSyncIterator } from './is.js';
+import { isAsyncIterator, isObject, isPrimitive, isPromise, isSyncIterator } from './is.js';
 import { escape } from './escape.js';
 import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';
@@ -72,9 +75,10 @@ export class Part {
    * Retrieve resolved string from passed "value"
    *
    * @param { any } value
+   * @param { RenderOptions } [options]
    * @returns { any }
    */
-  getValue(value) {
+  getValue(value /*, options */) {
     return value;
   }
 
@@ -92,9 +96,10 @@ export class NodePart extends Part {
    * Retrieve resolved value given passed "value"
    *
    * @param { any } value
+   * @param { RenderOptions } [options]
    * @returns { any }
    */
-  getValue(value) {
+  getValue(value /*, options */) {
     return resolveNodeValue(value, this);
   }
 }
@@ -126,9 +131,10 @@ export class AttributePart extends Part {
    * even when responsible for multiple values.
    *
    * @param { Array<unknown> } values
+   * @param { RenderOptions } [options]
    * @returns { Buffer|Promise<Buffer> }
    */
-  getValue(values) {
+  getValue(values, options) {
     let chunks = [this.prefix];
     let chunkLength = this.prefix.length;
     let pendingChunks;
@@ -167,6 +173,18 @@ export class AttributePart extends Part {
           chunks.push(chunk);
           chunkLength += chunk.length;
         }
+      } else if (isObject(value)) {
+        if (options !== undefined && options.serializePropertyAttributes) {
+          try {
+            value = Buffer.from(JSON.stringify(value));
+          } catch (err) {
+            value = Buffer.from('[object Object]');
+          }
+        } else {
+          value = Buffer.from('[object Object]');
+        }
+        chunks.push(value);
+        chunkLength += value.length;
       }
     }
 
@@ -210,9 +228,10 @@ export class BooleanAttributePart extends AttributePart {
    * Retrieve resolved string Buffer from passed "values".
    *
    * @param { Array<unknown> } values
+   * @param { RenderOptions } [options]
    * @returns { Buffer|Promise<Buffer> }
    */
-  getValue(values) {
+  getValue(values /*, options */) {
     let value = values[0];
 
     if (isDirective(value)) {
@@ -234,17 +253,24 @@ export class BooleanAttributePart extends AttributePart {
 export class PropertyAttributePart extends AttributePart {
   /**
    * Retrieve resolved string Buffer from passed "values".
-   * Properties have no server-side representation,
-   * so always returns an empty string.
+   * Returns an empty string unless "options.serializePropertyAttributes=true"
    *
    * @param { Array<unknown> } values
-   * @returns { string }
+   * @param { RenderOptions } [options]
+   * @returns { Buffer }
    */
-  getValue(values) {
-    let value = values[0];
+  getValue(values, options) {
+    if (options !== undefined && options.serializePropertyAttributes) {
+      // if (values.length === 1 && isObject(values[0])) {
+      //   return Buffer.from(`.${this.name}="${JSON.stringify(values[0])}"`);
+      // }
 
-    if (isDirective(value)) {
-      return `data-property-${this.name}="${resolveDirectiveValue(value, this)}"`;
+      const value = super.getValue(values, options);
+      const prefix = Buffer.from('.');
+
+      return value instanceof Promise
+        ? value.then((value) => Buffer.concat([prefix, value]))
+        : Buffer.concat([prefix, value]);
     }
 
     return emptyStringBuffer;
@@ -262,9 +288,10 @@ export class EventAttributePart extends AttributePart {
    * so always returns an empty string.
    *
    * @param { Array<unknown> } values
-   * @returns { string }
+   * @param { RenderOptions } [options]
+   * @returns { Buffer }
    */
-  getValue(/* values */) {
+  getValue(/* values, options */) {
     return emptyStringBuffer;
   }
 }
@@ -274,7 +301,7 @@ export class EventAttributePart extends AttributePart {
  *
  * @param { unknown } value
  * @param { AttributePart } part
- * @returns { unknown }
+ * @returns { any }
  */
 function resolveAttributeValue(value, part) {
   if (isDirective(value)) {
@@ -295,7 +322,7 @@ function resolveAttributeValue(value, part) {
     return Buffer.from(
       string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escape(string, 'attribute')
     );
-  } else if (Buffer.isBuffer(value)) {
+  } else if (Buffer.isBuffer(value) || isObject(value)) {
     return value;
   } else if (isPromise(value)) {
     return value.then((value) => resolveAttributeValue(value, part));
@@ -324,7 +351,7 @@ function resolveAttributeValue(value, part) {
  *
  * @param { unknown } value
  * @param { NodePart } part
- * @returns { unknown }
+ * @returns { any }
  */
 function resolveNodeValue(value, part) {
   if (isDirective(value)) {
