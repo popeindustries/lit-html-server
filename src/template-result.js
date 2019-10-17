@@ -49,10 +49,9 @@ class TemplateResult {
   /**
    * Consume template result content.
    *
-   * @param { boolean } deep - recursively resolve nested TemplateResults
    * @returns { unknown }
    */
-  read(deep) {
+  read() {
     let buffer = emptyStringBuffer;
     let chunk, chunks;
 
@@ -63,7 +62,7 @@ class TemplateResult {
         if (chunks === undefined) {
           chunks = [];
         }
-        buffer = reduce(buffer, chunks, chunk, deep);
+        buffer = reduce(buffer, chunks, chunk);
       }
     }
 
@@ -124,19 +123,14 @@ class TemplateResult {
  * @param { Buffer } buffer
  * @param { Array<unknown> } chunks
  * @param { unknown } chunk
- * @param { boolean } [deep]
  * @returns { Buffer }
  */
-function reduce(buffer, chunks, chunk, deep = false) {
+function reduce(buffer, chunks, chunk) {
   if (Buffer.isBuffer(chunk)) {
     return Buffer.concat([buffer, chunk], buffer.length + chunk.length);
   } else if (isTemplateResult(chunk)) {
-    if (deep) {
-      return reduce(buffer, chunks, chunk.read(deep), deep);
-    } else {
-      chunks.push(buffer, chunk);
-      return emptyStringBuffer;
-    }
+    chunks.push(buffer, chunk);
+    return emptyStringBuffer;
   } else if (Array.isArray(chunk)) {
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
   } else if (isPromise(chunk) || isAsyncIterator(chunk)) {
