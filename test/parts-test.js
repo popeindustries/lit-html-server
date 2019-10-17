@@ -297,7 +297,7 @@ describe('Parts', () => {
         })).toString()
       ).to.equal('.a="false"');
     });
-    it.skip('should resolve object Promise value if options.serializePropertyAttributes', async () => {
+    it('should resolve object Promise value if options.serializePropertyAttributes', async () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
       expect(
         (await part.getValue([Promise.resolve({ some: 'text' })], {

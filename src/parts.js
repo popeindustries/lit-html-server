@@ -141,7 +141,11 @@ export class AttributePart extends Part {
 
     for (let i = 0; i < this.length; i++) {
       const string = this.strings[i];
-      let value = resolveAttributeValue(values[i], this);
+      let value = resolveAttributeValue(
+        values[i],
+        this,
+        options !== undefined ? options.serializePropertyAttributes : false
+      );
 
       // Bail if 'nothing'
       if (value === nothingString) {
@@ -173,18 +177,6 @@ export class AttributePart extends Part {
           chunks.push(chunk);
           chunkLength += chunk.length;
         }
-      } else if (isObject(value)) {
-        if (options !== undefined && options.serializePropertyAttributes) {
-          try {
-            value = Buffer.from(JSON.stringify(value));
-          } catch (err) {
-            value = Buffer.from('[object Object]');
-          }
-        } else {
-          value = Buffer.from('[object Object]');
-        }
-        chunks.push(value);
-        chunkLength += value.length;
       }
     }
 
@@ -261,10 +253,6 @@ export class PropertyAttributePart extends AttributePart {
    */
   getValue(values, options) {
     if (options !== undefined && options.serializePropertyAttributes) {
-      // if (values.length === 1 && isObject(values[0])) {
-      //   return Buffer.from(`.${this.name}="${JSON.stringify(values[0])}"`);
-      // }
-
       const value = super.getValue(values, options);
       const prefix = Buffer.from('.');
 
@@ -301,9 +289,10 @@ export class EventAttributePart extends AttributePart {
  *
  * @param { unknown } value
  * @param { AttributePart } part
+ * @param { boolean } [allowObjects]
  * @returns { any }
  */
-function resolveAttributeValue(value, part) {
+function resolveAttributeValue(value, part, allowObjects = false) {
   if (isDirective(value)) {
     value = resolveDirectiveValue(value, part);
   }
@@ -322,17 +311,17 @@ function resolveAttributeValue(value, part) {
     return Buffer.from(
       string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escape(string, 'attribute')
     );
-  } else if (Buffer.isBuffer(value) || isObject(value)) {
+  } else if (Buffer.isBuffer(value)) {
     return value;
   } else if (isPromise(value)) {
-    return value.then((value) => resolveAttributeValue(value, part));
+    return value.then((value) => resolveAttributeValue(value, part, allowObjects));
   } else if (isSyncIterator(value)) {
     if (!Array.isArray(value)) {
       value = Array.from(value);
     }
     return Buffer.concat(
       value.reduce((values, value) => {
-        value = resolveAttributeValue(value, part);
+        value = resolveAttributeValue(value, part, allowObjects);
         // Flatten
         if (Array.isArray(value)) {
           return values.concat(value);
@@ -341,6 +330,8 @@ function resolveAttributeValue(value, part) {
         return values;
       }, [])
     );
+  } else if (allowObjects && isObject(value)) {
+    return Buffer.from(JSON.stringify(value));
   } else {
     throw Error('unknown AttributPart value', value);
   }
