@@ -303,7 +303,7 @@ describe('Parts', () => {
         (await part.getValue([Promise.resolve({ some: 'text' })], {
           serializePropertyAttributes: true
         })).toString()
-      ).to.equal('.a="{"some":"text"}"');
+      ).to.equal('.a="{\u0022some\u0022:\u0022text\u0022}"');
     });
   });
 });

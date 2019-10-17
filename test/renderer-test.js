@@ -281,5 +281,13 @@ describe('Server template render', () => {
         expect(err).to.have.property('message', 'errored!');
       }
     });
+    it('should render a template with stringified property object when options.serializePropertyAttributes', async () => {
+      const value = { some: 'text' };
+      const result = () => h`<div .a="${value}"></div>`;
+      const expected = '<div .a="{\u0022some\u0022:\u0022text\u0022}"></div>';
+      const options = { serializePropertyAttributes: true };
+      expect(await renderToString(result(), options)).to.equal(expected);
+      expect(await getStream(renderToStream(result(), options))).to.equal(expected);
+    });
   });
 });
