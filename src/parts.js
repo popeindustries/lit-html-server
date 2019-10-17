@@ -34,19 +34,6 @@ export function isAttributePart(part) {
 }
 
 /**
- * Determine if "part" is a PropertyAttributePart
- *
- * @param { Part } part
- * @returns { boolean }
- */
-export function isPropertyAttributePart(part) {
-  return (
-    part instanceof PropertyAttributePart ||
-    (part && part.getValue !== undefined && typeof part.name !== 'undefined')
-  );
-}
-
-/**
  * Base class interface for Node/Attribute parts
  */
 export class Part {

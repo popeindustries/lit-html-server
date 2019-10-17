@@ -28,11 +28,6 @@ export function directive<F extends (...args: Array<any>) => object>(f: F): F;
 export function isAttributePart(part: Part): boolean;
 
 /**
- * Determine if "part" is a PropertyAttributePart
- */
-export function isPropertyAttributePart(part: Part): boolean;
-
-/**
  * Determine if "part" is a NodePart
  */
 export function isNodePart(part: Part): boolean;
