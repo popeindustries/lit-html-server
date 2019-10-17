@@ -6,7 +6,6 @@ import { classMap } from '../directives/class-map.mjs';
 import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 import { guard } from '../directives/guard.mjs';
-// import { hydrate } from '../directives/hydrate.mjs';
 import { ifDefined } from '../directives/if-defined.mjs';
 import { repeat } from '../directives/repeat.mjs';
 import { styleMap } from '../directives/style-map.mjs';
