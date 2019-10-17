@@ -277,7 +277,7 @@ describe('Parts', () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
       expect(
         part.getValue([{ some: 'text' }], { serializePropertyAttributes: true }).toString()
-      ).to.equal('.a="{"some":"text"}"');
+      ).to.equal('.a="{&quot;some&quot;:&quot;text&quot;}"');
     });
     it('should resolve primitive Promise values if options.serializePropertyAttributes', async () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
@@ -303,7 +303,7 @@ describe('Parts', () => {
         (await part.getValue([Promise.resolve({ some: 'text' })], {
           serializePropertyAttributes: true
         })).toString()
-      ).to.equal('.a="{\u0022some\u0022:\u0022text\u0022}"');
+      ).to.equal('.a="{&quot;some&quot;:&quot;text&quot;}"');
     });
   });
 });

@@ -331,7 +331,7 @@ function resolveAttributeValue(value, part, allowObjects = false) {
       }, [])
     );
   } else if (allowObjects && isObject(value)) {
-    return Buffer.from(escape(JSON.stringify(value), 'attribute:json'));
+    return Buffer.from(escape(JSON.stringify(value), 'attribute'));
   } else {
     throw Error('unknown AttributPart value', value);
   }
