@@ -184,7 +184,11 @@ html`
 `;
 ```
 
-### `renderToStream(TemplateResult): Readable`
+> The following render methods accept an `options` object with the following properties:
+>
+> - **`serializePropertyAttributes: boolean`** - enable `JSON.stringify` of property attribute values (default: `false`)
+
+### `renderToStream(result: TemplateResult, options: RenderOptions): Readable`
 
 Returns the result of the template tagged by `html` as a Node.js `Readable` stream of markup:
 
@@ -199,7 +203,7 @@ renderToStream(
 ).pipe(response);
 ```
 
-### `renderToString(TemplateResult): Promise<string>`
+### `renderToString(result: TemplateResult, options: RenderOptions): Promise<string>`
 
 Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup:
 
@@ -215,7 +219,7 @@ const markup = await renderToString(
 response.end(markup);
 ```
 
-### `renderToBuffer(TemplateResult): Promise<Buffer>`
+### `renderToBuffer(result: TemplateResult, options: RenderOptions): Promise<Buffer>`
 
 Returns the result of the template tagged by `html` as a Promise which resolves to a Buffer of markup:
 
@@ -335,13 +339,19 @@ html`
 //=> <input type="checkbox" > if falsey
 ```
 
-- property (attribute markup removed):
+- property (attribute markup removed unless `RenderOptions.serializePropertyAttributes = true` ):
 
 ```js
+const value = { some: 'text' };
 html`
   <input .value="${value}" />
 `;
 //=> <input />
+html`
+  <input .value="${value}" />
+`;
+//=> <input .value="{&quot;some&quot;:&quot;text&quot;}"/>
+// (when render options.serializePropertyAttributes = true)
 ```
 
 - event handler (attribute markup removed):
