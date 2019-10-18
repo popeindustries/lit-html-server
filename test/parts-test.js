@@ -273,6 +273,12 @@ describe('Parts', () => {
         '.a="false"'
       );
     });
+    it('should resolve array value if options.serializePropertyAttributes', () => {
+      const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
+      expect(
+        part.getValue([['some', 'text']], { serializePropertyAttributes: true }).toString()
+      ).to.equal('.a="[&quot;some&quot;,&quot;text&quot;]"');
+    });
     it('should resolve object value if options.serializePropertyAttributes', () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
       expect(

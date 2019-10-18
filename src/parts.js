@@ -276,10 +276,10 @@ export class EventAttributePart extends AttributePart {
  *
  * @param { unknown } value
  * @param { AttributePart } part
- * @param { boolean } [allowObjects]
+ * @param { boolean } [serialiseObjectsAndArrays]
  * @returns { any }
  */
-function resolveAttributeValue(value, part, allowObjects = false) {
+function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
   if (isDirective(value)) {
     value = resolveDirectiveValue(value, part);
   }
@@ -300,15 +300,17 @@ function resolveAttributeValue(value, part, allowObjects = false) {
     );
   } else if (Buffer.isBuffer(value)) {
     return value;
+  } else if (serialiseObjectsAndArrays && (isObject(value) || Array.isArray(value))) {
+    return Buffer.from(escape(JSON.stringify(value), 'attribute'));
   } else if (isPromise(value)) {
-    return value.then((value) => resolveAttributeValue(value, part, allowObjects));
+    return value.then((value) => resolveAttributeValue(value, part, serialiseObjectsAndArrays));
   } else if (isSyncIterator(value)) {
     if (!Array.isArray(value)) {
       value = Array.from(value);
     }
     return Buffer.concat(
       value.reduce((values, value) => {
-        value = resolveAttributeValue(value, part, allowObjects);
+        value = resolveAttributeValue(value, part, serialiseObjectsAndArrays);
         // Flatten
         if (Array.isArray(value)) {
           return values.concat(value);
@@ -317,8 +319,6 @@ function resolveAttributeValue(value, part, allowObjects = false) {
         return values;
       }, [])
     );
-  } else if (allowObjects && isObject(value)) {
-    return Buffer.from(escape(JSON.stringify(value), 'attribute'));
   } else {
     throw Error('unknown AttributPart value', value);
   }
