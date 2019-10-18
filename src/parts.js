@@ -1,5 +1,8 @@
+/**
+ * @typedef RenderOptions { import('./index.js).RenderOptions }
+ */
 import { emptyStringBuffer, nothingString, unsafePrefixString } from './string.js';
-import { isAsyncIterator, isPrimitive, isPromise, isSyncIterator } from './is.js';
+import { isAsyncIterator, isObject, isPrimitive, isPromise, isSyncIterator } from './is.js';
 import { escape } from './escape.js';
 import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';
@@ -59,9 +62,10 @@ export class Part {
    * Retrieve resolved string from passed "value"
    *
    * @param { any } value
+   * @param { RenderOptions } [options]
    * @returns { any }
    */
-  getValue(value) {
+  getValue(value /*, options */) {
     return value;
   }
 
@@ -79,9 +83,10 @@ export class NodePart extends Part {
    * Retrieve resolved value given passed "value"
    *
    * @param { any } value
+   * @param { RenderOptions } [options]
    * @returns { any }
    */
-  getValue(value) {
+  getValue(value /*, options */) {
     return resolveNodeValue(value, this);
   }
 }
@@ -113,16 +118,21 @@ export class AttributePart extends Part {
    * even when responsible for multiple values.
    *
    * @param { Array<unknown> } values
+   * @param { RenderOptions } [options]
    * @returns { Buffer|Promise<Buffer> }
    */
-  getValue(values) {
+  getValue(values, options) {
     let chunks = [this.prefix];
     let chunkLength = this.prefix.length;
     let pendingChunks;
 
     for (let i = 0; i < this.length; i++) {
       const string = this.strings[i];
-      let value = resolveAttributeValue(values[i], this);
+      let value = resolveAttributeValue(
+        values[i],
+        this,
+        options !== undefined ? options.serializePropertyAttributes : false
+      );
 
       // Bail if 'nothing'
       if (value === nothingString) {
@@ -197,9 +207,10 @@ export class BooleanAttributePart extends AttributePart {
    * Retrieve resolved string Buffer from passed "values".
    *
    * @param { Array<unknown> } values
+   * @param { RenderOptions } [options]
    * @returns { Buffer|Promise<Buffer> }
    */
-  getValue(values) {
+  getValue(values /*, options */) {
     let value = values[0];
 
     if (isDirective(value)) {
@@ -221,13 +232,22 @@ export class BooleanAttributePart extends AttributePart {
 export class PropertyAttributePart extends AttributePart {
   /**
    * Retrieve resolved string Buffer from passed "values".
-   * Properties have no server-side representation,
-   * so always returns an empty string.
+   * Returns an empty string unless "options.serializePropertyAttributes=true"
    *
    * @param { Array<unknown> } values
-   * @returns { string }
+   * @param { RenderOptions } [options]
+   * @returns { Buffer }
    */
-  getValue(/* values */) {
+  getValue(values, options) {
+    if (options !== undefined && options.serializePropertyAttributes) {
+      const value = super.getValue(values, options);
+      const prefix = Buffer.from('.');
+
+      return value instanceof Promise
+        ? value.then((value) => Buffer.concat([prefix, value]))
+        : Buffer.concat([prefix, value]);
+    }
+
     return emptyStringBuffer;
   }
 }
@@ -243,9 +263,10 @@ export class EventAttributePart extends AttributePart {
    * so always returns an empty string.
    *
    * @param { Array<unknown> } values
-   * @returns { string }
+   * @param { RenderOptions } [options]
+   * @returns { Buffer }
    */
-  getValue(/* values */) {
+  getValue(/* values, options */) {
     return emptyStringBuffer;
   }
 }
@@ -255,9 +276,10 @@ export class EventAttributePart extends AttributePart {
  *
  * @param { unknown } value
  * @param { AttributePart } part
- * @returns { unknown }
+ * @param { boolean } [serialiseObjectsAndArrays]
+ * @returns { any }
  */
-function resolveAttributeValue(value, part) {
+function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
   if (isDirective(value)) {
     value = resolveDirectiveValue(value, part);
   }
@@ -278,15 +300,17 @@ function resolveAttributeValue(value, part) {
     );
   } else if (Buffer.isBuffer(value)) {
     return value;
+  } else if (serialiseObjectsAndArrays && (isObject(value) || Array.isArray(value))) {
+    return Buffer.from(escape(JSON.stringify(value), 'attribute'));
   } else if (isPromise(value)) {
-    return value.then((value) => resolveAttributeValue(value, part));
+    return value.then((value) => resolveAttributeValue(value, part, serialiseObjectsAndArrays));
   } else if (isSyncIterator(value)) {
     if (!Array.isArray(value)) {
       value = Array.from(value);
     }
     return Buffer.concat(
       value.reduce((values, value) => {
-        value = resolveAttributeValue(value, part);
+        value = resolveAttributeValue(value, part, serialiseObjectsAndArrays);
         // Flatten
         if (Array.isArray(value)) {
           return values.concat(value);
@@ -305,7 +329,7 @@ function resolveAttributeValue(value, part) {
  *
  * @param { unknown } value
  * @param { NodePart } part
- * @returns { unknown }
+ * @returns { any }
  */
 function resolveNodeValue(value, part) {
   if (isDirective(value)) {

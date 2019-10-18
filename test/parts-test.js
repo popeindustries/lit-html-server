@@ -261,5 +261,55 @@ describe('Parts', () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
       expect(part.getValue(['text']).toString()).to.equal('');
     });
+    it('should resolve primitive values if options.serializePropertyAttributes', () => {
+      const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
+      expect(part.getValue(['text'], { serializePropertyAttributes: true }).toString()).to.equal(
+        '.a="text"'
+      );
+      expect(part.getValue([1], { serializePropertyAttributes: true }).toString()).to.equal(
+        '.a="1"'
+      );
+      expect(part.getValue([false], { serializePropertyAttributes: true }).toString()).to.equal(
+        '.a="false"'
+      );
+    });
+    it('should resolve array value if options.serializePropertyAttributes', () => {
+      const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
+      expect(
+        part.getValue([['some', 'text']], { serializePropertyAttributes: true }).toString()
+      ).to.equal('.a="[&quot;some&quot;,&quot;text&quot;]"');
+    });
+    it('should resolve object value if options.serializePropertyAttributes', () => {
+      const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
+      expect(
+        part.getValue([{ some: 'text' }], { serializePropertyAttributes: true }).toString()
+      ).to.equal('.a="{&quot;some&quot;:&quot;text&quot;}"');
+    });
+    it('should resolve primitive Promise values if options.serializePropertyAttributes', async () => {
+      const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
+      expect(
+        (await part.getValue([Promise.resolve('text')], {
+          serializePropertyAttributes: true
+        })).toString()
+      ).to.equal('.a="text"');
+      expect(
+        (await part.getValue([Promise.resolve(1)], {
+          serializePropertyAttributes: true
+        })).toString()
+      ).to.equal('.a="1"');
+      expect(
+        (await part.getValue([Promise.resolve(false)], {
+          serializePropertyAttributes: true
+        })).toString()
+      ).to.equal('.a="false"');
+    });
+    it('should resolve object Promise value if options.serializePropertyAttributes', async () => {
+      const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
+      expect(
+        (await part.getValue([Promise.resolve({ some: 'text' })], {
+          serializePropertyAttributes: true
+        })).toString()
+      ).to.equal('.a="{&quot;some&quot;:&quot;text&quot;}"');
+    });
   });
 });

@@ -9,6 +9,10 @@ declare module '@popeindustries/lit-html-server' {
     destroy: (err: Error) => void;
   }
 
+  type RenderOptions = {
+    serializePropertyAttributes: boolean;
+  };
+
   export const defaultTemplateProcessor: DefaultTemplateProcessor;
   export const defaultTemplateResultProcessor: DefaultTemplateResultProcessor;
 
@@ -54,21 +58,21 @@ declare module '@popeindustries/lit-html-server' {
 
   /**
    * Render a template result to a string resolving Promise.
-   * *Note* that TemplateResults are single use, and can only be rendered once.
    */
-  export function renderToString(result: TemplateResult): Promise<string>;
+  export function renderToString(result: TemplateResult, options?: RenderOptions): Promise<string>;
 
   /**
    * Render a template result to a Readable stream
-   * *Note* that TemplateResults are single use, and can only be rendered once.
    */
-  export function renderToStream(result: TemplateResult): import('stream').Readable;
+  export function renderToStream(
+    result: TemplateResult,
+    options?: RenderOptions
+  ): import('stream').Readable;
 
   /**
    * Render a template result to a Buffer resolving Promise.
-   * *Note* that TemplateResults are single use, and can only be rendered once.
    */
-  export function renderToBuffer(result: TemplateResult): Promise<Buffer>;
+  export function renderToBuffer(result: TemplateResult, options?: RenderOptions): Promise<Buffer>;
 
   /**
    * Base class interface for Node/Attribute parts
@@ -89,7 +93,7 @@ declare module '@popeindustries/lit-html-server' {
     /**
      * Retrieve resolved value given passed "value"
      */
-    getValue(value: unknown): unknown;
+    getValue(value: unknown, options?: RenderOptions): unknown;
   }
 
   /**
@@ -101,7 +105,7 @@ declare module '@popeindustries/lit-html-server' {
      * @param { Array<any> } values
      * @returns { Buffer|Promise<Buffer> }
      */
-    getValue(values: Array<unknown>): Buffer | Promise<Buffer>;
+    getValue(values: Array<unknown>, options?: RenderOptions): Buffer | Promise<Buffer>;
   }
 
   /**
@@ -112,7 +116,7 @@ declare module '@popeindustries/lit-html-server' {
     /**
      * Retrieve resolved string Buffer from passed "values".
      */
-    getValue(values: Array<unknown>): Buffer | Promise<Buffer>;
+    getValue(values: Array<unknown>, options?: RenderOptions): Buffer | Promise<Buffer>;
   }
 
   /**
@@ -125,7 +129,7 @@ declare module '@popeindustries/lit-html-server' {
      * Properties have no server-side representation,
      * so always returns an empty string.
      */
-    getValue(values: Array<unknown>): Buffer;
+    getValue(values: Array<unknown>, options?: RenderOptions): Buffer;
   }
 
   /**
@@ -138,7 +142,7 @@ declare module '@popeindustries/lit-html-server' {
      * Event bindings have no server-side representation,
      * so always returns an empty string.
      */
-    getValue(values: Array<unknown>): Buffer;
+    getValue(values: Array<unknown>, options?: RenderOptions): Buffer;
   }
 
   /**
@@ -171,7 +175,8 @@ declare module '@popeindustries/lit-html-server' {
     getProcessor(
       renderer: TemplateResultRenderer,
       stack: Array<unknown>,
-      highWaterMark?: number
+      highWaterMark?: number,
+      options?: RenderOptions
     ): () => void;
 
     /**
@@ -194,12 +199,12 @@ declare module '@popeindustries/lit-html-server' {
     /**
      * Consume template result content.
      */
-    read(deep: boolean): unknown;
+    read(options?: RenderOptions): unknown;
 
     /**
      * Consume template result content one chunk at a time.
      */
-    readChunk(): unknown;
+    readChunk(options?: RenderOptions): unknown;
   }
 
   /**

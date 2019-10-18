@@ -23,8 +23,8 @@ export function escape(string, context = 'text') {
     case 'script':
     case 'style':
       return string.replace(RE_SCRIPT_STYLE_TAG, '<\\/$1').replace(/<!--/g, '\\x3C!--');
-    case 'text':
     case 'attribute':
+    case 'text':
     default:
       return string.replace(RE_HTML, (match) => HTML_ESCAPES[match]);
   }

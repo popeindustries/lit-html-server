@@ -1,4 +1,3 @@
-import { createAsyncIterable } from './utils.js';
 import { expect } from 'chai';
 // Disable Prettier
 import { html as h } from '../index.mjs';
@@ -37,30 +36,12 @@ describe('Template Result', () => {
       const result = h`a lot of numbers ${[1, 2, [3, [4, 5]]]} here`;
       expect(result.read().toString()).to.equal('a lot of numbers 12345 here');
     });
-    it('should process a template with nested template value', () => {
-      const result = h`some nested ${h`text`}`;
-      expect(result.read(true).toString()).to.equal('some nested text');
-    });
     it('should process a template with Promise value', async () => {
       const result = h`some ${Promise.resolve('text')} here`;
       const chunks = result.read();
       expect(chunks[0].toString()).to.equal('some ');
       expect((await chunks[1]).toString()).to.equal('text');
       expect(chunks[2].toString()).to.equal(' here');
-    });
-    it('should process a template with nested template with Promise value', async () => {
-      const result = h`some nested ${h`${Promise.resolve('text')} in here too`}`;
-      const chunks = result.read(true);
-      expect(chunks[0].toString()).to.equal('some nested ');
-      expect((await chunks[1]).toString()).to.equal('text');
-      expect(chunks[2].toString()).to.equal(' in here too');
-    });
-    it('should process a template with AsyncIterator value', async () => {
-      const result = h`some ${createAsyncIterable(['async', ' text'])} in here`;
-      const chunks = result.read(true);
-      expect(chunks[0].toString()).to.equal('some ');
-      expect(chunks[1]).to.be.an('AsyncGenerator');
-      expect(chunks[2].toString()).to.equal(' in here');
     });
   });
 

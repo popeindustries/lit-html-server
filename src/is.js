@@ -1,4 +1,4 @@
-export { isAsyncIterator, isIteratorResult, isPrimitive, isPromise, isSyncIterator };
+export { isAsyncIterator, isIteratorResult, isObject, isPrimitive, isPromise, isSyncIterator };
 
 /**
  * Determine if "promise" is a Promise instance
@@ -55,4 +55,14 @@ function isPrimitive(value) {
   const type = typeof value;
 
   return value === null || !(type === 'object' || type === 'function');
+}
+
+/**
+ * Determine if "value" is an object
+ *
+ * @param { unknown } value
+ * @returns { boolean }
+ */
+function isObject(value) {
+  return Object.prototype.toString.call(value) === '[object Object]';
 }
