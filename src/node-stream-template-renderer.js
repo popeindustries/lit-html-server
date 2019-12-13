@@ -31,7 +31,9 @@ export class StreamTemplateRenderer extends Readable {
    * Extend Readable.read()
    */
   _read() {
-    this.process();
+    if (this.process !== undefined) {
+      this.process();
+    }
   }
 
   /**
