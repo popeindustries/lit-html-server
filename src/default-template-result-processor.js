@@ -1,16 +1,4 @@
 /* eslint no-constant-condition:0 */
-/**
- * @typedef TemplateResultProcessor
- * @property { (renderer: TemplateResultRenderer, stack: Array<any>, [highWaterMark: number], [options: RenderOptions]) => function } getProcessor
- */
-/**
- * @typedef TemplateResultRenderer
- * @property { (chunk: Buffer) => boolean } push
- * @property { (err: Error) => void } destroy
- */
-/**
- * @typedef RenderOptions { import('./index.js).RenderOptions }
- */
 import { isAsyncIterator, isIteratorResult, isPromise } from './is.js';
 import { isTemplateResult } from './template-result.js';
 

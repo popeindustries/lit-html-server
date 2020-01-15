@@ -1,11 +1,8 @@
-/**
- * @typedef TemplateResult { import('./template-result.js).TemplateResult }
- */
-import { isTemplateResult, templateResult } from './template-result.js';
+import { isTemplateResult, TemplateResult } from './template-result.js';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
-import { PromiseTemplateRenderer } from './promise-template-renderer.js';
-import { StreamTemplateRenderer } from './browser-stream-template-renderer.js';
+import { promiseTemplateRenderer } from './promise-template-renderer.js';
+import { streamTemplateRenderer } from './browser-stream-template-renderer.js';
 import { Template } from './template.js';
 
 export { isAttributePart, isNodePart } from './parts.js';
@@ -30,7 +27,7 @@ const templateCache = new Map();
  * Interprets a template literal as an HTML template that can be
  * rendered as a Readable stream or String
  *
- * @param { Array<TemplateStringsArray> } strings
+ * @param { TemplateStringsArray } strings
  * @param  { ...unknown } values
  * @returns { TemplateResult }
  */
@@ -42,7 +39,7 @@ function html(strings, ...values) {
     templateCache.set(strings, template);
   }
 
-  return templateResult(template, values);
+  return new TemplateResult(template, values);
 }
 
 /**
@@ -50,10 +47,10 @@ function html(strings, ...values) {
  * *Note* that TemplateResults are single use, and can only be rendered once.
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
- * @returns { Readable }
+ * @returns { ReadableStream }
  */
 function renderToStream(result) {
-  return new StreamTemplateRenderer(result, defaultTemplateResultProcessor);
+  return streamTemplateRenderer(result, defaultTemplateResultProcessor);
 }
 
 /**
@@ -64,5 +61,5 @@ function renderToStream(result) {
  * @returns { Promise<string> }
  */
 function renderToString(result) {
-  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, false);
+  return promiseTemplateRenderer(result, defaultTemplateResultProcessor, false);
 }

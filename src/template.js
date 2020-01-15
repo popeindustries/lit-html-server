@@ -1,6 +1,3 @@
-/**
- * @typedef TemplateProcessor { import('./default-template-processor.js').TemplateProcessor }
- */
 import { emptyStringBuffer } from './string.js';
 import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
@@ -19,7 +16,7 @@ export class Template {
   /**
    * Create Template instance
    *
-   * @param { Array<TemplateStringsArray> } strings
+   * @param { TemplateStringsArray } strings
    * @param { TemplateProcessor } processor
    */
   constructor(strings, processor) {
@@ -34,7 +31,7 @@ export class Template {
    * and create Part instances for the dynamic values,
    * based on lit-html syntax.
    *
-   * @param { Array<TemplateStringsArray> } strings
+   * @param { TemplateStringsArray } strings
    * @param { TemplateProcessor } processor
    */
   _prepare(strings, processor) {

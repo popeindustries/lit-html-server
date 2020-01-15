@@ -1,15 +1,7 @@
-/**
- * @typedef Readable { import('stream').Readable }
- * @typedef TemplateResult { import('./template-result.js).TemplateResult }
- */
-/**
- * @typedef RenderOptions
- * @property { boolean } [serializePropertyAttributes] - JSON.stringify property attributes
- */
-import { isTemplateResult, templateResult } from './template-result.js';
+import { isTemplateResult, TemplateResult } from './template-result.js';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
-import { PromiseTemplateRenderer } from './promise-template-renderer.js';
+import { promiseTemplateRenderer } from './promise-template-renderer.js';
 import { StreamTemplateRenderer } from './node-stream-template-renderer.js';
 import { Template } from './template.js';
 
@@ -45,7 +37,7 @@ const templateCache = new Map();
  * Interprets a template literal as an HTML template that can be
  * rendered as a Readable stream or String
  *
- * @param { Array<TemplateStringsArray> } strings
+ * @param { TemplateStringsArray } strings
  * @param  { ...unknown } values
  * @returns { TemplateResult }
  */
@@ -57,7 +49,7 @@ function html(strings, ...values) {
     templateCache.set(strings, template);
   }
 
-  return templateResult(template, values);
+  return new TemplateResult(template, values);
 }
 
 /**
@@ -65,7 +57,7 @@ function html(strings, ...values) {
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
  * @param { RenderOptions } [options]
- * @returns { Readable }
+ * @returns { import('stream').Readable }
  */
 function renderToStream(result, options) {
   return new StreamTemplateRenderer(result, defaultTemplateResultProcessor, options);
@@ -79,7 +71,7 @@ function renderToStream(result, options) {
  * @returns { Promise<string> }
  */
 function renderToString(result, options) {
-  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, false, options);
+  return promiseTemplateRenderer(result, defaultTemplateResultProcessor, false, options);
 }
 
 /**
@@ -90,5 +82,5 @@ function renderToString(result, options) {
  * @returns { Promise<Buffer> }
  */
 function renderToBuffer(result, options) {
-  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, true, options);
+  return promiseTemplateRenderer(result, defaultTemplateResultProcessor, true, options);
 }

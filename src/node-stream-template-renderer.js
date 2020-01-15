@@ -1,9 +1,3 @@
-/**
- * @typedef TemplateResult { import('./template-result.js).TemplateResult }
- * @typedef TemplateResultProcessor { import('./default-template-result-processor.js).TemplateResultProcessor }
- * @typedef TemplateResultRenderer { import('./default-template-result-renderer.js).TemplateResultRenderer }
- * @typedef RenderOptions { import('./index.js).RenderOptions }
- */
 import { Readable } from 'stream';
 
 /**
@@ -14,11 +8,10 @@ import { Readable } from 'stream';
 export class StreamTemplateRenderer extends Readable {
   /**
    * Constructor
-   *
    * @param { TemplateResult } result - a template result returned from call to "html`...`"
    * @param { TemplateResultProcessor } processor
    * @param { RenderOptions } [options]
-   * @returns { Readable }
+   *
    */
   constructor(result, processor, options) {
     super({ autoDestroy: true });

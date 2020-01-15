@@ -1,6 +1,3 @@
-/**
- * @typedef RenderOptions { import('./index.js).RenderOptions }
- */
 import { isAsyncIterator, isPromise } from './is.js';
 import { emptyStringBuffer } from './string.js';
 import { isAttributePart } from './parts.js';
@@ -10,32 +7,22 @@ let id = 0;
 /**
  * Determine whether "result" is a TemplateResult
  *
- * @param { TemplateResult } result
- * @returns { boolean }
+ * @param { unknown } result
+ * @returns { result is TemplateResult }
  */
 export function isTemplateResult(result) {
   return (
     result instanceof TemplateResult ||
+    // @ts-ignore
     (result && typeof result.template !== 'undefined' && typeof result.values !== 'undefined')
   );
-}
-
-/**
- * Retrieve TemplateResult instance.
- *
- * @param { Template } template
- * @param { Array<unknown> } values
- * @returns { TemplateResult }
- */
-export function templateResult(template, values) {
-  return new TemplateResult(template, values);
 }
 
 /**
  * A class for consuming the combined static and dynamic parts of a lit-html Template.
  * TemplateResults
  */
-class TemplateResult {
+export class TemplateResult {
   /**
    * Constructor
    *
@@ -103,6 +90,7 @@ class TemplateResult {
     const part = this.template.parts[index];
     let value;
 
+    // @ts-ignore
     if (isAttributePart(part)) {
       // AttributeParts can have multiple values, so slice based on length
       // (strings in-between values are already handled the instance)

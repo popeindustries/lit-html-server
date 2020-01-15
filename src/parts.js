@@ -1,6 +1,3 @@
-/**
- * @typedef RenderOptions { import('./index.js).RenderOptions }
- */
 import { emptyStringBuffer, nothingString, unsafePrefixString } from './string.js';
 import { isAsyncIterator, isObject, isPrimitive, isPromise, isSyncIterator } from './is.js';
 import { escape } from './escape.js';
@@ -14,21 +11,19 @@ import { isTemplateResult } from './template-result.js';
  * @returns { boolean }
  */
 export function isNodePart(part) {
-  return (
-    part instanceof NodePart ||
-    (part && part.getValue !== undefined && typeof part.name === 'undefined')
-  );
+  return part instanceof NodePart || (part && part.getValue !== undefined && !('name' in part));
 }
 
 /**
  * Determine if "part" is an AttributePart
  *
- * @param { Part } part
- * @returns { boolean }
+ * @param { AttributePart } part
+ * @returns { part is AttributePart }
  */
 export function isAttributePart(part) {
   return (
     part instanceof AttributePart ||
+    // @ts-ignore
     (part && part.getValue !== undefined && typeof part.name !== 'undefined')
   );
 }
@@ -65,7 +60,7 @@ export class Part {
    * @param { RenderOptions } [options]
    * @returns { any }
    */
-  getValue(value /*, options */) {
+  getValue(value, options) {
     return value;
   }
 
@@ -86,7 +81,7 @@ export class NodePart extends Part {
    * @param { RenderOptions } [options]
    * @returns { any }
    */
-  getValue(value /*, options */) {
+  getValue(value, options) {
     return resolveNodeValue(value, this);
   }
 }
@@ -119,7 +114,7 @@ export class AttributePart extends Part {
    *
    * @param { Array<unknown> } values
    * @param { RenderOptions } [options]
-   * @returns { Buffer|Promise<Buffer> }
+   * @returns { Buffer | Promise<Buffer> }
    */
   getValue(values, options) {
     let chunks = [this.prefix];
@@ -151,11 +146,14 @@ export class AttributePart extends Part {
           pendingChunks = [];
         }
 
+        // @ts-ignore
         const index = chunks.push(value) - 1;
 
         pendingChunks.push(
           value.then((value) => {
+            // @ts-ignore
             chunks[index] = value;
+            // @ts-ignore
             chunkLength += value.length;
           })
         );
@@ -196,8 +194,8 @@ export class BooleanAttributePart extends AttributePart {
 
     if (
       strings.length !== 2 ||
-      !strings[0] === emptyStringBuffer ||
-      !strings[1] === emptyStringBuffer
+      strings[0] === emptyStringBuffer ||
+      strings[1] === emptyStringBuffer
     ) {
       throw Error('Boolean attributes can only contain a single expression');
     }
@@ -208,9 +206,9 @@ export class BooleanAttributePart extends AttributePart {
    *
    * @param { Array<unknown> } values
    * @param { RenderOptions } [options]
-   * @returns { Buffer|Promise<Buffer> }
+   * @returns { Buffer | Promise<Buffer> }
    */
-  getValue(values /*, options */) {
+  getValue(values, options) {
     let value = values[0];
 
     if (isDirective(value)) {
@@ -236,7 +234,7 @@ export class PropertyAttributePart extends AttributePart {
    *
    * @param { Array<unknown> } values
    * @param { RenderOptions } [options]
-   * @returns { Buffer }
+   * @returns { Buffer | Promise<Buffer> }
    */
   getValue(values, options) {
     if (options !== undefined && options.serializePropertyAttributes) {
@@ -266,7 +264,7 @@ export class EventAttributePart extends AttributePart {
    * @param { RenderOptions } [options]
    * @returns { Buffer }
    */
-  getValue(/* values, options */) {
+  getValue(values, options) {
     return emptyStringBuffer;
   }
 }
@@ -309,6 +307,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
       value = Array.from(value);
     }
     return Buffer.concat(
+      // @ts-ignore: already converted to Array
       value.reduce((values, value) => {
         value = resolveAttributeValue(value, part, serialiseObjectsAndArrays);
         // Flatten
@@ -320,7 +319,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
       }, [])
     );
   } else {
-    throw Error('unknown AttributPart value', value);
+    throw Error(`unknown AttributPart value: ${value}`);
   }
 }
 
@@ -359,6 +358,7 @@ function resolveNodeValue(value, part) {
     if (!Array.isArray(value)) {
       value = Array.from(value);
     }
+    // @ts-ignore: already converted to Array
     return value.reduce((values, value) => {
       value = resolveNodeValue(value, part);
       // Flatten
@@ -371,14 +371,14 @@ function resolveNodeValue(value, part) {
   } else if (isAsyncIterator(value)) {
     return resolveAsyncIteratorValue(value, part);
   } else {
-    throw Error('unknown NodePart value', value);
+    throw Error(`unknown NodePart value: ${value}`);
   }
 }
 
 /**
  * Resolve values of async "iterator"
  *
- * @param { AsyncIterator } iterator
+ * @param { AsyncIterableIterator } iterator
  * @param { NodePart } part
  * @returns { AsyncGenerator }
  */

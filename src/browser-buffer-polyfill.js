@@ -1,5 +1,6 @@
 /* global window */
 /* eslint no-unused-vars: 0 */
+// @ts-nocheck
 const Buffer =
   (typeof window !== 'undefined' && window.Buffer) ||
   class Buffer {

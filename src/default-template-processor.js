@@ -1,8 +1,3 @@
-/**
- * @typedef TemplateProcessor
- * @property { (name: string, strings: Array<string>) => AttributePart } handleAttributeExpressions
- * @property { () => NodePart } handleTextExpression
- */
 import {
   AttributePart,
   BooleanAttributePart,
@@ -21,7 +16,7 @@ export class DefaultTemplateProcessor {
    * Create part instance for dynamic attribute values
    *
    * @param { string } name
-   * @param { Array<string> } strings
+   * @param { Array<Buffer> } strings
    * @param { string } tagName
    * @returns { AttributePart }
    */

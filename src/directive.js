@@ -1,15 +1,12 @@
 /**
- * @typedef Part { import('./parts.js').Part }
- */
-
-/**
  * Determine if "obj" is a directive function
  *
- * @param { unknown } obj
- * @returns { boolean }
+ * @param { unknown } fn
+ * @returns { fn is Function }
  */
-export function isDirective(obj) {
-  return typeof obj === 'function' && obj.isDirective;
+export function isDirective(fn) {
+  // @ts-ignore
+  return typeof fn === 'function' && fn.isDirective;
 }
 
 /**
@@ -28,6 +25,7 @@ export function directive(fn) {
       throw Error('directives are factory functions and must return a function when called');
     }
 
+    // @ts-ignore
     result.isDirective = true;
     return result;
   };

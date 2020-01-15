@@ -1,22 +1,20 @@
-export { isAsyncIterator, isIteratorResult, isObject, isPrimitive, isPromise, isSyncIterator };
-
 /**
  * Determine if "promise" is a Promise instance
  *
- * @param { Promise<unknown> } promise
- * @returns { boolean }
+ * @param { object } promise
+ * @returns { promise is Promise<unknown> }
  */
-function isPromise(promise) {
+export function isPromise(promise) {
   return promise != null && promise.then != null;
 }
 
 /**
  * Determine if "iterator" is an synchronous iterator
  *
- * @param { IterableIterator } iterator
- * @returns { boolean }
+ * @param { unknown } iterator
+ * @returns { iterator is IterableIterator }
  */
-function isSyncIterator(iterator) {
+export function isSyncIterator(iterator) {
   return (
     iterator != null &&
     // Ignore strings (which are also iterable)
@@ -28,20 +26,20 @@ function isSyncIterator(iterator) {
 /**
  * Determine if "iterator" is an asynchronous iterator
  *
- * @param { AsyncIterableIterator } iterator
- * @returns { boolean }
+ * @param { unknown } iterator
+ * @returns { iterator is AsyncIterableIterator }
  */
-function isAsyncIterator(iterator) {
+export function isAsyncIterator(iterator) {
   return iterator != null && typeof iterator[Symbol.asyncIterator] === 'function';
 }
 
 /**
  * Determine if "result" is an iterator result object
  *
- * @param { object } result
- * @returns { boolean }
+ * @param { unknown } result
+ * @returns { result is IteratorResult<T, TReturn> }
  */
-function isIteratorResult(result) {
+export function isIteratorResult(result) {
   return typeof result === 'object' && 'value' in result && 'done' in result;
 }
 
@@ -49,9 +47,9 @@ function isIteratorResult(result) {
  * Determine if "value" is a primitive
  *
  * @param { unknown } value
- * @returns { boolean }
+ * @returns { value is null|string|boolean|number }
  */
-function isPrimitive(value) {
+export function isPrimitive(value) {
   const type = typeof value;
 
   return value === null || !(type === 'object' || type === 'function');
@@ -61,8 +59,8 @@ function isPrimitive(value) {
  * Determine if "value" is an object
  *
  * @param { unknown } value
- * @returns { boolean }
+ * @returns { value is object }
  */
-function isObject(value) {
+export function isObject(value) {
   return Object.prototype.toString.call(value) === '[object Object]';
 }
