@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const commonjs = require('rollup-plugin-commonjs');
 const fs = require('fs');
 const path = require('path');
@@ -32,7 +34,7 @@ const tasks = [
       format: 'esm'
     }
   ],
-  ...configDirectives('', 'cjs', '.js'),
+  ...configDirectives('', 'cjs', '.js', true),
   ...configDirectives('', 'esm', '.mjs'),
   ...configDirectives('browser', 'esm', '.js')
 ];
@@ -51,19 +53,23 @@ const tasks = [
       write(path.resolve(outputOptions.file), content);
     }
   }
+  write(
+    path.resolve('index.d.ts'),
+    fs.readFileSync(path.resolve('src/index.d.ts'), 'utf8').replace(/declare/g, 'export')
+  );
 })();
 
-function configDirectives(outputdir = '', format, extension) {
+function configDirectives(outputdir = '', format, extension, moveTypes) {
   const config = [];
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
   const preWrite = (content) => content.replace('../index.js', '../index.mjs');
 
   for (const directive of directives) {
-    if (path.extname(directive) === '.js') {
-      const input = path.join(dir, directive);
-      let filename = path.join(outputdir, 'directives', directive);
+    const input = path.join(dir, directive);
+    let filename = path.join(outputdir, 'directives', directive);
 
+    if (path.extname(directive) === '.js') {
       if (extension === '.mjs') {
         filename = filename.replace('.js', '.mjs');
       }
@@ -80,6 +86,8 @@ function configDirectives(outputdir = '', format, extension) {
         },
         extension === '.mjs' ? preWrite : undefined
       ]);
+    } else if (path.extname(directive) === '.ts' && moveTypes) {
+      fs.copyFileSync(input, path.resolve(filename));
     }
   }
 
