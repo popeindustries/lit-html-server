@@ -3,3 +3,4 @@ test
 src
 .*
 package-lock.json
+tsconfig.json
