@@ -16,7 +16,7 @@ export {
   PropertyAttributePart
 } from './parts.js';
 export { nothingString, unsafePrefixString } from './string.js';
-export { directive } from './directive.js';
+export { directive, isDirective } from './directive.js';
 export {
   defaultTemplateProcessor,
   defaultTemplateResultProcessor,
