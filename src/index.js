@@ -1,8 +1,10 @@
 import { isTemplateResult, TemplateResult } from './template-result.js';
+import { browserStreamTemplateRenderer } from './browser-stream-template-renderer';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
+import { polyfillBuffer } from './browser-buffer-polyfill.js';
 import { promiseTemplateRenderer } from './promise-template-renderer.js';
-import { StreamTemplateRenderer } from './node-stream-template-renderer.js';
+import { streamTemplateRenderer } from './node-stream-template-renderer.js';
 import { Template } from './template.js';
 
 export {
@@ -32,6 +34,11 @@ export {
 const defaultTemplateProcessor = new DefaultTemplateProcessor();
 const defaultTemplateResultProcessor = new DefaultTemplateResultProcessor();
 const templateCache = new Map();
+const isNode = typeof process !== 'undefined' && typeof process.versions.node !== 'undefined';
+
+if (!isNode) {
+  polyfillBuffer();
+}
 
 /**
  * Interprets a template literal as an HTML template that can be
@@ -57,10 +64,12 @@ function html(strings, ...values) {
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
  * @param { RenderOptions } [options]
- * @returns { import('stream').Readable }
+ * @returns { import('stream').Readable | ReadableStream }
  */
 function renderToStream(result, options) {
-  return new StreamTemplateRenderer(result, defaultTemplateResultProcessor, options);
+  return isNode
+    ? streamTemplateRenderer(result, defaultTemplateResultProcessor, options)
+    : browserStreamTemplateRenderer(result, defaultTemplateResultProcessor, options);
 }
 
 /**

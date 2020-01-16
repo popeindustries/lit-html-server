@@ -4,8 +4,10 @@
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
  * @param { TemplateResultProcessor } processor
+ * @param { RenderOptions } [options]
+ * @returns { ReadableStream }
  */
-export function streamTemplateRenderer(result, processor) {
+export function browserStreamTemplateRenderer(result, processor, options) {
   if (typeof ReadableStream === 'undefined') {
     throw Error('ReadableStream not supported on this platform');
   }
@@ -31,7 +33,7 @@ export function streamTemplateRenderer(result, processor) {
 
             controller.enqueue(encoder.encode(chunk.toString()));
             // Pause processing (return "false") if stream is full
-            return controller.desiredSize ? controller.desiredSize > 0 : true;
+            return controller.desiredSize != null ? controller.desiredSize > 0 : true;
           },
           destroy(err) {
             controller.error(err);
@@ -41,7 +43,8 @@ export function streamTemplateRenderer(result, processor) {
           }
         },
         stack,
-        16384
+        16384,
+        options
       );
     },
     pull() {

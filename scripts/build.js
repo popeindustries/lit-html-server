@@ -11,10 +11,6 @@ if (!fs.existsSync(path.resolve('directives'))) {
 }
 
 const plugins = [commonjs(), resolve({ preferBuiltins: true })];
-const bufferPolyfill = fs.readFileSync(
-  path.resolve(__dirname, '../src/browser-buffer-polyfill.js'),
-  'utf8'
-);
 const tasks = [
   [
     { external: ['stream'], input: 'src/index.js', plugins },
@@ -30,17 +26,8 @@ const tasks = [
       format: 'esm'
     }
   ],
-  [
-    { input: 'src/browser.js', plugins },
-    {
-      intro: bufferPolyfill,
-      file: 'browser/index.js',
-      format: 'esm'
-    }
-  ],
-  ...configDirectives('', 'cjs', '.js', true),
-  ...configDirectives('', 'esm', '.mjs'),
-  ...configDirectives('browser', 'esm', '.js')
+  ...configDirectives('cjs', '.js', true),
+  ...configDirectives('esm', '.mjs')
 ];
 
 (async function() {
@@ -61,7 +48,7 @@ const tasks = [
   );
 })();
 
-function configDirectives(outputdir = '', format, extension, moveTypes) {
+function configDirectives(format, extension, moveTypes) {
   const config = [];
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
@@ -69,7 +56,7 @@ function configDirectives(outputdir = '', format, extension, moveTypes) {
 
   for (const directive of directives) {
     const input = path.join(dir, directive);
-    let filename = path.join(outputdir, 'directives', directive);
+    let filename = path.join('directives', directive);
 
     if (path.extname(directive) === '.js') {
       if (extension === '.mjs') {

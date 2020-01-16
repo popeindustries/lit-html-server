@@ -1,17 +1,27 @@
 import { Readable } from 'stream';
 
 /**
- * A custom Readable stream class for rendering a template result to a stream
+ * Factory for StreamTemplateRenderer instances
  *
- * @implements TemplateResultRenderer
+ * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { TemplateResultProcessor } processor
+ * @param { RenderOptions } [options]
+ * @returns { import('stream').Readable }
  */
-export class StreamTemplateRenderer extends Readable {
+export function streamTemplateRenderer(result, processor, options) {
+  return new StreamTemplateRenderer(result, processor, options);
+}
+
+/**
+ * A custom Readable stream class for rendering a template result to a stream
+ */
+class StreamTemplateRenderer extends Readable {
   /**
    * Constructor
+   *
    * @param { TemplateResult } result - a template result returned from call to "html`...`"
    * @param { TemplateResultProcessor } processor
    * @param { RenderOptions } [options]
-   *
    */
   constructor(result, processor, options) {
     super({ autoDestroy: true });

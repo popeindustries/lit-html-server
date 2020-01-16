@@ -15,7 +15,6 @@
   ],
   "main": "index.js",
   "module": "index.mjs",
-  "browser": "browser/index.js",
   "types": "index.d.ts",
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "license": "MIT",
