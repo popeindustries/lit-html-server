@@ -2,6 +2,7 @@
   "name": "@popeindustries/lit-html-server",
   "version": "1.6.1",
   "description": "Render lit-html templates on the server",
+  "author": "Alexander Pope <alex@pope-industries.com>",
   "keywords": [
     "html template",
     "lit-html",
@@ -15,9 +16,12 @@
   "main": "index.js",
   "module": "index.mjs",
   "browser": "browser/index.js",
+  "types": "index.d.ts",
   "repository": "https://github.com/popeindustries/lit-html-server.git",
-  "author": "Alexander Pope <alex@pope-industries.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=10"
+  },
   "dependencies": {},
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.1",
@@ -39,9 +43,6 @@
     "text-encoding": "^0.7.0",
     "web-streams-polyfill": "^2.0.6"
   },
-  "engines": {
-    "node": ">=10"
-  },
   "scripts": {
     "build": "node ./scripts/build.js",
     "format": "prettier --write './{directives,src,test}/**/*.{js,json}'",
@@ -50,7 +51,6 @@
     "prepublishOnly": "npm run build",
     "test": "npm run build && NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm"
   },
-  "types": "index.d.ts",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
