@@ -9,6 +9,7 @@
 export function promiseTemplateRenderer(result, processor, asBuffer = false, options) {
   return new Promise((resolve, reject) => {
     let stack = [result];
+    /** @type { Array<Buffer> } */
     let buffer = [];
     let bufferLength = 0;
 
@@ -26,7 +27,9 @@ export function promiseTemplateRenderer(result, processor, asBuffer = false, opt
         },
         destroy(err) {
           buffer.length = stack.length = bufferLength = 0;
+          // @ts-ignore
           buffer = undefined;
+          // @ts-ignore
           stack = undefined;
           reject(err);
         }

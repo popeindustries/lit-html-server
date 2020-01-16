@@ -1,4 +1,4 @@
-import { isAsyncIterator, isPromise } from './is.js';
+import { isArray, isAsyncIterator, isBuffer, isPromise } from './is.js';
 import { emptyStringBuffer } from './string.js';
 import { isAttributePart } from './parts.js';
 
@@ -44,16 +44,18 @@ export class TemplateResult {
    */
   read(options) {
     let buffer = emptyStringBuffer;
-    let chunk, chunks;
+    let chunk;
+    /** @type { Array<Buffer> | undefined } */
+    let chunks;
 
     while ((chunk = this.readChunk(options)) !== null) {
-      if (Buffer.isBuffer(chunk)) {
+      if (isBuffer(chunk)) {
         buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length);
       } else {
         if (chunks === undefined) {
           chunks = [];
         }
-        buffer = reduce(buffer, chunks, chunk);
+        buffer = reduce(buffer, chunks, chunk) || emptyStringBuffer;
       }
     }
 
@@ -90,7 +92,6 @@ export class TemplateResult {
     const part = this.template.parts[index];
     let value;
 
-    // @ts-ignore
     if (isAttributePart(part)) {
       // AttributeParts can have multiple values, so slice based on length
       // (strings in-between values are already handled the instance)
@@ -101,7 +102,7 @@ export class TemplateResult {
         value = part.getValue([this.values[index]], options);
       }
     } else {
-      value = part.getValue(this.values[index], options);
+      value = part && part.getValue(this.values[index], options);
     }
 
     return value;
@@ -115,15 +116,15 @@ export class TemplateResult {
  * @param { Buffer } buffer
  * @param { Array<unknown> } chunks
  * @param { unknown } chunk
- * @returns { Buffer }
+ * @returns { Buffer | undefined }
  */
 function reduce(buffer, chunks, chunk) {
-  if (Buffer.isBuffer(chunk)) {
+  if (isBuffer(chunk)) {
     return Buffer.concat([buffer, chunk], buffer.length + chunk.length);
   } else if (isTemplateResult(chunk)) {
     chunks.push(buffer, chunk);
     return emptyStringBuffer;
-  } else if (Array.isArray(chunk)) {
+  } else if (isArray(chunk)) {
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
   } else if (isPromise(chunk) || isAsyncIterator(chunk)) {
     chunks.push(buffer, chunk);

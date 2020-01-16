@@ -14,8 +14,8 @@ export function isDirective(fn) {
  * The passed function should be a factory function,
  * and must return a function that will eventually be called with a Part instance
  *
- * @param { (...args) => (part: Part) => void } fn
- * @returns { (...args) => (part: Part) => void }
+ * @param { (...args: Array<unknown>) => (part: Part) => void } fn
+ * @returns { (...args: Array<unknown>) => (part: Part) => void }
  */
 export function directive(fn) {
   return function directive(...args) {

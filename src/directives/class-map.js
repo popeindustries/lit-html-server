@@ -1,6 +1,3 @@
-/**
- * @typedef Part { import('../parts.js').Part }
- */
 import { directive, isAttributePart } from '../index.js';
 
 /**
@@ -14,10 +11,11 @@ export const classMap = directive((classInfo) => (part) => {
     throw Error('The `classMap` directive can only be used in the `class` attribute');
   }
 
+  const classes = /** @type { { [name: string]: string } } */ (classInfo);
   let value = '';
 
-  for (const key in classInfo) {
-    if (classInfo[key]) {
+  for (const key in classes) {
+    if (classes[key]) {
       value += `${value.length ? ' ' : ''}${key}`;
     }
   }

@@ -17,7 +17,7 @@ interface TemplateResultProcessor {
 }
 
 interface TemplateResultRenderer {
-  push: (chunk: Buffer) => boolean;
+  push: (chunk: Buffer | null) => boolean;
   destroy: (err: Error) => void;
 }
 
@@ -115,7 +115,9 @@ declare class DefaultTemplateResultProcessor {
  * A dynamic template part for boolean attributes.
  * Boolean attributes are prefixed with "?"
  */
-/* export */ declare class BooleanAttributePart extends AttributePart {}
+/* export */ declare class BooleanAttributePart extends AttributePart {
+  nameAsBuffer: Buffer;
+}
 
 /**
  * A dynamic template part for property attributes.
@@ -178,8 +180,8 @@ declare class DefaultTemplateResultProcessor {
  * tagged template literal invoked with "html`...`".
  */
 /* export */ declare class Template {
-  strings: Array<Buffer>;
-  parts: Array<Part>;
+  strings: Array<Buffer | null>;
+  parts: Array<Part | null>;
 
   /**
    * Create Template instance

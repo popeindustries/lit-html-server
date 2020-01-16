@@ -31,11 +31,12 @@ export function streamTemplateRenderer(result, processor) {
 
             controller.enqueue(encoder.encode(chunk.toString()));
             // Pause processing (return "false") if stream is full
-            return controller.desiredSize > 0;
+            return controller.desiredSize ? controller.desiredSize > 0 : true;
           },
           destroy(err) {
             controller.error(err);
             underlyingSource.process = undefined;
+            // @ts-ignore
             stack = undefined;
           }
         },

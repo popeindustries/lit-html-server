@@ -20,7 +20,9 @@ export class Template {
    * @param { TemplateProcessor } processor
    */
   constructor(strings, processor) {
+    /** @type { Array<Buffer | null> } */
     this.strings = [];
+    /** @type { Array<Part | null> } */
     this.parts = [];
 
     this._prepare(strings, processor);
@@ -106,6 +108,7 @@ export class Template {
       }
 
       this.strings.push(Buffer.from(string));
+      // @ts-ignore: part will never be undefined here
       this.parts.push(part);
       // Add placehholders for strings/parts that wil be skipped due to multple values in a single AttributePart
       if (skip > 0) {
@@ -149,6 +152,7 @@ function getTagState(string) {
  * @param { string } string
  * @param { number } tagState
  * @param { number } tagStateIndex
+ * @returns { string }
  */
 function getTagName(string, tagState, tagStateIndex) {
   let tagName = '';

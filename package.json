@@ -41,6 +41,7 @@
     "prettier": "^1.19.1",
     "rollup": "^1.29.0",
     "text-encoding": "^0.7.0",
+    "typescript": "^3.7.4",
     "web-streams-polyfill": "^2.0.6"
   },
   "scripts": {
@@ -48,8 +49,9 @@
     "format": "prettier --write './{directives,src,test}/**/*.{js,json}'",
     "lint": "eslint './{directives,src,test}/**/*.js'",
     "perf": "node test/perf.js",
-    "prepublishOnly": "npm run build",
-    "test": "npm run build && NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm"
+    "prepublishOnly": "npm run test && npm run typecheck",
+    "test": "npm run build && NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm",
+    "typecheck": "tsc --noEmit"
   },
   "husky": {
     "hooks": {

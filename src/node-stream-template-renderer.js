@@ -32,7 +32,7 @@ export class StreamTemplateRenderer extends Readable {
   /**
    * Extend Readalbe.destroy()
    *
-   * @param { Error } [err]
+   * @param { Error | null } [err]
    */
   _destroy(err) {
     if (err) {
@@ -40,7 +40,9 @@ export class StreamTemplateRenderer extends Readable {
     }
     this.emit('close');
 
+    // @ts-ignore
     this.process = undefined;
+    // @ts-ignore
     this.stack = undefined;
     this.removeAllListeners();
   }

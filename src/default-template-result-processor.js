@@ -1,5 +1,5 @@
 /* eslint no-constant-condition:0 */
-import { isAsyncIterator, isIteratorResult, isPromise } from './is.js';
+import { isArray, isAsyncIterator, isBuffer, isIteratorResult, isPromise } from './is.js';
 import { isTemplateResult } from './template-result.js';
 
 /**
@@ -19,6 +19,7 @@ export class DefaultTemplateResultProcessor {
    * @returns { () => void }
    */
   getProcessor(renderer, stack, highWaterMark = 0, options) {
+    /** @type { Array<Buffer> } */
     const buffer = [];
     let bufferLength = 0;
     let processing = false;
@@ -56,7 +57,7 @@ export class DefaultTemplateResultProcessor {
 
         // Skip if finished reading TemplateResult (null)
         if (chunk !== null) {
-          if (Buffer.isBuffer(chunk)) {
+          if (isBuffer(chunk)) {
             buffer.push(chunk);
             bufferLength += chunk.length;
             // Flush buffered data if over highWaterMark
@@ -96,7 +97,7 @@ export class DefaultTemplateResultProcessor {
                 stack.length = 0;
                 renderer.destroy(err);
               });
-          } else if (Array.isArray(chunk)) {
+          } else if (isArray(chunk)) {
             // First remove existing Array if at top of stack (not added by pending TemplateResult)
             if (stack[0] === chunk) {
               popStack = false;
@@ -141,7 +142,7 @@ function getTemplateResultChunk(result, stack, options) {
   let chunk = result.readChunk(options);
 
   // Skip empty strings
-  if (Buffer.isBuffer(chunk) && chunk.length === 0) {
+  if (isBuffer(chunk) && chunk.length === 0) {
     chunk = result.readChunk(options);
   }
 

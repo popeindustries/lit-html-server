@@ -1,25 +1,29 @@
-/**
- * @typedef Part { import('../parts.js').Part }
- */
 import { directive, isNodePart } from '../index.js';
 
 /**
  * Render items of an AsyncIterable
- *
- * @type { (value: AsyncIterable<unknown>, mapper?: ((v: unknown, index?: number | undefined) => unknown) | undefined) => (part: Part) => void }
  */
 export const asyncAppend = directive((value, mapper) => (part) => {
   if (!isNodePart(part)) {
     throw Error('The `asyncAppend` directive can only be used in text nodes');
   }
 
+  const val = /** @type { AsyncIterableIterator<unknown> } */ (value);
+  const map = /** @type { (value: unknown, index: number) => unknown } */ (mapper);
+
   if (mapper !== undefined) {
-    value = createMappedAsyncIterable(value, mapper);
+    value = createMappedAsyncIterable(val, map);
   }
 
   part.setValue(value);
 });
 
+/**
+ * Create new asyncIterator from "asuncIterable" that maps results with "mapper"
+ *
+ * @param { AsyncIterableIterator<unknown> } asyncIterable
+ * @param { (value: unknown, index: number) => unknown } mapper
+ */
 async function* createMappedAsyncIterable(asyncIterable, mapper) {
   let i = 0;
 
