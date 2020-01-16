@@ -49,9 +49,10 @@
     "format": "prettier --write './{directives,src,test}/**/*.{js,json}'",
     "lint": "eslint './{directives,src,test}/**/*.js'",
     "perf": "node test/perf.js",
-    "prepublishOnly": "npm run test && npm run typecheck",
-    "test": "npm run build && NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm",
-    "typecheck": "tsc --noEmit"
+    "prepublishOnly": "npm run build",
+    "test": "npm run test:types && npm run test:unit",
+    "test:unit": "npm run build && NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm",
+    "test:types": "tsc --noEmit"
   },
   "husky": {
     "hooks": {

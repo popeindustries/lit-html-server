@@ -14,5 +14,5 @@
     "declaration": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "src/browser-buffer-polyfill.js"]
+  "exclude": ["node_modules", "src/browser-buffer-polyfill.js", "test"]
 }

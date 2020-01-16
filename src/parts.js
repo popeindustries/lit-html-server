@@ -363,7 +363,7 @@ function resolveNodeValue(value, part) {
   } else if (isPromise(value)) {
     return value.then((value) => resolveNodeValue(value, part));
   } else if (isSyncIterator(value)) {
-    if (!value) {
+    if (!isArray(value)) {
       value = Array.from(value);
     }
     // @ts-ignore: already converted to Array
