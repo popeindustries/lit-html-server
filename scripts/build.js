@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-const commonjs = require('rollup-plugin-commonjs');
+const commonjs = require('@rollup/plugin-commonjs');
 const fs = require('fs');
 const path = require('path');
-const resolve = require('rollup-plugin-node-resolve');
+const resolve = require('@rollup/plugin-node-resolve');
 const { rollup } = require('rollup');
 
 if (!fs.existsSync(path.resolve('directives'))) {
