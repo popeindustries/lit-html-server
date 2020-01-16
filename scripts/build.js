@@ -6,6 +6,10 @@ const path = require('path');
 const resolve = require('rollup-plugin-node-resolve');
 const { rollup } = require('rollup');
 
+if (!fs.existsSync(path.resolve('directives'))) {
+  fs.mkdirSync(path.resolve('directives'));
+}
+
 const plugins = [commonjs(), resolve({ preferBuiltins: true })];
 const bufferPolyfill = fs.readFileSync(
   path.resolve(__dirname, '../src/browser-buffer-polyfill.js'),
@@ -43,10 +47,8 @@ const tasks = [
   for (const [inputOptions, outputOptions, preWrite] of tasks) {
     const bundle = await rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
-
     for (const chunkOrAsset of output) {
       let content = chunkOrAsset.isAsset ? chunkOrAsset.source : chunkOrAsset.code;
-
       if (preWrite) {
         content = preWrite(content);
       }
@@ -55,7 +57,7 @@ const tasks = [
   }
   write(
     path.resolve('index.d.ts'),
-    fs.readFileSync(path.resolve('src/index.d.ts'), 'utf8').replace(/declare/g, 'export')
+    fs.readFileSync(path.resolve('src/types.d.ts'), 'utf8').replace(/\/\* export \*\//g, 'export')
   );
 })();
 
