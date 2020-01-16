@@ -1,14 +1,14 @@
 /* global globalThis, self, window */
 // @ts-nocheck
 
-const global =
+const g =
   (typeof globalThis !== 'undefined' && globalThis) ||
   (typeof self !== 'undefined' && self) ||
-  (typeof window !== undefined && window);
+  (typeof window !== 'undefined' && window);
 
 export function polyfillBuffer() {
-  global.Buffer =
-    global.Buffer ||
+  g.Buffer =
+    g.Buffer ||
     class Buffer {
       /**
        * Determine if 'buffer' is a buffer
