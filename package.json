@@ -40,6 +40,7 @@
     "prettier": "^1.19.1",
     "rollup": "^1.29.0",
     "text-encoding": "^0.7.0",
+    "@types/node": "^13.1.7",
     "typescript": "^3.7.4",
     "web-streams-polyfill": "^2.0.6"
   },
@@ -49,8 +50,8 @@
     "lint": "eslint './{directives,src,test}/**/*.js'",
     "perf": "node test/perf.js",
     "prepublishOnly": "npm run build",
-    "test": "npm run test:types && npm run test:unit",
-    "test:unit": "npm run build && NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm",
+    "test": "npm run build && npm run test:types && npm run test:unit",
+    "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm",
     "test:types": "tsc --noEmit"
   },
   "husky": {

@@ -6,7 +6,7 @@ import { Readable } from 'stream';
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
  * @param { TemplateResultProcessor } processor
  * @param { RenderOptions } [options]
- * @returns { import('stream').Readable }
+ * @returns { Readable }
  */
 export function streamTemplateRenderer(result, processor, options) {
   return new StreamTemplateRenderer(result, processor, options);
