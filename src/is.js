@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 /**
  * Determine if "promise" is a Promise instance
  *

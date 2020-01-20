@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer';
+
 /**
  * An empty string Buffer
  */

@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import { emptyStringBuffer } from './string.js';
 import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 

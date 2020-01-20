@@ -1,4 +1,5 @@
 import { isArray, isAsyncIterator, isBuffer, isPromise } from './is.js';
+import { Buffer } from 'buffer';
 import { emptyStringBuffer } from './string.js';
 import { isAttributePart } from './parts.js';
 

@@ -8,6 +8,7 @@ import {
   isPromise,
   isSyncIterator
 } from './is.js';
+import { Buffer } from 'buffer';
 import { escape } from './escape.js';
 import { isDirective } from './directive.js';
 import { isTemplateResult } from './template-result.js';

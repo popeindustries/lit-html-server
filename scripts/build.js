@@ -11,16 +11,21 @@ if (!fs.existsSync(path.resolve('directives'))) {
 }
 
 const plugins = [commonjs(), resolve({ preferBuiltins: true })];
+const input = {
+  external: ['buffer', 'stream'],
+  input: 'src/index.js',
+  plugins
+};
 const tasks = [
   [
-    { external: ['stream'], input: 'src/index.js', plugins },
+    input,
     {
       file: 'index.js',
       format: 'cjs'
     }
   ],
   [
-    { external: ['stream'], input: 'src/index.js', plugins },
+    input,
     {
       file: 'index.mjs',
       format: 'esm'
@@ -46,6 +51,8 @@ const tasks = [
     path.resolve('index.d.ts'),
     fs.readFileSync(path.resolve('src/types.d.ts'), 'utf8').replace(/\/\* export \*\//g, 'export')
   );
+  fs.copyFileSync(path.resolve('src/browser-buffer.js'), path.resolve('browser-buffer.js'));
+  fs.copyFileSync(path.resolve('src/browser-stream.js'), path.resolve('browser-stream.js'));
 })();
 
 function configDirectives(format, extension, moveTypes) {

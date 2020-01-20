@@ -16,6 +16,10 @@
   "main": "index.js",
   "module": "index.mjs",
   "types": "index.d.ts",
+  "browser": {
+    "buffer": "./browser-buffer.js",
+    "stream": "./browser-stream.js"
+  },
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "license": "MIT",
   "engines": {
@@ -50,9 +54,9 @@
     "lint": "eslint './{directives,src,test}/**/*.js'",
     "perf": "node test/perf.js",
     "prepublishOnly": "npm run build",
-    "test": "npm run build && npm run test:types && npm run test:unit",
+    "test": "npm run build && npm run typecheck && npm run test:unit",
     "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm",
-    "test:types": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "husky": {
     "hooks": {

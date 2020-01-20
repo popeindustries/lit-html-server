@@ -1,5 +1,6 @@
 /* eslint no-constant-condition:0 */
 import { isArray, isAsyncIterator, isBuffer, isIteratorResult, isPromise } from './is.js';
+import { Buffer } from 'buffer';
 import { isTemplateResult } from './template-result.js';
 
 /**
