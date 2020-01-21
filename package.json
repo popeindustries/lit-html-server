@@ -54,7 +54,7 @@
     "lint": "eslint './{directives,src,test}/**/*.js'",
     "perf": "node test/perf.js",
     "prepublishOnly": "npm run build",
-    "test": "npm run build && npm run typecheck && npm run test:unit",
+    "test": "npm run typecheck && npm run test:unit",
     "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm",
     "typecheck": "tsc --noEmit"
   },
