@@ -2,10 +2,10 @@
 .npm
 node_modules
 .DS_Store
-/browser-buffer.js
-/browser-stream.js
 /index.d.ts
 /index.js
 /index.mjs
-/browser/
+/browser.js
+/shared.js
+/shared.mjs
 /directives/

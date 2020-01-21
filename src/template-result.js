@@ -1,23 +1,16 @@
-import { isArray, isAsyncIterator, isBuffer, isPromise } from './is.js';
+import {
+  isArray,
+  isAsyncIterator,
+  isAttributePart,
+  isBuffer,
+  isPromise,
+  isTemplateResult
+} from './is.js';
 import { Buffer } from 'buffer';
-import { emptyStringBuffer } from './string.js';
-import { isAttributePart } from './parts.js';
+
+const EMPTY_STRING_BUFFER = Buffer.from('');
 
 let id = 0;
-
-/**
- * Determine whether "result" is a TemplateResult
- *
- * @param { unknown } result
- * @returns { result is TemplateResult }
- */
-export function isTemplateResult(result) {
-  return (
-    result instanceof TemplateResult ||
-    // @ts-ignore
-    (result && typeof result.template !== 'undefined' && typeof result.values !== 'undefined')
-  );
-}
 
 /**
  * A class for consuming the combined static and dynamic parts of a lit-html Template.
@@ -44,7 +37,7 @@ export class TemplateResult {
    * @returns { unknown }
    */
   read(options) {
-    let buffer = emptyStringBuffer;
+    let buffer = EMPTY_STRING_BUFFER;
     let chunk;
     /** @type { Array<Buffer> | undefined } */
     let chunks;
@@ -56,7 +49,7 @@ export class TemplateResult {
         if (chunks === undefined) {
           chunks = [];
         }
-        buffer = reduce(buffer, chunks, chunk) || emptyStringBuffer;
+        buffer = reduce(buffer, chunks, chunk) || EMPTY_STRING_BUFFER;
       }
     }
 
@@ -124,11 +117,11 @@ function reduce(buffer, chunks, chunk) {
     return Buffer.concat([buffer, chunk], buffer.length + chunk.length);
   } else if (isTemplateResult(chunk)) {
     chunks.push(buffer, chunk);
-    return emptyStringBuffer;
+    return EMPTY_STRING_BUFFER;
   } else if (isArray(chunk)) {
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
   } else if (isPromise(chunk) || isAsyncIterator(chunk)) {
     chunks.push(buffer, chunk);
-    return emptyStringBuffer;
+    return EMPTY_STRING_BUFFER;
   }
 }

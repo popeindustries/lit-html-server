@@ -1,4 +1,4 @@
-import { directive, isNodePart } from '../common.js';
+import { directive, isNodePart } from '../shared.js';
 
 /**
  * Enables fast switching between multiple templates by caching previous results.

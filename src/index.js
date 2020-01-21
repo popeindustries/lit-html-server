@@ -1,19 +1,11 @@
-import { isTemplateResult, TemplateResult } from './template-result.js';
 import { browserStreamTemplateRenderer } from './browser-stream-template-renderer';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
 import { promiseTemplateRenderer } from './promise-template-renderer.js';
 import { streamTemplateRenderer } from './node-stream-template-renderer.js';
 import { Template } from './template.js';
+import { TemplateResult } from './template-result.js';
 
-export {
-  directive,
-  isAttributePart,
-  isNodePart,
-  isPrimitive,
-  nothingString,
-  unsafePrefixString
-} from './common.js';
 export {
   AttributePart,
   BooleanAttributePart,
@@ -22,12 +14,19 @@ export {
   Part,
   PropertyAttributePart
 } from './parts.js';
-export { isDirective } from './directive.js';
+export {
+  directive,
+  isAttributePart,
+  isDirective,
+  isNodePart,
+  nothingString,
+  unsafePrefixString
+} from './shared.js';
+export { isTemplateResult } from './is.js';
 export {
   defaultTemplateProcessor,
   defaultTemplateResultProcessor,
   html,
-  isTemplateResult,
   renderToBuffer,
   renderToStream,
   renderToString,

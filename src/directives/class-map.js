@@ -1,4 +1,4 @@
-import { directive, isAttributePart } from '../common.js';
+import { directive, isAttributePart } from '../shared.js';
 
 /**
  * Applies CSS classes, where'classInfo' keys are added as class names if values are truthy.

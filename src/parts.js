@@ -1,4 +1,3 @@
-import { emptyStringBuffer, nothingString, unsafePrefixString } from './string.js';
 import {
   isArray,
   isAsyncIterator,
@@ -8,34 +7,12 @@ import {
   isPromise,
   isSyncIterator
 } from './is.js';
+import { isDirective, isTemplateResult } from './is.js';
+import { nothingString, unsafePrefixString } from './shared.js';
 import { Buffer } from 'buffer';
 import { escape } from './escape.js';
-import { isDirective } from './directive.js';
-import { isTemplateResult } from './template-result.js';
 
-/**
- * Determine if "part" is a NodePart
- *
- * @param { Part } part
- * @returns { boolean }
- */
-export function isNodePart(part) {
-  return part instanceof NodePart || (part && part.getValue !== undefined && !('name' in part));
-}
-
-/**
- * Determine if "part" is an AttributePart
- *
- * @param { unknown } part
- * @returns { part is AttributePart }
- */
-export function isAttributePart(part) {
-  return (
-    (part && part instanceof AttributePart) ||
-    // @ts-ignore
-    (part && part.getValue !== undefined && typeof part.name !== 'undefined')
-  );
-}
+const EMPTY_STRING_BUFFER = Buffer.from('');
 
 /**
  * Base class interface for Node/Attribute parts
@@ -140,7 +117,7 @@ export class AttributePart extends Part {
 
       // Bail if 'nothing'
       if (value === nothingString) {
-        return emptyStringBuffer;
+        return EMPTY_STRING_BUFFER;
       }
 
       chunks.push(string);
@@ -203,8 +180,8 @@ export class BooleanAttributePart extends AttributePart {
 
     if (
       strings.length !== 2 ||
-      strings[0] === emptyStringBuffer ||
-      strings[1] === emptyStringBuffer
+      strings[0] === EMPTY_STRING_BUFFER ||
+      strings[1] === EMPTY_STRING_BUFFER
     ) {
       throw Error('Boolean attributes can only contain a single expression');
     }
@@ -225,10 +202,10 @@ export class BooleanAttributePart extends AttributePart {
     }
 
     if (isPromise(value)) {
-      return value.then((value) => (value ? this.nameAsBuffer : emptyStringBuffer));
+      return value.then((value) => (value ? this.nameAsBuffer : EMPTY_STRING_BUFFER));
     }
 
-    return value ? this.nameAsBuffer : emptyStringBuffer;
+    return value ? this.nameAsBuffer : EMPTY_STRING_BUFFER;
   }
 }
 
@@ -255,7 +232,7 @@ export class PropertyAttributePart extends AttributePart {
         : Buffer.concat([prefix, value]);
     }
 
-    return emptyStringBuffer;
+    return EMPTY_STRING_BUFFER;
   }
 }
 
@@ -274,7 +251,7 @@ export class EventAttributePart extends AttributePart {
    * @returns { Buffer }
    */
   getValue(values, options) {
-    return emptyStringBuffer;
+    return EMPTY_STRING_BUFFER;
   }
 }
 
@@ -345,7 +322,7 @@ function resolveNodeValue(value, part) {
   }
 
   if (value === nothingString || value === undefined) {
-    return emptyStringBuffer;
+    return EMPTY_STRING_BUFFER;
   }
 
   if (isPrimitive(value)) {

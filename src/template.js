@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer';
-import { emptyStringBuffer } from './string.js';
 import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
+const EMPTY_STRING_BUFFER = Buffer.from('');
 const RE_QUOTE = /"[^"]*|'[^']*$/;
 /* eslint no-control-regex: 0 */
 const RE_TAG_NAME = /[a-zA-Z0-9._-]/;
@@ -99,7 +99,7 @@ export class Template {
           } else {
             part = processor.handleAttributeExpressions(
               name,
-              [emptyStringBuffer, emptyStringBuffer],
+              [EMPTY_STRING_BUFFER, EMPTY_STRING_BUFFER],
               tagName
             );
           }

@@ -1,4 +1,4 @@
-import { directive, isNodePart, unsafePrefixString } from '../common.js';
+import { directive, isNodePart, unsafePrefixString } from '../shared.js';
 
 /**
  * Render "value" without HTML escaping

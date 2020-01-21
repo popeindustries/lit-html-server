@@ -1,4 +1,4 @@
-import { directive } from '../common.js';
+import { directive } from '../shared.js';
 
 /**
  * Guard against re-render.

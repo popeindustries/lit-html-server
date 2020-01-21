@@ -1,5 +1,18 @@
 import { Buffer } from 'buffer';
 
+export { isAttributePart, isDirective, isNodePart, isPrimitive } from './shared.js';
+
+/**
+ * Determine whether "result" is a TemplateResult
+ *
+ * @param { unknown } result
+ * @returns { result is TemplateResult }
+ */
+export function isTemplateResult(result) {
+  // @ts-ignore
+  return result && typeof result.template !== 'undefined' && typeof result.values !== 'undefined';
+}
+
 /**
  * Determine if "promise" is a Promise instance
  *
@@ -46,18 +59,6 @@ export function isAsyncIterator(iterator) {
 export function isIteratorResult(result) {
   // @ts-ignore
   return result != null && typeof result === 'object' && 'value' in result && 'done' in result;
-}
-
-/**
- * Determine if "value" is a primitive
- *
- * @param { unknown } value
- * @returns { value is null|string|boolean|number }
- */
-export function isPrimitive(value) {
-  const type = typeof value;
-
-  return value === null || !(type === 'object' || type === 'function');
 }
 
 /**
