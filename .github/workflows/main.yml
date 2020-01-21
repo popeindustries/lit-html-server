@@ -1,0 +1,34 @@
+name: test
+
+on: push
+
+jobs:
+  build_deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['10', '12', '13']
+    name: Install, build, and test (Node ${{ matrix.node }})
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: node-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }} # Cache key based on Node version + hashed package-lock.json contents
+
+      - name: Install
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm run test
