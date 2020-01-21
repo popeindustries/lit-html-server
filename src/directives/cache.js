@@ -1,4 +1,4 @@
-import { directive, isNodePart } from '../index.js';
+import { directive, isNodePart } from '../common.js';
 
 /**
  * Enables fast switching between multiple templates by caching previous results.

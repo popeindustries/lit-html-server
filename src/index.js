@@ -7,17 +7,22 @@ import { streamTemplateRenderer } from './node-stream-template-renderer.js';
 import { Template } from './template.js';
 
 export {
+  directive,
+  isAttributePart,
+  isNodePart,
+  isPrimitive,
+  nothingString,
+  unsafePrefixString
+} from './common.js';
+export {
   AttributePart,
   BooleanAttributePart,
   EventAttributePart,
-  isAttributePart,
-  isNodePart,
   NodePart,
   Part,
   PropertyAttributePart
 } from './parts.js';
-export { nothingString, unsafePrefixString } from './string.js';
-export { directive, isDirective } from './directive.js';
+export { isDirective } from './directive.js';
 export {
   defaultTemplateProcessor,
   defaultTemplateResultProcessor,

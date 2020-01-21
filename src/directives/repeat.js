@@ -1,4 +1,4 @@
-import { directive } from '../index.js';
+import { directive } from '../common.js';
 
 /**
  * Loop through 'items' and call 'template'.

@@ -1,4 +1,4 @@
-import { directive, isAttributePart } from '../index.js';
+import { directive, isAttributePart } from '../common.js';
 
 /**
  * Apply CSS properties, where 'styleInfo' keys and values are added as CSS properties.

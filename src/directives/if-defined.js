@@ -1,4 +1,4 @@
-import { directive, isAttributePart, nothingString } from '../index.js';
+import { directive, isAttributePart, nothingString } from '../common.js';
 
 /**
  * Sets the attribute if 'value' is defined,

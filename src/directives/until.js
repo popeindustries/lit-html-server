@@ -1,5 +1,4 @@
-import { directive } from '../index.js';
-import { isPrimitive } from '../is.js';
+import { directive, isPrimitive } from '../common.js';
 
 /**
  * Renders one of a series of values, including Promises, in priority order.
