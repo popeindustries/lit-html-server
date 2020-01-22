@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>lit-html-server Tests</title>
+    <link rel="stylesheet" href="assets/mocha.css" />
+    <script src="assets/mocha.js"></script>
+    <script src="assets/chai.js"></script>
+    <script>
+      window.expect = window.chai.expect;
+      window.mocha.setup('bdd');
+    </script>
+    <script type="module" src="test-runner.js"></script>
+    <script type="module" src="tests.js"></script>
+    </head>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>

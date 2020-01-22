@@ -54,10 +54,10 @@
     "lit-html": "^1.1.0",
     "mocha": "^7.0.0",
     "prettier": "^1.19.1",
+    "puppeteer": "^2.0.0",
     "rollup": "^1.29.0",
-    "text-encoding": "^0.7.0",
-    "typescript": "^3.7.4",
-    "web-streams-polyfill": "^2.0.6"
+    "send": "^0.17.1",
+    "typescript": "^3.7.4"
   },
   "scripts": {
     "build": "node ./scripts/build.js",
@@ -65,8 +65,9 @@
     "lint": "npm run typecheck && eslint './{src,test}/**/*.js'",
     "perf": "node test/perf.js",
     "prepublishOnly": "npm run build",
-    "test": "npm run lint && npm run test:unit",
+    "test": "npm run lint && npm run test:unit && npm run test:browser",
     "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000",
+    "test:browser": "node ./test/browser/cli.js",
     "typecheck": "tsc --noEmit"
   },
   "husky": {
