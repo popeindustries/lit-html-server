@@ -1,41 +1,22 @@
-/**
- * @typedef RenderOptions { import('./index.js).RenderOptions }
- */
-import { isAsyncIterator, isPromise } from './is.js';
-import { emptyStringBuffer } from './string.js';
-import { isAttributePart } from './parts.js';
+import {
+  isArray,
+  isAsyncIterator,
+  isAttributePart,
+  isBuffer,
+  isPromise,
+  isTemplateResult
+} from './is.js';
+import { Buffer } from 'buffer';
+
+const EMPTY_STRING_BUFFER = Buffer.from('');
 
 let id = 0;
-
-/**
- * Determine whether "result" is a TemplateResult
- *
- * @param { TemplateResult } result
- * @returns { boolean }
- */
-export function isTemplateResult(result) {
-  return (
-    result instanceof TemplateResult ||
-    (result && typeof result.template !== 'undefined' && typeof result.values !== 'undefined')
-  );
-}
-
-/**
- * Retrieve TemplateResult instance.
- *
- * @param { Template } template
- * @param { Array<unknown> } values
- * @returns { TemplateResult }
- */
-export function templateResult(template, values) {
-  return new TemplateResult(template, values);
-}
 
 /**
  * A class for consuming the combined static and dynamic parts of a lit-html Template.
  * TemplateResults
  */
-class TemplateResult {
+export class TemplateResult {
   /**
    * Constructor
    *
@@ -56,17 +37,19 @@ class TemplateResult {
    * @returns { unknown }
    */
   read(options) {
-    let buffer = emptyStringBuffer;
-    let chunk, chunks;
+    let buffer = EMPTY_STRING_BUFFER;
+    let chunk;
+    /** @type { Array<Buffer> | undefined } */
+    let chunks;
 
     while ((chunk = this.readChunk(options)) !== null) {
-      if (Buffer.isBuffer(chunk)) {
+      if (isBuffer(chunk)) {
         buffer = Buffer.concat([buffer, chunk], buffer.length + chunk.length);
       } else {
         if (chunks === undefined) {
           chunks = [];
         }
-        buffer = reduce(buffer, chunks, chunk);
+        buffer = reduce(buffer, chunks, chunk) || EMPTY_STRING_BUFFER;
       }
     }
 
@@ -113,7 +96,7 @@ class TemplateResult {
         value = part.getValue([this.values[index]], options);
       }
     } else {
-      value = part.getValue(this.values[index], options);
+      value = part && part.getValue(this.values[index], options);
     }
 
     return value;
@@ -127,18 +110,18 @@ class TemplateResult {
  * @param { Buffer } buffer
  * @param { Array<unknown> } chunks
  * @param { unknown } chunk
- * @returns { Buffer }
+ * @returns { Buffer | undefined }
  */
 function reduce(buffer, chunks, chunk) {
-  if (Buffer.isBuffer(chunk)) {
+  if (isBuffer(chunk)) {
     return Buffer.concat([buffer, chunk], buffer.length + chunk.length);
   } else if (isTemplateResult(chunk)) {
     chunks.push(buffer, chunk);
-    return emptyStringBuffer;
-  } else if (Array.isArray(chunk)) {
+    return EMPTY_STRING_BUFFER;
+  } else if (isArray(chunk)) {
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
   } else if (isPromise(chunk) || isAsyncIterator(chunk)) {
     chunks.push(buffer, chunk);
-    return emptyStringBuffer;
+    return EMPTY_STRING_BUFFER;
   }
 }

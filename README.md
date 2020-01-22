@@ -1,5 +1,5 @@
 [![NPM Version](https://img.shields.io/npm/v/@popeindustries/lit-html-server.svg?style=flat)](https://npmjs.org/package/@popeindustries/lit-html-server)
-[![Build Status](https://img.shields.io/travis/popeindustries/lit-html-server.svg?style=flat)](https://travis-ci.org/popeindustries/lit-html-server)
+[![Build Status](https://img.shields.io/github/workflow/status/popeindustries/lit-html-server/test/master)](https://github.com/popeindustries/lit-html-server/actions)
 
 # lit-html-server
 
@@ -244,7 +244,7 @@ response.end(markup);
 The tag function to apply to HTML template literals (also aliased as `svg`):
 
 ```js
-import { html } from '@popeindustries/lit-html-server';
+import { html } from '@popeindustries/lit-html-server/browser.mjs';
 
 const name = 'Bob';
 html`
@@ -257,7 +257,7 @@ html`
 Returns the result of the template tagged by `html` as a `ReadableStream` stream of markup. This may be used in a Service Worker script to stream an html response to the browser:
 
 ```js
-import { html, renderToStream } from '@popeindustries/lit-html-server';
+import { html, renderToStream } from '@popeindustries/lit-html-server/browser.mjs';
 
 self.addEventListener('fetch', (event) => {
   const name = 'Bob';
@@ -283,7 +283,7 @@ self.addEventListener('fetch', (event) => {
 Returns the result of the template tagged by `html` as a Promise which resolves to a string of markup:
 
 ```js
-import { html, renderToString } from '@popeindustries/lit-html-server';
+import { html, renderToString } from '@popeindustries/lit-html-server/browser.mjs';
 const name = 'Bob';
 const markup = await renderToString(
   html`
@@ -370,7 +370,7 @@ Most of the **lit-html** [value types](https://polymer.github.io/lit-html/guide/
 
 - primitives: `String`, `Number`, `Boolean`, `null`, and `undefined`
 
-  > note that `undefined` handling is the same as in **lit-html**: stringified when used as an attribute value, and ignored when used as a node value
+  > Note that `undefined` handling is the same as in **lit-html**: stringified when used as an attribute value, and ignored when used as a node value
 
 - nested templates:
 
@@ -416,9 +416,7 @@ html`
 
 ### Directives
 
-Most of the built-in **lit-html** [directives](https://lit-html.polymer-project.org/guide/template-reference#built-in-directives) are also included for compatibility when using templates on the server and client (even though some directives are no-ops in a server rendered context):
-
-> _NOTE: directives for use in the browser are imported from `@popeindustries/lit-html-server/browser/directives`_
+Most of the built-in **lit-html** [directives](https://lit-html.polymer-project.org/guide/template-reference#built-in-directives) are also included for compatibility when using templates on the server and in the browser (even though some directives are no-ops in a server rendered context):
 
 - `asyncAppend(value)`: Renders the items of an AsyncIterable, appending new values after previous values:
 
@@ -516,6 +514,16 @@ html`
 `;
 ```
 
+- `unsafeHTML(value)`: render `value` without HTML escaping:
+
+```js
+const { unsafeHTML } = require('@popeindustries/lit-html-server/directives/unsafe-html.js');
+
+html`
+  <div>${unsafeHTML("hey! it's dangerous! <script>boom!</script>")}</div>
+`;
+```
+
 - `until(...args)`: renders one of a series of values, including Promises, in priority order. Since it's not possible to render more than once in a server context, primitive synchronous values are prioritized over asynchronous Promises. If no synchronous values are passed, the last value is rendered regardless of type:
 
 ```js
@@ -550,4 +558,4 @@ html`
 
 ## Thanks!
 
-Thanks to [Thomas Parslow](https://github.com/almost) for the [stream-template](https://github.com/almost/stream-template) library that was the basis for this streaming implementation, and thanks to [Justin Fagnani](https://github.com/justinfagnani) and the [team](https://github.com/Polymer/lit-html/graphs/contributors) behind the **lit-html** project!
+Thanks to [Thomas Parslow](https://github.com/almost) for the [stream-template](https://github.com/almost/stream-template) library that was the inspiration for this streaming implementation, and thanks to [Justin Fagnani](https://github.com/justinfagnani) and the [team](https://github.com/Polymer/lit-html/graphs/contributors) behind the **lit-html** project!

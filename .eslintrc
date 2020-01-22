@@ -16,7 +16,7 @@
   "plugins": ["prettier"],
   "rules": {
     "no-console": "off",
-    "no-unused-vars": ["error", { "ignoreRestSiblings": true }],
+    "no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
     "sort-imports": [
       "warn",
       { "ignoreCase": true, "memberSyntaxSortOrder": ["none", "all", "multiple", "single"] }

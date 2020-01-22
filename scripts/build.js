@@ -1,76 +1,109 @@
-const commonjs = require('rollup-plugin-commonjs');
+// @ts-nocheck
+
+const commonjs = require('@rollup/plugin-commonjs');
 const fs = require('fs');
 const path = require('path');
-const resolve = require('rollup-plugin-node-resolve');
+const resolve = require('@rollup/plugin-node-resolve');
 const { rollup } = require('rollup');
 
+if (!fs.existsSync(path.resolve('directives'))) {
+  fs.mkdirSync(path.resolve('directives'));
+}
+
 const plugins = [commonjs(), resolve({ preferBuiltins: true })];
-const bufferPolyfill = fs.readFileSync(
-  path.resolve(__dirname, '../src/browser-buffer-polyfill.js'),
-  'utf8'
-);
+const input = {
+  external: (id) => id === 'buffer' || id === 'stream' || path.basename(id) === 'shared.js',
+  input: 'src/index.js',
+  plugins
+};
 const tasks = [
   [
-    { external: ['stream'], input: 'src/index.js', plugins },
+    input,
     {
       file: 'index.js',
       format: 'cjs'
     }
   ],
   [
-    { external: ['stream'], input: 'src/index.js', plugins },
+    input,
     {
       file: 'index.mjs',
+      format: 'esm'
+    },
+    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs')
+  ],
+  [
+    {
+      external: (id) => path.basename(id) === 'shared.js',
+      input: 'src/index.js',
+      plugins: [commonjs(), resolve({ mainFields: ['browser', 'module', 'main'] })]
+    },
+    {
+      file: 'browser.mjs',
+      format: 'esm'
+    },
+    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs')
+  ],
+  [
+    {
+      input: 'src/shared.js',
+      plugins
+    },
+    {
+      file: 'shared.mjs',
       format: 'esm'
     }
   ],
   [
-    { input: 'src/browser.js', plugins },
     {
-      intro: bufferPolyfill,
-      file: 'browser/index.js',
-      format: 'esm'
+      input: 'src/shared.js',
+      plugins
+    },
+    {
+      file: 'shared.js',
+      format: 'cjs'
     }
   ],
-  ...configDirectives('', 'cjs', '.js'),
-  ...configDirectives('', 'esm', '.mjs'),
-  ...configDirectives('browser', 'esm', '.js')
+  ...configDirectives('cjs', '.js', true),
+  ...configDirectives('esm', '.mjs')
 ];
 
 (async function() {
   for (const [inputOptions, outputOptions, preWrite] of tasks) {
     const bundle = await rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
-
     for (const chunkOrAsset of output) {
       let content = chunkOrAsset.isAsset ? chunkOrAsset.source : chunkOrAsset.code;
-
       if (preWrite) {
         content = preWrite(content);
       }
       write(path.resolve(outputOptions.file), content);
     }
   }
+  write(
+    path.resolve('index.d.ts'),
+    fs.readFileSync(path.resolve('src/types.d.ts'), 'utf8').replace(/\/\* export \*\//g, 'export')
+  );
 })();
 
-function configDirectives(outputdir = '', format, extension) {
+function configDirectives(format, extension, moveTypes) {
   const config = [];
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
-  const preWrite = (content) => content.replace('../index.js', '../index.mjs');
+  const preWrite = (content) => content.replace('../shared.js', '../shared.mjs');
 
   for (const directive of directives) {
-    if (path.extname(directive) === '.js') {
-      const input = path.join(dir, directive);
-      let filename = path.join(outputdir, 'directives', directive);
+    const input = path.join(dir, directive);
+    let filename = path.join('directives', directive);
 
+    if (path.extname(directive) === '.js') {
       if (extension === '.mjs') {
         filename = filename.replace('.js', '.mjs');
       }
 
       config.push([
         {
-          external: (id) => id === '../index.js',
+          external: (id) => id !== input,
           input,
           plugins
         },
@@ -80,6 +113,8 @@ function configDirectives(outputdir = '', format, extension) {
         },
         extension === '.mjs' ? preWrite : undefined
       ]);
+    } else if (path.extname(directive) === '.ts' && moveTypes) {
+      fs.copyFileSync(input, path.resolve(filename));
     }
   }
 

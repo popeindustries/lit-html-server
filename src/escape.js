@@ -1,6 +1,7 @@
 // https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#output-encoding-rules-summary
 // https://github.com/mathiasbynens/jsesc/blob/master/jsesc.js
 
+/** @type { { [name: string]: string } } */
 const HTML_ESCAPES = {
   '"': '&quot;',
   "'": '&#x27;',

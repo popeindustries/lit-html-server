@@ -1,8 +1,9 @@
 // Disable Prettier
-import { html as h, renderToStream, renderToString } from '../index.js';
-import { createAsyncIterable } from './utils.js';
-import { expect } from 'chai';
-import getStream from 'get-stream';
+// @ts-nocheck
+const { html: h, renderToStream, renderToString } = require('../index.js');
+const { createAsyncIterable } = require('./utils.js');
+const { expect } = require('chai');
+const getStream = require('get-stream');
 
 describe('Server template render', () => {
   describe('text', () => {

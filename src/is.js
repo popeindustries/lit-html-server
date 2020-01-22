@@ -1,26 +1,40 @@
-export { isAsyncIterator, isIteratorResult, isObject, isPrimitive, isPromise, isSyncIterator };
+import { Buffer } from 'buffer';
+
+export { isAttributePart, isDirective, isNodePart, isPrimitive } from './shared.js';
+
+/**
+ * Determine whether "result" is a TemplateResult
+ *
+ * @param { unknown } result
+ * @returns { result is TemplateResult }
+ */
+export function isTemplateResult(result) {
+  // @ts-ignore
+  return result && typeof result.template !== 'undefined' && typeof result.values !== 'undefined';
+}
 
 /**
  * Determine if "promise" is a Promise instance
  *
- * @param { Promise<unknown> } promise
- * @returns { boolean }
+ * @param { object } promise
+ * @returns { promise is Promise<unknown> }
  */
-function isPromise(promise) {
+export function isPromise(promise) {
   return promise != null && promise.then != null;
 }
 
 /**
  * Determine if "iterator" is an synchronous iterator
  *
- * @param { IterableIterator } iterator
- * @returns { boolean }
+ * @param { unknown } iterator
+ * @returns { iterator is IterableIterator<unknown> }
  */
-function isSyncIterator(iterator) {
+export function isSyncIterator(iterator) {
   return (
     iterator != null &&
     // Ignore strings (which are also iterable)
     typeof iterator !== 'string' &&
+    // @ts-ignore
     typeof iterator[Symbol.iterator] === 'function'
   );
 }
@@ -28,41 +42,51 @@ function isSyncIterator(iterator) {
 /**
  * Determine if "iterator" is an asynchronous iterator
  *
- * @param { AsyncIterableIterator } iterator
- * @returns { boolean }
+ * @param { unknown } iterator
+ * @returns { iterator is AsyncIterable<unknown> }
  */
-function isAsyncIterator(iterator) {
+export function isAsyncIterator(iterator) {
+  // @ts-ignore
   return iterator != null && typeof iterator[Symbol.asyncIterator] === 'function';
 }
 
 /**
  * Determine if "result" is an iterator result object
  *
- * @param { object } result
- * @returns { boolean }
+ * @param { unknown } result
+ * @returns { result is IteratorResult<unknown, unknown> }
  */
-function isIteratorResult(result) {
-  return typeof result === 'object' && 'value' in result && 'done' in result;
-}
-
-/**
- * Determine if "value" is a primitive
- *
- * @param { unknown } value
- * @returns { boolean }
- */
-function isPrimitive(value) {
-  const type = typeof value;
-
-  return value === null || !(type === 'object' || type === 'function');
+export function isIteratorResult(result) {
+  // @ts-ignore
+  return result != null && typeof result === 'object' && 'value' in result && 'done' in result;
 }
 
 /**
  * Determine if "value" is an object
  *
  * @param { unknown } value
- * @returns { boolean }
+ * @returns { value is object }
  */
-function isObject(value) {
+export function isObject(value) {
   return Object.prototype.toString.call(value) === '[object Object]';
+}
+
+/**
+ * Determine if "value" is a Buffer
+ *
+ * @param { unknown } value
+ * @returns { value is Buffer }
+ */
+export function isBuffer(value) {
+  return Buffer.isBuffer(value);
+}
+
+/**
+ * Determine if "value" is an Array
+ *
+ * @param { unknown } value
+ * @returns { value is Array }
+ */
+export function isArray(value) {
+  return Array.isArray(value);
 }

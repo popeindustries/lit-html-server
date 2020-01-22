@@ -1,14 +1,14 @@
+/* global chai */
 /* eslint no-constant-condition:0 no-async-promise-executor:0 */
-import 'web-streams-polyfill';
-import { html as h, renderToStream, renderToString } from '../browser/index.js';
-import { createAsyncIterable } from './utils.js';
-import { expect } from 'chai';
+// @ts-nocheck
+import { html as h, renderToStream, renderToString } from '../../browser.mjs';
 
-if (typeof TextDecoder === 'undefined') {
-  const { TextDecoder, TextEncoder } = require('text-encoding');
+const { expect } = chai;
 
-  global.TextDecoder = TextDecoder;
-  global.TextEncoder = TextEncoder;
+async function* createAsyncIterable(syncIterable) {
+  for (const elem of syncIterable) {
+    yield elem;
+  }
 }
 
 function getStream(stream) {

@@ -1,9 +1,7 @@
-/**
- * @typedef TemplateProcessor { import('./default-template-processor.js').TemplateProcessor }
- */
-import { emptyStringBuffer } from './string.js';
+import { Buffer } from 'buffer';
 import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
+const EMPTY_STRING_BUFFER = Buffer.from('');
 const RE_QUOTE = /"[^"]*|'[^']*$/;
 /* eslint no-control-regex: 0 */
 const RE_TAG_NAME = /[a-zA-Z0-9._-]/;
@@ -19,11 +17,13 @@ export class Template {
   /**
    * Create Template instance
    *
-   * @param { Array<TemplateStringsArray> } strings
+   * @param { TemplateStringsArray } strings
    * @param { TemplateProcessor } processor
    */
   constructor(strings, processor) {
+    /** @type { Array<Buffer | null> } */
     this.strings = [];
+    /** @type { Array<Part | null> } */
     this.parts = [];
 
     this._prepare(strings, processor);
@@ -34,7 +34,7 @@ export class Template {
    * and create Part instances for the dynamic values,
    * based on lit-html syntax.
    *
-   * @param { Array<TemplateStringsArray> } strings
+   * @param { TemplateStringsArray } strings
    * @param { TemplateProcessor } processor
    */
   _prepare(strings, processor) {
@@ -99,7 +99,7 @@ export class Template {
           } else {
             part = processor.handleAttributeExpressions(
               name,
-              [emptyStringBuffer, emptyStringBuffer],
+              [EMPTY_STRING_BUFFER, EMPTY_STRING_BUFFER],
               tagName
             );
           }
@@ -109,6 +109,7 @@ export class Template {
       }
 
       this.strings.push(Buffer.from(string));
+      // @ts-ignore: part will never be undefined here
       this.parts.push(part);
       // Add placehholders for strings/parts that wil be skipped due to multple values in a single AttributePart
       if (skip > 0) {
@@ -152,6 +153,7 @@ function getTagState(string) {
  * @param { string } string
  * @param { number } tagState
  * @param { number } tagStateIndex
+ * @returns { string }
  */
 function getTagName(string, tagState, tagStateIndex) {
   let tagName = '';

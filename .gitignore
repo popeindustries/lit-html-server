@@ -2,7 +2,10 @@
 .npm
 node_modules
 .DS_Store
+/index.d.ts
 /index.js
 /index.mjs
-/browser/
+/browser.mjs
+/shared.js
+/shared.mjs
 /directives/

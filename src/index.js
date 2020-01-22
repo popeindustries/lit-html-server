@@ -1,51 +1,58 @@
-/**
- * @typedef Readable { import('stream').Readable }
- * @typedef TemplateResult { import('./template-result.js).TemplateResult }
- */
-/**
- * @typedef RenderOptions
- * @property { boolean } [serializePropertyAttributes] - JSON.stringify property attributes
- */
-import { isTemplateResult, templateResult } from './template-result.js';
+import { browserStreamTemplateRenderer } from './browser-stream-template-renderer';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
-import { PromiseTemplateRenderer } from './promise-template-renderer.js';
-import { StreamTemplateRenderer } from './node-stream-template-renderer.js';
+import { promiseTemplateRenderer } from './promise-template-renderer.js';
+import { streamTemplateRenderer } from './node-stream-template-renderer.js';
 import { Template } from './template.js';
+import { TemplateResult } from './template-result.js';
 
 export {
   AttributePart,
   BooleanAttributePart,
   EventAttributePart,
-  isAttributePart,
-  isNodePart,
   NodePart,
   Part,
   PropertyAttributePart
 } from './parts.js';
-export { nothingString, unsafePrefixString } from './string.js';
-export { directive } from './directive.js';
+export {
+  directive,
+  isAttributePart,
+  isDirective,
+  isNodePart,
+  nothingString,
+  unsafePrefixString
+} from './shared.js';
+export { isTemplateResult } from './is.js';
 export {
   defaultTemplateProcessor,
+  DefaultTemplateProcessor,
   defaultTemplateResultProcessor,
+  DefaultTemplateResultProcessor,
   html,
-  isTemplateResult,
   renderToBuffer,
   renderToStream,
   renderToString,
   html as svg,
-  templateCache
+  Template,
+  templateCache,
+  TemplateResult
 };
 
 const defaultTemplateProcessor = new DefaultTemplateProcessor();
 const defaultTemplateResultProcessor = new DefaultTemplateResultProcessor();
 const templateCache = new Map();
+const streamRenderer =
+  typeof process !== 'undefined' &&
+  typeof process.versions !== 'undefined' &&
+  typeof process.versions.node !== 'undefined'
+    ? streamTemplateRenderer
+    : browserStreamTemplateRenderer;
 
 /**
  * Interprets a template literal as an HTML template that can be
  * rendered as a Readable stream or String
  *
- * @param { Array<TemplateStringsArray> } strings
+ * @param { TemplateStringsArray } strings
  * @param  { ...unknown } values
  * @returns { TemplateResult }
  */
@@ -57,7 +64,7 @@ function html(strings, ...values) {
     templateCache.set(strings, template);
   }
 
-  return templateResult(template, values);
+  return new TemplateResult(template, values);
 }
 
 /**
@@ -65,10 +72,10 @@ function html(strings, ...values) {
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
  * @param { RenderOptions } [options]
- * @returns { Readable }
+ * @returns { import('stream').Readable | ReadableStream }
  */
 function renderToStream(result, options) {
-  return new StreamTemplateRenderer(result, defaultTemplateResultProcessor, options);
+  return streamRenderer(result, defaultTemplateResultProcessor, options);
 }
 
 /**
@@ -79,7 +86,7 @@ function renderToStream(result, options) {
  * @returns { Promise<string> }
  */
 function renderToString(result, options) {
-  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, false, options);
+  return promiseTemplateRenderer(result, defaultTemplateResultProcessor, false, options);
 }
 
 /**
@@ -90,5 +97,5 @@ function renderToString(result, options) {
  * @returns { Promise<Buffer> }
  */
 function renderToBuffer(result, options) {
-  return new PromiseTemplateRenderer(result, defaultTemplateResultProcessor, true, options);
+  return promiseTemplateRenderer(result, defaultTemplateResultProcessor, true, options);
 }

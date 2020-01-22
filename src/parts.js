@@ -1,37 +1,18 @@
-/**
- * @typedef RenderOptions { import('./index.js).RenderOptions }
- */
-import { emptyStringBuffer, nothingString, unsafePrefixString } from './string.js';
-import { isAsyncIterator, isObject, isPrimitive, isPromise, isSyncIterator } from './is.js';
+import {
+  isArray,
+  isAsyncIterator,
+  isBuffer,
+  isObject,
+  isPrimitive,
+  isPromise,
+  isSyncIterator
+} from './is.js';
+import { isDirective, isTemplateResult } from './is.js';
+import { nothingString, unsafePrefixString } from './shared.js';
+import { Buffer } from 'buffer';
 import { escape } from './escape.js';
-import { isDirective } from './directive.js';
-import { isTemplateResult } from './template-result.js';
 
-/**
- * Determine if "part" is a NodePart
- *
- * @param { Part } part
- * @returns { boolean }
- */
-export function isNodePart(part) {
-  return (
-    part instanceof NodePart ||
-    (part && part.getValue !== undefined && typeof part.name === 'undefined')
-  );
-}
-
-/**
- * Determine if "part" is an AttributePart
- *
- * @param { Part } part
- * @returns { boolean }
- */
-export function isAttributePart(part) {
-  return (
-    part instanceof AttributePart ||
-    (part && part.getValue !== undefined && typeof part.name !== 'undefined')
-  );
-}
+const EMPTY_STRING_BUFFER = Buffer.from('');
 
 /**
  * Base class interface for Node/Attribute parts
@@ -65,7 +46,7 @@ export class Part {
    * @param { RenderOptions } [options]
    * @returns { any }
    */
-  getValue(value /*, options */) {
+  getValue(value, options) {
     return value;
   }
 
@@ -86,7 +67,7 @@ export class NodePart extends Part {
    * @param { RenderOptions } [options]
    * @returns { any }
    */
-  getValue(value /*, options */) {
+  getValue(value, options) {
     return resolveNodeValue(value, this);
   }
 }
@@ -119,7 +100,7 @@ export class AttributePart extends Part {
    *
    * @param { Array<unknown> } values
    * @param { RenderOptions } [options]
-   * @returns { Buffer|Promise<Buffer> }
+   * @returns { Buffer | Promise<Buffer> }
    */
   getValue(values, options) {
     let chunks = [this.prefix];
@@ -136,13 +117,13 @@ export class AttributePart extends Part {
 
       // Bail if 'nothing'
       if (value === nothingString) {
-        return emptyStringBuffer;
+        return EMPTY_STRING_BUFFER;
       }
 
       chunks.push(string);
       chunkLength += string.length;
 
-      if (Buffer.isBuffer(value)) {
+      if (isBuffer(value)) {
         chunks.push(value);
         chunkLength += value.length;
       } else if (isPromise(value)) {
@@ -151,15 +132,18 @@ export class AttributePart extends Part {
           pendingChunks = [];
         }
 
+        // @ts-ignore
         const index = chunks.push(value) - 1;
 
         pendingChunks.push(
           value.then((value) => {
+            // @ts-ignore
             chunks[index] = value;
+            // @ts-ignore
             chunkLength += value.length;
           })
         );
-      } else if (Array.isArray(value)) {
+      } else if (isArray(value)) {
         for (const chunk of value) {
           chunks.push(chunk);
           chunkLength += chunk.length;
@@ -192,12 +176,12 @@ export class BooleanAttributePart extends AttributePart {
   constructor(name, strings, tagName) {
     super(name, strings, tagName);
 
-    this.name = Buffer.from(this.name);
+    this.nameAsBuffer = Buffer.from(this.name);
 
     if (
       strings.length !== 2 ||
-      !strings[0] === emptyStringBuffer ||
-      !strings[1] === emptyStringBuffer
+      strings[0] === EMPTY_STRING_BUFFER ||
+      strings[1] === EMPTY_STRING_BUFFER
     ) {
       throw Error('Boolean attributes can only contain a single expression');
     }
@@ -208,9 +192,9 @@ export class BooleanAttributePart extends AttributePart {
    *
    * @param { Array<unknown> } values
    * @param { RenderOptions } [options]
-   * @returns { Buffer|Promise<Buffer> }
+   * @returns { Buffer | Promise<Buffer> }
    */
-  getValue(values /*, options */) {
+  getValue(values, options) {
     let value = values[0];
 
     if (isDirective(value)) {
@@ -218,10 +202,10 @@ export class BooleanAttributePart extends AttributePart {
     }
 
     if (isPromise(value)) {
-      return value.then((value) => (value ? this.name : emptyStringBuffer));
+      return value.then((value) => (value ? this.nameAsBuffer : EMPTY_STRING_BUFFER));
     }
 
-    return value ? this.name : emptyStringBuffer;
+    return value ? this.nameAsBuffer : EMPTY_STRING_BUFFER;
   }
 }
 
@@ -236,7 +220,7 @@ export class PropertyAttributePart extends AttributePart {
    *
    * @param { Array<unknown> } values
    * @param { RenderOptions } [options]
-   * @returns { Buffer }
+   * @returns { Buffer | Promise<Buffer> }
    */
   getValue(values, options) {
     if (options !== undefined && options.serializePropertyAttributes) {
@@ -248,7 +232,7 @@ export class PropertyAttributePart extends AttributePart {
         : Buffer.concat([prefix, value]);
     }
 
-    return emptyStringBuffer;
+    return EMPTY_STRING_BUFFER;
   }
 }
 
@@ -266,8 +250,8 @@ export class EventAttributePart extends AttributePart {
    * @param { RenderOptions } [options]
    * @returns { Buffer }
    */
-  getValue(/* values, options */) {
-    return emptyStringBuffer;
+  getValue(values, options) {
+    return EMPTY_STRING_BUFFER;
   }
 }
 
@@ -298,21 +282,22 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
     return Buffer.from(
       string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escape(string, 'attribute')
     );
-  } else if (Buffer.isBuffer(value)) {
+  } else if (isBuffer(value)) {
     return value;
-  } else if (serialiseObjectsAndArrays && (isObject(value) || Array.isArray(value))) {
+  } else if (serialiseObjectsAndArrays && (isObject(value) || isArray(value))) {
     return Buffer.from(escape(JSON.stringify(value), 'attribute'));
   } else if (isPromise(value)) {
     return value.then((value) => resolveAttributeValue(value, part, serialiseObjectsAndArrays));
   } else if (isSyncIterator(value)) {
-    if (!Array.isArray(value)) {
+    if (!isArray(value)) {
       value = Array.from(value);
     }
     return Buffer.concat(
+      // @ts-ignore: already converted to Array
       value.reduce((values, value) => {
         value = resolveAttributeValue(value, part, serialiseObjectsAndArrays);
         // Flatten
-        if (Array.isArray(value)) {
+        if (isArray(value)) {
           return values.concat(value);
         }
         values.push(value);
@@ -320,7 +305,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
       }, [])
     );
   } else {
-    throw Error('unknown AttributPart value', value);
+    throw Error(`unknown AttributPart value: ${value}`);
   }
 }
 
@@ -337,7 +322,7 @@ function resolveNodeValue(value, part) {
   }
 
   if (value === nothingString || value === undefined) {
-    return emptyStringBuffer;
+    return EMPTY_STRING_BUFFER;
   }
 
   if (isPrimitive(value)) {
@@ -351,18 +336,19 @@ function resolveNodeValue(value, part) {
             part.tagName === 'script' || part.tagName === 'style' ? part.tagName : 'text'
           )
     );
-  } else if (isTemplateResult(value) || Buffer.isBuffer(value)) {
+  } else if (isTemplateResult(value) || isBuffer(value)) {
     return value;
   } else if (isPromise(value)) {
     return value.then((value) => resolveNodeValue(value, part));
   } else if (isSyncIterator(value)) {
-    if (!Array.isArray(value)) {
+    if (!isArray(value)) {
       value = Array.from(value);
     }
+    // @ts-ignore: already converted to Array
     return value.reduce((values, value) => {
       value = resolveNodeValue(value, part);
       // Flatten
-      if (Array.isArray(value)) {
+      if (isArray(value)) {
         return values.concat(value);
       }
       values.push(value);
@@ -371,14 +357,14 @@ function resolveNodeValue(value, part) {
   } else if (isAsyncIterator(value)) {
     return resolveAsyncIteratorValue(value, part);
   } else {
-    throw Error('unknown NodePart value', value);
+    throw Error(`unknown NodePart value: ${value}`);
   }
 }
 
 /**
  * Resolve values of async "iterator"
  *
- * @param { AsyncIterator } iterator
+ * @param { AsyncIterable<unknown> } iterator
  * @param { NodePart } part
  * @returns { AsyncGenerator }
  */

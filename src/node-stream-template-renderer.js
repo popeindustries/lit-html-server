@@ -1,24 +1,27 @@
-/**
- * @typedef TemplateResult { import('./template-result.js).TemplateResult }
- * @typedef TemplateResultProcessor { import('./default-template-result-processor.js).TemplateResultProcessor }
- * @typedef TemplateResultRenderer { import('./default-template-result-renderer.js).TemplateResultRenderer }
- * @typedef RenderOptions { import('./index.js).RenderOptions }
- */
 import { Readable } from 'stream';
 
 /**
- * A custom Readable stream class for rendering a template result to a stream
+ * Factory for StreamTemplateRenderer instances
  *
- * @implements TemplateResultRenderer
+ * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { TemplateResultProcessor } processor
+ * @param { RenderOptions } [options]
+ * @returns { Readable }
  */
-export class StreamTemplateRenderer extends Readable {
+export function streamTemplateRenderer(result, processor, options) {
+  return new StreamTemplateRenderer(result, processor, options);
+}
+
+/**
+ * A custom Readable stream class for rendering a template result to a stream
+ */
+class StreamTemplateRenderer extends Readable {
   /**
    * Constructor
    *
    * @param { TemplateResult } result - a template result returned from call to "html`...`"
    * @param { TemplateResultProcessor } processor
    * @param { RenderOptions } [options]
-   * @returns { Readable }
    */
   constructor(result, processor, options) {
     super({ autoDestroy: true });
@@ -39,7 +42,7 @@ export class StreamTemplateRenderer extends Readable {
   /**
    * Extend Readalbe.destroy()
    *
-   * @param { Error } [err]
+   * @param { Error | null } [err]
    */
   _destroy(err) {
     if (err) {
@@ -47,7 +50,9 @@ export class StreamTemplateRenderer extends Readable {
     }
     this.emit('close');
 
+    // @ts-ignore
     this.process = undefined;
+    // @ts-ignore
     this.stack = undefined;
     this.removeAllListeners();
   }

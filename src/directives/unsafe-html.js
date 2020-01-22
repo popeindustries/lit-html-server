@@ -1,12 +1,7 @@
-/**
- * @typedef Part { import('../parts.js').Part }
- */
-import { directive, isNodePart, unsafePrefixString } from '../index.js';
+import { directive, isNodePart, unsafePrefixString } from '../shared.js';
 
 /**
  * Render "value" without HTML escaping
- *
- * @type { (value: unknown) => (part: Part) => void }
  */
 export const unsafeHTML = directive((value) => (part) => {
   if (!isNodePart(part)) {

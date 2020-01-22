@@ -1,16 +1,17 @@
-import { directive, html as h, renderToString as render } from '../index.mjs';
-import { asyncAppend } from '../directives/async-append.mjs';
-import { asyncReplace } from '../directives/async-replace.mjs';
-import { cache } from '../directives/cache.mjs';
-import { classMap } from '../directives/class-map.mjs';
-import { createAsyncIterable } from './utils.js';
-import { expect } from 'chai';
-import { guard } from '../directives/guard.mjs';
-import { ifDefined } from '../directives/if-defined.mjs';
-import { repeat } from '../directives/repeat.mjs';
-import { styleMap } from '../directives/style-map.mjs';
-import { unsafeHTML } from '../directives/unsafe-html.mjs';
-import { until } from '../directives/until.mjs';
+// @ts-nocheck
+const { directive, html: h, renderToString: render } = require('../index.js');
+const { asyncAppend } = require('../directives/async-append.js');
+const { asyncReplace } = require('../directives/async-replace.js');
+const { cache } = require('../directives/cache.js');
+const { classMap } = require('../directives/class-map.js');
+const { createAsyncIterable } = require('./utils.js');
+const { expect } = require('chai');
+const { guard } = require('../directives/guard.js');
+const { ifDefined } = require('../directives/if-defined.js');
+const { repeat } = require('../directives/repeat.js');
+const { styleMap } = require('../directives/style-map.js');
+const { unsafeHTML } = require('../directives/unsafe-html.js');
+const { until } = require('../directives/until.js');
 
 describe('directives', () => {
   describe('asyncAppend', () => {

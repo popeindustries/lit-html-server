@@ -1,6 +1,6 @@
-import { expect } from 'chai';
 // Disable Prettier
-import { html as h } from '../index.mjs';
+const { expect } = require('chai');
+const { html: h } = require('../index.js');
 
 describe('Template Result', () => {
   describe('text', () => {
