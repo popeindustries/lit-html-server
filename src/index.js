@@ -25,13 +25,17 @@ export {
 export { isTemplateResult } from './is.js';
 export {
   defaultTemplateProcessor,
+  DefaultTemplateProcessor,
   defaultTemplateResultProcessor,
+  DefaultTemplateResultProcessor,
   html,
   renderToBuffer,
   renderToStream,
   renderToString,
   html as svg,
-  templateCache
+  Template,
+  templateCache,
+  TemplateResult
 };
 
 const defaultTemplateProcessor = new DefaultTemplateProcessor();

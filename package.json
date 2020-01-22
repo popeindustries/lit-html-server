@@ -17,8 +17,20 @@
   "module": "index.mjs",
   "types": "index.d.ts",
   "browser": {
-    "buffer": "./browser-buffer.js",
-    "stream": "./browser-stream.js"
+    "buffer": "./src/browser-buffer.js",
+    "stream": "./src/browser-stream.js",
+    "./index.js": "./browser.mjs",
+    "./index.mjs": "./browser.mjs",
+    "./directives/async-append.js": "./directives/async-append.mjs",
+    "./directives/async-replace.js": "./directives/async-replace.mjs",
+    "./directives/cache.js": "./directives/cache.mjs",
+    "./directives/class-map.js": "./directives/class-map.mjs",
+    "./directives/guard.js": "./directives/guard.mjs",
+    "./directives/if-defined.js": "./directives/if-defined.mjs",
+    "./directives/repeat.js": "./directives/repeat.mjs",
+    "./directives/style-map.js": "./directives/style-map.mjs",
+    "./directives/unsafe-html.js": "./directives/unsafe-html.mjs",
+    "./directives/until.js": "./directives/until.mjs"
   },
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "license": "MIT",
@@ -35,7 +47,6 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "esm": "^3.2.25",
     "get-stream": "^5.1.0",
     "husky": "^4.0.9",
     "lint-staged": "^9.5.0",
@@ -55,7 +66,7 @@
     "perf": "node test/perf.js",
     "prepublishOnly": "npm run build",
     "test": "npm run typecheck && npm run test:unit",
-    "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000 --require esm",
+    "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000",
     "typecheck": "tsc --noEmit"
   },
   "husky": {

@@ -1,14 +1,14 @@
-import {
+// @ts-nocheck
+const {
   AttributePart,
   BooleanAttributePart,
   EventAttributePart,
   NodePart,
   PropertyAttributePart
-} from '../src/parts.js';
-import { nothingString, unsafePrefixString } from '../src/string.js';
-import { createAsyncIterable } from './utils.js';
-import { directive } from '../src/directive.js';
-import { expect } from 'chai';
+} = require('../index.js');
+const { directive, nothingString, unsafePrefixString } = require('../shared.js');
+const { createAsyncIterable } = require('./utils.js');
+const { expect } = require('chai');
 
 describe('Parts', () => {
   describe('NodePart', () => {
@@ -288,27 +288,35 @@ describe('Parts', () => {
     it('should resolve primitive Promise values if options.serializePropertyAttributes', async () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
       expect(
-        (await part.getValue([Promise.resolve('text')], {
-          serializePropertyAttributes: true
-        })).toString()
+        (
+          await part.getValue([Promise.resolve('text')], {
+            serializePropertyAttributes: true
+          })
+        ).toString()
       ).to.equal('.a="text"');
       expect(
-        (await part.getValue([Promise.resolve(1)], {
-          serializePropertyAttributes: true
-        })).toString()
+        (
+          await part.getValue([Promise.resolve(1)], {
+            serializePropertyAttributes: true
+          })
+        ).toString()
       ).to.equal('.a="1"');
       expect(
-        (await part.getValue([Promise.resolve(false)], {
-          serializePropertyAttributes: true
-        })).toString()
+        (
+          await part.getValue([Promise.resolve(false)], {
+            serializePropertyAttributes: true
+          })
+        ).toString()
       ).to.equal('.a="false"');
     });
     it('should resolve object Promise value if options.serializePropertyAttributes', async () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
       expect(
-        (await part.getValue([Promise.resolve({ some: 'text' })], {
-          serializePropertyAttributes: true
-        })).toString()
+        (
+          await part.getValue([Promise.resolve({ some: 'text' })], {
+            serializePropertyAttributes: true
+          })
+        ).toString()
       ).to.equal('.a="{&quot;some&quot;:&quot;text&quot;}"');
     });
   });

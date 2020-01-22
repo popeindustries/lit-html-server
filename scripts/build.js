@@ -29,7 +29,20 @@ const tasks = [
     {
       file: 'index.mjs',
       format: 'esm'
-    }
+    },
+    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs')
+  ],
+  [
+    {
+      external: (id) => path.basename(id) === 'shared.js',
+      input: 'src/index.js',
+      plugins: [commonjs(), resolve({ mainFields: ['browser', 'module', 'main'] })]
+    },
+    {
+      file: 'browser.mjs',
+      format: 'esm'
+    },
+    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs')
   ],
   [
     {
@@ -77,7 +90,7 @@ function configDirectives(format, extension, moveTypes) {
   const config = [];
   const dir = path.resolve('src/directives');
   const directives = fs.readdirSync(dir);
-  const preWrite = (content) => content.replace('../index.js', '../index.mjs');
+  const preWrite = (content) => content.replace('../shared.js', '../shared.mjs');
 
   for (const directive of directives) {
     const input = path.join(dir, directive);
@@ -90,7 +103,7 @@ function configDirectives(format, extension, moveTypes) {
 
       config.push([
         {
-          external: (id) => id === '../index.js',
+          external: (id) => id !== input,
           input,
           plugins
         },

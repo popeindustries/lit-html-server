@@ -1,7 +1,6 @@
-import { AttributePart, NodePart } from '../src/parts.js';
-import { DefaultTemplateProcessor } from '../src/default-template-processor.js';
-import { expect } from 'chai';
-import { Template } from '../src/template.js';
+// @ts-nocheck
+const { AttributePart, DefaultTemplateProcessor, NodePart, Template } = require('../index.js');
+const { expect } = require('chai');
 
 const defaultTemplateProcessor = new DefaultTemplateProcessor();
 
