@@ -41,6 +41,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.1",
     "@rollup/plugin-node-resolve": "^7.0.0",
+    "@types/node": "^13.1.7",
     "autocannon": "^4.4.2",
     "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
@@ -55,17 +56,16 @@
     "prettier": "^1.19.1",
     "rollup": "^1.29.0",
     "text-encoding": "^0.7.0",
-    "@types/node": "^13.1.7",
     "typescript": "^3.7.4",
     "web-streams-polyfill": "^2.0.6"
   },
   "scripts": {
     "build": "node ./scripts/build.js",
-    "format": "prettier --write './{directives,src,test}/**/*.{js,json}'",
-    "lint": "eslint './{directives,src,test}/**/*.js'",
+    "format": "prettier --write './{src,test}/**/*.{js,json}'",
+    "lint": "npm run typecheck && eslint './{src,test}/**/*.js'",
     "perf": "node test/perf.js",
     "prepublishOnly": "npm run build",
-    "test": "npm run typecheck && npm run test:unit",
+    "test": "npm run lint && npm run test:unit",
     "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000",
     "typecheck": "tsc --noEmit"
   },
