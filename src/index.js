@@ -19,7 +19,7 @@ export {
   isAttributePart,
   isDirective,
   isNodePart,
-  nothingString,
+  nothing,
   unsafePrefixString
 } from './shared.js';
 export { isTemplateResult } from './is.js';

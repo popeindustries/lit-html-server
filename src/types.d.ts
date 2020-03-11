@@ -231,9 +231,9 @@ declare class DefaultTemplateResultProcessor {
 /* export */ declare function isTemplateResult(result: unknown): result is TemplateResult;
 
 /**
- * A value for strings that signals a Part to clear its content
+ * A value for parts that signals a Part to clear its content
  */
-/* export */ declare const nothingString: string;
+/* export */ declare const nothing: {};
 /**
  * A prefix value for strings that should not be escaped
  */

@@ -1,4 +1,4 @@
-import { directive, isAttributePart, nothingString } from '../shared.js';
+import { directive, isAttributePart, nothing } from '../shared.js';
 
 /**
  * Sets the attribute if 'value' is defined,
@@ -6,7 +6,7 @@ import { directive, isAttributePart, nothingString } from '../shared.js';
  */
 export const ifDefined = directive((value) => (part) => {
   if (value === undefined && isAttributePart(part)) {
-    return part.setValue(nothingString);
+    return part.setValue(nothing);
   }
   part.setValue(value);
 });

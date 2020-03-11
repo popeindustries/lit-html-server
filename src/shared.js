@@ -4,9 +4,9 @@
  */
 
 /**
- * A value for strings that signals a Part to clear its content
+ * A value for parts that signals a Part to clear its content
  */
-export const nothingString = '__nothing-lit-html-server-string__';
+export const nothing = {};
 
 /**
  * A prefix value for strings that should not be escaped
