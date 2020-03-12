@@ -233,7 +233,7 @@ declare class DefaultTemplateResultProcessor {
 /**
  * A value for parts that signals a Part to clear its content
  */
-/* export */ declare const nothing: {};
+/* export */ declare const nothing: string;
 /**
  * A prefix value for strings that should not be escaped
  */

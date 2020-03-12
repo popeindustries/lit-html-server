@@ -6,7 +6,7 @@
 /**
  * A value for parts that signals a Part to clear its content
  */
-export const nothing = {};
+export const nothing = '__nothing-lit-html-server-string__';
 
 /**
  * A prefix value for strings that should not be escaped
