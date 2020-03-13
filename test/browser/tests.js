@@ -235,15 +235,15 @@ describe('Browser template render', () => {
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
-    it('should render a template with nested template attribute', async () => {
+    it('should not render a template with nested template attribute', async () => {
       const result = () => h`<div a="some ${h`text`}"></div>`;
-      const expected = '<div a="some text"></div>';
+      const expected = '<div a="some [object Object]"></div>';
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
     it('should render a template with nested template array attribute', async () => {
       const result = () => h`<div a="some ${[h`1`, h`2`, h`3`]}"></div>`;
-      const expected = '<div a="some 123"></div>';
+      const expected = '<div a="some [object Object][object Object][object Object]"></div>';
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
@@ -259,16 +259,16 @@ describe('Browser template render', () => {
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
-    it('should render a template with Promise template attribute', async () => {
+    it('should not render a template with Promise template attribute', async () => {
       const result = () => h`<div a="some ${Promise.resolve(h`text`)} here"></div>`;
-      const expected = '<div a="some text here"></div>';
+      const expected = '<div a="some [object Object] here"></div>';
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
-    it('should render a template with multiple Promise templates attribute', async () => {
+    it('should not render a template with multiple Promise templates attribute', async () => {
       const result = () =>
         h`<div a="some ${Promise.resolve(h`text`)} here ${Promise.resolve(h`too`)}"></div>`;
-      const expected = '<div a="some text here too"></div>';
+      const expected = '<div a="some [object Object] here [object Object]"></div>';
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
