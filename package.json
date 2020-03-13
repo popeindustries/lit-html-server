@@ -39,25 +39,25 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^11.0.1",
-    "@rollup/plugin-node-resolve": "^7.0.0",
-    "@types/node": "^13.1.7",
-    "autocannon": "^4.4.2",
-    "babel-eslint": "^10.0.1",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@types/node": "^13.9.1",
+    "autocannon": "^4.6.0",
+    "babel-eslint": "^10.1.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.9.0",
+    "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
     "get-stream": "^5.1.0",
-    "husky": "^4.0.9",
-    "lint-staged": "^9.5.0",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
     "lit-html": "^1.1.0",
-    "mocha": "^7.0.0",
+    "mocha": "^7.1.0",
     "prettier": "^1.19.1",
     "puppeteer": "^2.0.0",
-    "rollup": "^1.29.0",
+    "rollup": "^1.32.1",
     "send": "^0.17.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "build": "node ./scripts/build.js",
@@ -78,12 +78,10 @@
   "lint-staged": {
     "*.js": [
       "prettier --write",
-      "eslint",
-      "git add"
+      "eslint"
     ],
     "*.json": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   }
 }
