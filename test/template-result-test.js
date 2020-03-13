@@ -84,9 +84,9 @@ describe('Template Result', () => {
       const result = h`<div .a="${'some prop'}"></div>`;
       expect(result.read().toString()).to.equal('<div ></div>');
     });
-    it('should process a template with nested template attribute value', () => {
+    it('should not process a template with nested template attribute value', () => {
       const result = h`<div a="some ${h`text`}"></div>`;
-      expect(result.read().toString()).to.equal('<div a="some text"></div>');
+      expect(result.read().toString()).to.equal('<div a="some [object Object]"></div>');
     });
     it('should process a template with Promise attribute value', async () => {
       const result = h`<div a="some ${Promise.resolve('text')}"></div>`;

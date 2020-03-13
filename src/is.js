@@ -16,10 +16,11 @@ export function isTemplateResult(result) {
 /**
  * Determine if "promise" is a Promise instance
  *
- * @param { object } promise
+ * @param { unknown } promise
  * @returns { promise is Promise<unknown> }
  */
 export function isPromise(promise) {
+  // @ts-ignore
   return promise != null && promise.then != null;
 }
 
