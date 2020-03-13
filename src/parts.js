@@ -273,7 +273,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
   }
 
   if (isTemplateResult(value)) {
-    value = value.read();
+    value = '[object Object]';
   }
 
   if (isPrimitive(value)) {

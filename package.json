@@ -54,8 +54,8 @@
     "lit-html": "^1.1.0",
     "mocha": "^7.1.0",
     "prettier": "^1.19.1",
-    "puppeteer": "^2.0.0",
-    "rollup": "^1.32.1",
+    "puppeteer": "^2.1.1",
+    "rollup": "^2.0.6",
     "send": "^0.17.1",
     "typescript": "^3.8.3"
   },

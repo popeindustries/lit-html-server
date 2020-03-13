@@ -6,38 +6,6 @@ import { streamTemplateRenderer } from './node-stream-template-renderer.js';
 import { Template } from './template.js';
 import { TemplateResult } from './template-result.js';
 
-export {
-  AttributePart,
-  BooleanAttributePart,
-  EventAttributePart,
-  NodePart,
-  Part,
-  PropertyAttributePart
-} from './parts.js';
-export {
-  directive,
-  isAttributePart,
-  isDirective,
-  isNodePart,
-  nothing,
-  unsafePrefixString
-} from './shared.js';
-export { isTemplateResult } from './is.js';
-export {
-  defaultTemplateProcessor,
-  DefaultTemplateProcessor,
-  defaultTemplateResultProcessor,
-  DefaultTemplateResultProcessor,
-  html,
-  renderToBuffer,
-  renderToStream,
-  renderToString,
-  html as svg,
-  Template,
-  templateCache,
-  TemplateResult
-};
-
 const defaultTemplateProcessor = new DefaultTemplateProcessor();
 const defaultTemplateResultProcessor = new DefaultTemplateResultProcessor();
 const templateCache = new Map();
@@ -99,3 +67,35 @@ function renderToString(result, options) {
 function renderToBuffer(result, options) {
   return promiseTemplateRenderer(result, defaultTemplateResultProcessor, true, options);
 }
+
+export {
+  AttributePart,
+  BooleanAttributePart,
+  EventAttributePart,
+  NodePart,
+  Part,
+  PropertyAttributePart
+} from './parts.js';
+export {
+  directive,
+  isAttributePart,
+  isDirective,
+  isNodePart,
+  nothing,
+  unsafePrefixString
+} from './shared.js';
+export { isTemplateResult } from './is.js';
+export {
+  defaultTemplateProcessor,
+  DefaultTemplateProcessor,
+  defaultTemplateResultProcessor,
+  DefaultTemplateResultProcessor,
+  html,
+  renderToBuffer,
+  renderToStream,
+  renderToString,
+  html as svg,
+  Template,
+  templateCache,
+  TemplateResult
+};
