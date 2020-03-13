@@ -272,10 +272,6 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
     return value;
   }
 
-  if (isTemplateResult(value)) {
-    value = '[object Object]';
-  }
-
   if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
     // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
@@ -305,7 +301,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
       }, [])
     );
   } else {
-    throw Error(`unknown AttributPart value: ${value}`);
+    return Buffer.from(String(value));
   }
 }
 
