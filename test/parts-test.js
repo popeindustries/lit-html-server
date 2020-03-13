@@ -6,7 +6,7 @@ const {
   NodePart,
   PropertyAttributePart
 } = require('../index.js');
-const { directive, nothingString, unsafePrefixString } = require('../shared.js');
+const { directive, nothing, unsafePrefixString } = require('../shared.js');
 const { createAsyncIterable } = require('./utils.js');
 const { expect } = require('chai');
 
@@ -130,7 +130,7 @@ describe('Parts', () => {
     });
     it('should resolve a directive value returning "nothing"', () => {
       const d = directive(() => (part) => {
-        part.setValue(nothingString);
+        part.setValue(nothing);
       });
       const part = new NodePart();
       expect(part.getValue(d()).toString()).to.equal('');
@@ -179,7 +179,7 @@ describe('Parts', () => {
     });
     it('should resolve a directive value returning "nothing"', () => {
       const d = directive(() => (part) => {
-        part.setValue(nothingString);
+        part.setValue(nothing);
       });
       const part = new AttributePart('a', [Buffer.from(''), Buffer.from('')]);
       expect(part.getValue([d()]).toString()).to.equal('');

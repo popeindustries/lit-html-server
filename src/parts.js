@@ -8,7 +8,7 @@ import {
   isSyncIterator
 } from './is.js';
 import { isDirective, isTemplateResult } from './is.js';
-import { nothingString, unsafePrefixString } from './shared.js';
+import { nothing, unsafePrefixString } from './shared.js';
 import { Buffer } from 'buffer';
 import { escape } from './escape.js';
 
@@ -116,7 +116,7 @@ export class AttributePart extends Part {
       );
 
       // Bail if 'nothing'
-      if (value === nothingString) {
+      if (value === nothing) {
         return EMPTY_STRING_BUFFER;
       }
 
@@ -268,7 +268,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
     value = resolveDirectiveValue(value, part);
   }
 
-  if (value === nothingString) {
+  if (value === nothing) {
     return value;
   }
 
@@ -321,7 +321,7 @@ function resolveNodeValue(value, part) {
     value = resolveDirectiveValue(value, part);
   }
 
-  if (value === nothingString || value === undefined) {
+  if (value === nothing || value === undefined) {
     return EMPTY_STRING_BUFFER;
   }
 
