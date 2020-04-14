@@ -65,7 +65,7 @@
     "lint": "npm run typecheck && eslint './{src,test}/**/*.js'",
     "perf": "node test/perf.js",
     "prepublishOnly": "npm run build",
-    "test": "npm run lint && npm run test:unit && npm run test:browser",
+    "test": "npm run build && npm run lint && npm run test:unit && npm run test:browser",
     "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000",
     "test:browser": "node ./test/browser/cli.js",
     "typecheck": "tsc --noEmit"
