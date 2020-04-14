@@ -4,7 +4,7 @@ const {
   BooleanAttributePart,
   EventAttributePart,
   NodePart,
-  PropertyAttributePart
+  PropertyAttributePart,
 } = require('../index.js');
 const { directive, nothing, unsafePrefixString } = require('../shared.js');
 const { createAsyncIterable } = require('./utils.js');
@@ -57,7 +57,7 @@ describe('Parts', () => {
         '2',
         '3',
         '4',
-        '5'
+        '5',
       ]);
     });
     it('should resolve a sync iterator value', () => {
@@ -65,7 +65,7 @@ describe('Parts', () => {
       const array = ['hello ', 'world'];
       expect(part.getValue(array[Symbol.iterator]()).map((v) => v.toString())).to.deep.equal([
         'hello ',
-        'world'
+        'world',
       ]);
     });
     it('should resolve a string Promise value', async () => {
@@ -99,7 +99,7 @@ describe('Parts', () => {
       expect((await part.getValue(promise)).map((v) => v.toString())).to.deep.equal([
         '1',
         '2',
-        '3'
+        '3',
       ]);
     });
     it('should handle Promise errors', async () => {
@@ -290,21 +290,21 @@ describe('Parts', () => {
       expect(
         (
           await part.getValue([Promise.resolve('text')], {
-            serializePropertyAttributes: true
+            serializePropertyAttributes: true,
           })
         ).toString()
       ).to.equal('.a="text"');
       expect(
         (
           await part.getValue([Promise.resolve(1)], {
-            serializePropertyAttributes: true
+            serializePropertyAttributes: true,
           })
         ).toString()
       ).to.equal('.a="1"');
       expect(
         (
           await part.getValue([Promise.resolve(false)], {
-            serializePropertyAttributes: true
+            serializePropertyAttributes: true,
           })
         ).toString()
       ).to.equal('.a="false"');
@@ -314,7 +314,7 @@ describe('Parts', () => {
       expect(
         (
           await part.getValue([Promise.resolve({ some: 'text' })], {
-            serializePropertyAttributes: true
+            serializePropertyAttributes: true,
           })
         ).toString()
       ).to.equal('.a="{&quot;some&quot;:&quot;text&quot;}"');

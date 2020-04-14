@@ -60,7 +60,7 @@ async function startServer() {
       }
 
       return send(req, filePath, {
-        cacheControl: false
+        cacheControl: false,
       }).pipe(res);
     });
 

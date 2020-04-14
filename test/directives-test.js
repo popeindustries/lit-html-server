@@ -143,7 +143,7 @@ describe('directives', () => {
     it('should include style properties', async () => {
       const result = h`<div style="${styleMap({
         color: 'red',
-        border: '1px solid black'
+        border: '1px solid black',
       })}"></div>`;
       expect(await render(result)).to.equal(
         '<div style="color: red; border: 1px solid black"></div>'

@@ -9,7 +9,7 @@ http
       async: /async/.test(req.url),
       title: new Date().toISOString(),
       isTrue: Math.random() > 0.5,
-      number: Math.random() * 100
+      number: Math.random() * 100,
     };
     res.writeHead(200);
     if (/buffer/.test(req.url)) {

@@ -5,7 +5,7 @@ import {
   isObject,
   isPrimitive,
   isPromise,
-  isSyncIterator
+  isSyncIterator,
 } from './is.js';
 import { isDirective, isTemplateResult } from './is.js';
 import { nothing, unsafePrefixString } from './shared.js';

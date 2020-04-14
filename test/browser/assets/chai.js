@@ -1,4 +1,4 @@
-(function(f) {
+(function (f) {
   if (typeof exports === 'object' && typeof module !== 'undefined') {
     module.exports = f();
   } else if (typeof define === 'function' && define.amd) {
@@ -16,9 +16,9 @@
     }
     g.chai = f();
   }
-})(function() {
+})(function () {
   var define, module, exports;
-  return (function() {
+  return (function () {
     function r(e, n, t) {
       function o(i, f) {
         if (!n[i]) {
@@ -32,7 +32,7 @@
           var p = (n[i] = { exports: {} });
           e[i][0].call(
             p.exports,
-            function(r) {
+            function (r) {
               var n = e[i][1][r];
               return o(n || r);
             },
@@ -53,13 +53,13 @@
   })()(
     {
       1: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           module.exports = require('./lib/chai');
         },
-        { './lib/chai': 2 }
+        { './lib/chai': 2 },
       ],
       2: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * chai
            * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
@@ -96,7 +96,7 @@
            * @api public
            */
 
-          exports.use = function(fn) {
+          exports.use = function (fn) {
             if (!~used.indexOf(fn)) {
               fn(exports, util);
               used.push(fn);
@@ -161,11 +161,11 @@
           './chai/interface/expect': 7,
           './chai/interface/should': 8,
           './chai/utils': 22,
-          'assertion-error': 33
-        }
+          'assertion-error': 33,
+        },
       ],
       3: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * chai
            * http://chaijs.com
@@ -175,7 +175,7 @@
 
           var config = require('./config');
 
-          module.exports = function(_chai, util) {
+          module.exports = function (_chai, util) {
             /*!
              * Module dependencies.
              */
@@ -237,52 +237,52 @@
             }
 
             Object.defineProperty(Assertion, 'includeStack', {
-              get: function() {
+              get: function () {
                 console.warn(
                   'Assertion.includeStack is deprecated, use chai.config.includeStack instead.'
                 );
                 return config.includeStack;
               },
-              set: function(value) {
+              set: function (value) {
                 console.warn(
                   'Assertion.includeStack is deprecated, use chai.config.includeStack instead.'
                 );
                 config.includeStack = value;
-              }
+              },
             });
 
             Object.defineProperty(Assertion, 'showDiff', {
-              get: function() {
+              get: function () {
                 console.warn('Assertion.showDiff is deprecated, use chai.config.showDiff instead.');
                 return config.showDiff;
               },
-              set: function(value) {
+              set: function (value) {
                 console.warn('Assertion.showDiff is deprecated, use chai.config.showDiff instead.');
                 config.showDiff = value;
-              }
+              },
             });
 
-            Assertion.addProperty = function(name, fn) {
+            Assertion.addProperty = function (name, fn) {
               util.addProperty(this.prototype, name, fn);
             };
 
-            Assertion.addMethod = function(name, fn) {
+            Assertion.addMethod = function (name, fn) {
               util.addMethod(this.prototype, name, fn);
             };
 
-            Assertion.addChainableMethod = function(name, fn, chainingBehavior) {
+            Assertion.addChainableMethod = function (name, fn, chainingBehavior) {
               util.addChainableMethod(this.prototype, name, fn, chainingBehavior);
             };
 
-            Assertion.overwriteProperty = function(name, fn) {
+            Assertion.overwriteProperty = function (name, fn) {
               util.overwriteProperty(this.prototype, name, fn);
             };
 
-            Assertion.overwriteMethod = function(name, fn) {
+            Assertion.overwriteMethod = function (name, fn) {
               util.overwriteMethod(this.prototype, name, fn);
             };
 
-            Assertion.overwriteChainableMethod = function(name, fn, chainingBehavior) {
+            Assertion.overwriteChainableMethod = function (name, fn, chainingBehavior) {
               util.overwriteChainableMethod(this.prototype, name, fn, chainingBehavior);
             };
 
@@ -301,7 +301,7 @@
              * @api private
              */
 
-            Assertion.prototype.assert = function(
+            Assertion.prototype.assert = function (
               expr,
               msg,
               negateMsg,
@@ -322,7 +322,7 @@
                   {
                     actual: actual,
                     expected: expected,
-                    showDiff: showDiff
+                    showDiff: showDiff,
                   },
                   config.includeStack ? this.assert : flag(this, 'ssfi')
                 );
@@ -338,19 +338,19 @@
              */
 
             Object.defineProperty(Assertion.prototype, '_obj', {
-              get: function() {
+              get: function () {
                 return flag(this, 'object');
               },
-              set: function(val) {
+              set: function (val) {
                 flag(this, 'object', val);
-              }
+              },
             });
           };
         },
-        { './config': 4 }
+        { './config': 4 },
       ],
       4: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           module.exports = {
             /**
              * ### config.includeStack
@@ -442,13 +442,13 @@
              * @api public
              */
 
-            proxyExcludedKeys: ['then', 'catch', 'inspect', 'toJSON']
+            proxyExcludedKeys: ['then', 'catch', 'inspect', 'toJSON'],
           };
         },
-        {}
+        {},
       ],
       5: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * chai
            * http://chaijs.com
@@ -456,7 +456,7 @@
            * MIT Licensed
            */
 
-          module.exports = function(chai, _) {
+          module.exports = function (chai, _) {
             var Assertion = chai.Assertion,
               AssertionError = chai.AssertionError,
               flag = _.flag;
@@ -507,8 +507,8 @@
               'same',
               'but',
               'does',
-              'still'
-            ].forEach(function(chain) {
+              'still',
+            ].forEach(function (chain) {
               Assertion.addProperty(chain);
             });
 
@@ -535,7 +535,7 @@
              * @api public
              */
 
-            Assertion.addProperty('not', function() {
+            Assertion.addProperty('not', function () {
               flag(this, 'negate', true);
             });
 
@@ -576,7 +576,7 @@
              * @api public
              */
 
-            Assertion.addProperty('deep', function() {
+            Assertion.addProperty('deep', function () {
               flag(this, 'deep', true);
             });
 
@@ -602,7 +602,7 @@
              * @api public
              */
 
-            Assertion.addProperty('nested', function() {
+            Assertion.addProperty('nested', function () {
               flag(this, 'nested', true);
             });
 
@@ -628,7 +628,7 @@
              * @api public
              */
 
-            Assertion.addProperty('own', function() {
+            Assertion.addProperty('own', function () {
               flag(this, 'own', true);
             });
 
@@ -652,7 +652,7 @@
              * @api public
              */
 
-            Assertion.addProperty('ordered', function() {
+            Assertion.addProperty('ordered', function () {
               flag(this, 'ordered', true);
             });
 
@@ -672,7 +672,7 @@
              * @api public
              */
 
-            Assertion.addProperty('any', function() {
+            Assertion.addProperty('any', function () {
               flag(this, 'any', true);
               flag(this, 'all', false);
             });
@@ -697,7 +697,7 @@
              * @api public
              */
 
-            Assertion.addProperty('all', function() {
+            Assertion.addProperty('all', function () {
               flag(this, 'all', true);
               flag(this, 'any', false);
             });
@@ -967,14 +967,14 @@
 
                 case 'map':
                   var isEql = isDeep ? _.eql : SameValueZero;
-                  obj.forEach(function(item) {
+                  obj.forEach(function (item) {
                     included = included || isEql(item, val);
                   });
                   break;
 
                 case 'set':
                   if (isDeep) {
-                    obj.forEach(function(item) {
+                    obj.forEach(function (item) {
                       included = included || _.eql(item, val);
                     });
                   } else {
@@ -984,7 +984,7 @@
 
                 case 'array':
                   if (isDeep) {
-                    included = obj.some(function(item) {
+                    included = obj.some(function (item) {
                       return _.eql(item, val);
                     });
                   } else {
@@ -1012,7 +1012,7 @@
                     firstErr = null,
                     numErrs = 0;
 
-                  props.forEach(function(prop) {
+                  props.forEach(function (prop) {
                     var propAssertion = new Assertion(obj);
                     _.transferFlags(this, propAssertion, true);
                     flag(propAssertion, 'lockSsfi', true);
@@ -1092,7 +1092,7 @@
              * @api public
              */
 
-            Assertion.addProperty('ok', function() {
+            Assertion.addProperty('ok', function () {
               this.assert(
                 flag(this, 'object'),
                 'expected #{this} to be truthy',
@@ -1126,7 +1126,7 @@
              * @api public
              */
 
-            Assertion.addProperty('true', function() {
+            Assertion.addProperty('true', function () {
               this.assert(
                 true === flag(this, 'object'),
                 'expected #{this} to be true',
@@ -1161,7 +1161,7 @@
              * @api public
              */
 
-            Assertion.addProperty('false', function() {
+            Assertion.addProperty('false', function () {
               this.assert(
                 false === flag(this, 'object'),
                 'expected #{this} to be false',
@@ -1193,7 +1193,7 @@
              * @api public
              */
 
-            Assertion.addProperty('null', function() {
+            Assertion.addProperty('null', function () {
               this.assert(
                 null === flag(this, 'object'),
                 'expected #{this} to be null',
@@ -1224,7 +1224,7 @@
              * @api public
              */
 
-            Assertion.addProperty('undefined', function() {
+            Assertion.addProperty('undefined', function () {
               this.assert(
                 undefined === flag(this, 'object'),
                 'expected #{this} to be undefined',
@@ -1255,7 +1255,7 @@
              * @api public
              */
 
-            Assertion.addProperty('NaN', function() {
+            Assertion.addProperty('NaN', function () {
               this.assert(
                 _.isNaN(flag(this, 'object')),
                 'expected #{this} to be NaN',
@@ -1293,7 +1293,7 @@
              * @api public
              */
 
-            Assertion.addProperty('exist', function() {
+            Assertion.addProperty('exist', function () {
               var val = flag(this, 'object');
               this.assert(
                 val !== null && val !== undefined,
@@ -1351,7 +1351,7 @@
              * @api public
              */
 
-            Assertion.addProperty('empty', function() {
+            Assertion.addProperty('empty', function () {
               var val = flag(this, 'object'),
                 ssfi = flag(this, 'ssfi'),
                 flagMsg = flag(this, 'message'),
@@ -2019,7 +2019,7 @@
              * @api public
              */
 
-            Assertion.addMethod('within', function(start, finish, msg) {
+            Assertion.addMethod('within', function (start, finish, msg) {
               if (msg) flag(this, 'message', msg);
               var obj = flag(this, 'object'),
                 doLength = flag(this, 'doLength'),
@@ -2692,7 +2692,7 @@
              * @api public
              */
 
-            Assertion.addMethod('string', function(str, msg) {
+            Assertion.addMethod('string', function (str, msg) {
               if (msg) flag(this, 'message', msg);
               var obj = flag(this, 'object'),
                 flagMsg = flag(this, 'message'),
@@ -2832,7 +2832,7 @@
                 actual = [];
 
                 // Map and Set '.keys' aren't supported in IE 11. Therefore, use .forEach.
-                obj.forEach(function(val, key) {
+                obj.forEach(function (val, key) {
                   actual.push(key);
                 });
 
@@ -2859,7 +2859,7 @@
                 }
 
                 // Only stringify non-Symbols because Symbols would become "Symbol()"
-                keys = keys.map(function(val) {
+                keys = keys.map(function (val) {
                   return typeof val === 'symbol' ? val : String(val);
                 });
               }
@@ -2879,8 +2879,8 @@
 
               // Has any
               if (any) {
-                ok = expected.some(function(expectedKey) {
-                  return actual.some(function(actualKey) {
+                ok = expected.some(function (expectedKey) {
+                  return actual.some(function (actualKey) {
                     if (isDeep) {
                       return _.eql(expectedKey, actualKey);
                     } else {
@@ -2892,8 +2892,8 @@
 
               // Has all
               if (all) {
-                ok = expected.every(function(expectedKey) {
-                  return actual.some(function(actualKey) {
+                ok = expected.every(function (expectedKey) {
+                  return actual.some(function (actualKey) {
                     if (isDeep) {
                       return _.eql(expectedKey, actualKey);
                     } else {
@@ -2909,7 +2909,7 @@
 
               // Key string
               if (len > 1) {
-                keys = keys.map(function(key) {
+                keys = keys.map(function (key) {
                   return _.inspect(key);
                 });
                 var last = keys.pop();
@@ -3356,7 +3356,7 @@
              * @api public
              */
 
-            Assertion.addProperty('itself', function() {
+            Assertion.addProperty('itself', function () {
               flag(this, 'itself', true);
             });
 
@@ -3485,7 +3485,7 @@
                 superset = superset.slice();
               }
 
-              return subset.every(function(elem, idx) {
+              return subset.every(function (elem, idx) {
                 if (ordered) return cmp ? cmp(elem, superset[idx]) : elem === superset[idx];
 
                 if (!cmp) {
@@ -3497,7 +3497,7 @@
                   return true;
                 }
 
-                return superset.some(function(elem2, matchIdx) {
+                return superset.some(function (elem2, matchIdx) {
                   if (!cmp(elem, elem2)) return false;
 
                   // Remove match from superset so not counted twice if duplicate in subset.
@@ -3576,7 +3576,7 @@
              * @api public
              */
 
-            Assertion.addMethod('members', function(subset, msg) {
+            Assertion.addMethod('members', function (subset, msg) {
               if (msg) flag(this, 'message', msg);
               var obj = flag(this, 'object'),
                 flagMsg = flag(this, 'message'),
@@ -4150,7 +4150,7 @@
              * @api public
              */
 
-            Assertion.addProperty('extensible', function() {
+            Assertion.addProperty('extensible', function () {
               var obj = flag(this, 'object');
 
               // In ES5, if the argument to this method is a primitive, then it will cause a TypeError.
@@ -4195,7 +4195,7 @@
              * @api public
              */
 
-            Assertion.addProperty('sealed', function() {
+            Assertion.addProperty('sealed', function () {
               var obj = flag(this, 'object');
 
               // In ES5, if the argument to this method is a primitive, then it will cause a TypeError.
@@ -4237,7 +4237,7 @@
              * @api public
              */
 
-            Assertion.addProperty('frozen', function() {
+            Assertion.addProperty('frozen', function () {
               var obj = flag(this, 'object');
 
               // In ES5, if the argument to this method is a primitive, then it will cause a TypeError.
@@ -4303,7 +4303,7 @@
              * @api public
              */
 
-            Assertion.addProperty('finite', function(msg) {
+            Assertion.addProperty('finite', function (msg) {
               var obj = flag(this, 'object');
 
               this.assert(
@@ -4314,17 +4314,17 @@
             });
           };
         },
-        {}
+        {},
       ],
       6: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * chai
            * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
            * MIT Licensed
            */
 
-          module.exports = function(chai, util) {
+          module.exports = function (chai, util) {
             /*!
              * Chai dependencies.
              */
@@ -4351,7 +4351,7 @@
              * @api public
              */
 
-            var assert = (chai.assert = function(express, errmsg) {
+            var assert = (chai.assert = function (express, errmsg) {
               var test = new Assertion(null, null, chai.assert, true);
               test.assert(express, errmsg, '[ negation message unavailable ]');
             });
@@ -4378,7 +4378,7 @@
              * @api public
              */
 
-            assert.fail = function(actual, expected, message, operator) {
+            assert.fail = function (actual, expected, message, operator) {
               if (arguments.length < 2) {
                 // Comply with Node's fail([message]) interface
 
@@ -4392,7 +4392,7 @@
                 {
                   actual: actual,
                   expected: expected,
-                  operator: operator
+                  operator: operator,
                 },
                 assert.fail
               );
@@ -4414,7 +4414,7 @@
              * @api public
              */
 
-            assert.isOk = function(val, msg) {
+            assert.isOk = function (val, msg) {
               new Assertion(val, msg, assert.isOk, true).is.ok;
             };
 
@@ -4434,7 +4434,7 @@
              * @api public
              */
 
-            assert.isNotOk = function(val, msg) {
+            assert.isNotOk = function (val, msg) {
               new Assertion(val, msg, assert.isNotOk, true).is.not.ok;
             };
 
@@ -4453,7 +4453,7 @@
              * @api public
              */
 
-            assert.equal = function(act, exp, msg) {
+            assert.equal = function (act, exp, msg) {
               var test = new Assertion(act, msg, assert.equal, true);
 
               test.assert(
@@ -4481,7 +4481,7 @@
              * @api public
              */
 
-            assert.notEqual = function(act, exp, msg) {
+            assert.notEqual = function (act, exp, msg) {
               var test = new Assertion(act, msg, assert.notEqual, true);
 
               test.assert(
@@ -4509,7 +4509,7 @@
              * @api public
              */
 
-            assert.strictEqual = function(act, exp, msg) {
+            assert.strictEqual = function (act, exp, msg) {
               new Assertion(act, msg, assert.strictEqual, true).to.equal(exp);
             };
 
@@ -4528,7 +4528,7 @@
              * @api public
              */
 
-            assert.notStrictEqual = function(act, exp, msg) {
+            assert.notStrictEqual = function (act, exp, msg) {
               new Assertion(act, msg, assert.notStrictEqual, true).to.not.equal(exp);
             };
 
@@ -4548,7 +4548,7 @@
              * @api public
              */
 
-            assert.deepEqual = assert.deepStrictEqual = function(act, exp, msg) {
+            assert.deepEqual = assert.deepStrictEqual = function (act, exp, msg) {
               new Assertion(act, msg, assert.deepEqual, true).to.eql(exp);
             };
 
@@ -4567,7 +4567,7 @@
              * @api public
              */
 
-            assert.notDeepEqual = function(act, exp, msg) {
+            assert.notDeepEqual = function (act, exp, msg) {
               new Assertion(act, msg, assert.notDeepEqual, true).to.not.eql(exp);
             };
 
@@ -4586,7 +4586,7 @@
              * @api public
              */
 
-            assert.isAbove = function(val, abv, msg) {
+            assert.isAbove = function (val, abv, msg) {
               new Assertion(val, msg, assert.isAbove, true).to.be.above(abv);
             };
 
@@ -4606,7 +4606,7 @@
              * @api public
              */
 
-            assert.isAtLeast = function(val, atlst, msg) {
+            assert.isAtLeast = function (val, atlst, msg) {
               new Assertion(val, msg, assert.isAtLeast, true).to.be.least(atlst);
             };
 
@@ -4625,7 +4625,7 @@
              * @api public
              */
 
-            assert.isBelow = function(val, blw, msg) {
+            assert.isBelow = function (val, blw, msg) {
               new Assertion(val, msg, assert.isBelow, true).to.be.below(blw);
             };
 
@@ -4645,7 +4645,7 @@
              * @api public
              */
 
-            assert.isAtMost = function(val, atmst, msg) {
+            assert.isAtMost = function (val, atmst, msg) {
               new Assertion(val, msg, assert.isAtMost, true).to.be.most(atmst);
             };
 
@@ -4664,7 +4664,7 @@
              * @api public
              */
 
-            assert.isTrue = function(val, msg) {
+            assert.isTrue = function (val, msg) {
               new Assertion(val, msg, assert.isTrue, true).is['true'];
             };
 
@@ -4683,7 +4683,7 @@
              * @api public
              */
 
-            assert.isNotTrue = function(val, msg) {
+            assert.isNotTrue = function (val, msg) {
               new Assertion(val, msg, assert.isNotTrue, true).to.not.equal(true);
             };
 
@@ -4702,7 +4702,7 @@
              * @api public
              */
 
-            assert.isFalse = function(val, msg) {
+            assert.isFalse = function (val, msg) {
               new Assertion(val, msg, assert.isFalse, true).is['false'];
             };
 
@@ -4721,7 +4721,7 @@
              * @api public
              */
 
-            assert.isNotFalse = function(val, msg) {
+            assert.isNotFalse = function (val, msg) {
               new Assertion(val, msg, assert.isNotFalse, true).to.not.equal(false);
             };
 
@@ -4739,7 +4739,7 @@
              * @api public
              */
 
-            assert.isNull = function(val, msg) {
+            assert.isNull = function (val, msg) {
               new Assertion(val, msg, assert.isNull, true).to.equal(null);
             };
 
@@ -4758,7 +4758,7 @@
              * @api public
              */
 
-            assert.isNotNull = function(val, msg) {
+            assert.isNotNull = function (val, msg) {
               new Assertion(val, msg, assert.isNotNull, true).to.not.equal(null);
             };
 
@@ -4776,7 +4776,7 @@
              * @api public
              */
 
-            assert.isNaN = function(val, msg) {
+            assert.isNaN = function (val, msg) {
               new Assertion(val, msg, assert.isNaN, true).to.be.NaN;
             };
 
@@ -4793,7 +4793,7 @@
              * @namespace Assert
              * @api public
              */
-            assert.isNotNaN = function(val, msg) {
+            assert.isNotNaN = function (val, msg) {
               new Assertion(val, msg, assert.isNotNaN, true).not.to.be.NaN;
             };
 
@@ -4813,7 +4813,7 @@
              * @api public
              */
 
-            assert.exists = function(val, msg) {
+            assert.exists = function (val, msg) {
               new Assertion(val, msg, assert.exists, true).to.exist;
             };
 
@@ -4835,7 +4835,7 @@
              * @api public
              */
 
-            assert.notExists = function(val, msg) {
+            assert.notExists = function (val, msg) {
               new Assertion(val, msg, assert.notExists, true).to.not.exist;
             };
 
@@ -4854,7 +4854,7 @@
              * @api public
              */
 
-            assert.isUndefined = function(val, msg) {
+            assert.isUndefined = function (val, msg) {
               new Assertion(val, msg, assert.isUndefined, true).to.equal(undefined);
             };
 
@@ -4873,7 +4873,7 @@
              * @api public
              */
 
-            assert.isDefined = function(val, msg) {
+            assert.isDefined = function (val, msg) {
               new Assertion(val, msg, assert.isDefined, true).to.not.equal(undefined);
             };
 
@@ -4892,7 +4892,7 @@
              * @api public
              */
 
-            assert.isFunction = function(val, msg) {
+            assert.isFunction = function (val, msg) {
               new Assertion(val, msg, assert.isFunction, true).to.be.a('function');
             };
 
@@ -4911,7 +4911,7 @@
              * @api public
              */
 
-            assert.isNotFunction = function(val, msg) {
+            assert.isNotFunction = function (val, msg) {
               new Assertion(val, msg, assert.isNotFunction, true).to.not.be.a('function');
             };
 
@@ -4931,7 +4931,7 @@
              * @api public
              */
 
-            assert.isObject = function(val, msg) {
+            assert.isObject = function (val, msg) {
               new Assertion(val, msg, assert.isObject, true).to.be.a('object');
             };
 
@@ -4951,7 +4951,7 @@
              * @api public
              */
 
-            assert.isNotObject = function(val, msg) {
+            assert.isNotObject = function (val, msg) {
               new Assertion(val, msg, assert.isNotObject, true).to.not.be.a('object');
             };
 
@@ -4970,7 +4970,7 @@
              * @api public
              */
 
-            assert.isArray = function(val, msg) {
+            assert.isArray = function (val, msg) {
               new Assertion(val, msg, assert.isArray, true).to.be.an('array');
             };
 
@@ -4989,7 +4989,7 @@
              * @api public
              */
 
-            assert.isNotArray = function(val, msg) {
+            assert.isNotArray = function (val, msg) {
               new Assertion(val, msg, assert.isNotArray, true).to.not.be.an('array');
             };
 
@@ -5008,7 +5008,7 @@
              * @api public
              */
 
-            assert.isString = function(val, msg) {
+            assert.isString = function (val, msg) {
               new Assertion(val, msg, assert.isString, true).to.be.a('string');
             };
 
@@ -5027,7 +5027,7 @@
              * @api public
              */
 
-            assert.isNotString = function(val, msg) {
+            assert.isNotString = function (val, msg) {
               new Assertion(val, msg, assert.isNotString, true).to.not.be.a('string');
             };
 
@@ -5046,7 +5046,7 @@
              * @api public
              */
 
-            assert.isNumber = function(val, msg) {
+            assert.isNumber = function (val, msg) {
               new Assertion(val, msg, assert.isNumber, true).to.be.a('number');
             };
 
@@ -5065,7 +5065,7 @@
              * @api public
              */
 
-            assert.isNotNumber = function(val, msg) {
+            assert.isNotNumber = function (val, msg) {
               new Assertion(val, msg, assert.isNotNumber, true).to.not.be.a('number');
             };
 
@@ -5086,7 +5086,7 @@
              * @api public
              */
 
-            assert.isFinite = function(val, msg) {
+            assert.isFinite = function (val, msg) {
               new Assertion(val, msg, assert.isFinite, true).to.be.finite;
             };
 
@@ -5108,7 +5108,7 @@
              * @api public
              */
 
-            assert.isBoolean = function(val, msg) {
+            assert.isBoolean = function (val, msg) {
               new Assertion(val, msg, assert.isBoolean, true).to.be.a('boolean');
             };
 
@@ -5130,7 +5130,7 @@
              * @api public
              */
 
-            assert.isNotBoolean = function(val, msg) {
+            assert.isNotBoolean = function (val, msg) {
               new Assertion(val, msg, assert.isNotBoolean, true).to.not.be.a('boolean');
             };
 
@@ -5155,7 +5155,7 @@
              * @api public
              */
 
-            assert.typeOf = function(val, type, msg) {
+            assert.typeOf = function (val, type, msg) {
               new Assertion(val, msg, assert.typeOf, true).to.be.a(type);
             };
 
@@ -5175,7 +5175,7 @@
              * @api public
              */
 
-            assert.notTypeOf = function(val, type, msg) {
+            assert.notTypeOf = function (val, type, msg) {
               new Assertion(val, msg, assert.notTypeOf, true).to.not.be.a(type);
             };
 
@@ -5197,7 +5197,7 @@
              * @api public
              */
 
-            assert.instanceOf = function(val, type, msg) {
+            assert.instanceOf = function (val, type, msg) {
               new Assertion(val, msg, assert.instanceOf, true).to.be.instanceOf(type);
             };
 
@@ -5219,7 +5219,7 @@
              * @api public
              */
 
-            assert.notInstanceOf = function(val, type, msg) {
+            assert.notInstanceOf = function (val, type, msg) {
               new Assertion(val, msg, assert.notInstanceOf, true).to.not.be.instanceOf(type);
             };
 
@@ -5254,7 +5254,7 @@
              * @api public
              */
 
-            assert.include = function(exp, inc, msg) {
+            assert.include = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.include, true).include(inc);
             };
 
@@ -5290,7 +5290,7 @@
              * @api public
              */
 
-            assert.notInclude = function(exp, inc, msg) {
+            assert.notInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.notInclude, true).not.include(inc);
             };
 
@@ -5315,7 +5315,7 @@
              * @api public
              */
 
-            assert.deepInclude = function(exp, inc, msg) {
+            assert.deepInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.deepInclude, true).deep.include(inc);
             };
 
@@ -5340,7 +5340,7 @@
              * @api public
              */
 
-            assert.notDeepInclude = function(exp, inc, msg) {
+            assert.notDeepInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.notDeepInclude, true).not.deep.include(inc);
             };
 
@@ -5365,7 +5365,7 @@
              * @api public
              */
 
-            assert.nestedInclude = function(exp, inc, msg) {
+            assert.nestedInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.nestedInclude, true).nested.include(inc);
             };
 
@@ -5390,7 +5390,7 @@
              * @api public
              */
 
-            assert.notNestedInclude = function(exp, inc, msg) {
+            assert.notNestedInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.notNestedInclude, true).not.nested.include(inc);
             };
 
@@ -5415,7 +5415,7 @@
              * @api public
              */
 
-            assert.deepNestedInclude = function(exp, inc, msg) {
+            assert.deepNestedInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.deepNestedInclude, true).deep.nested.include(inc);
             };
 
@@ -5440,7 +5440,7 @@
              * @api public
              */
 
-            assert.notDeepNestedInclude = function(exp, inc, msg) {
+            assert.notDeepNestedInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.notDeepNestedInclude, true).not.deep.nested.include(
                 inc
               );
@@ -5463,7 +5463,7 @@
              * @api public
              */
 
-            assert.ownInclude = function(exp, inc, msg) {
+            assert.ownInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.ownInclude, true).own.include(inc);
             };
 
@@ -5486,7 +5486,7 @@
              * @api public
              */
 
-            assert.notOwnInclude = function(exp, inc, msg) {
+            assert.notOwnInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.notOwnInclude, true).not.own.include(inc);
             };
 
@@ -5507,7 +5507,7 @@
              * @api public
              */
 
-            assert.deepOwnInclude = function(exp, inc, msg) {
+            assert.deepOwnInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.deepOwnInclude, true).deep.own.include(inc);
             };
 
@@ -5528,7 +5528,7 @@
              * @api public
              */
 
-            assert.notDeepOwnInclude = function(exp, inc, msg) {
+            assert.notDeepOwnInclude = function (exp, inc, msg) {
               new Assertion(exp, msg, assert.notDeepOwnInclude, true).not.deep.own.include(inc);
             };
 
@@ -5547,7 +5547,7 @@
              * @api public
              */
 
-            assert.match = function(exp, re, msg) {
+            assert.match = function (exp, re, msg) {
               new Assertion(exp, msg, assert.match, true).to.match(re);
             };
 
@@ -5566,7 +5566,7 @@
              * @api public
              */
 
-            assert.notMatch = function(exp, re, msg) {
+            assert.notMatch = function (exp, re, msg) {
               new Assertion(exp, msg, assert.notMatch, true).to.not.match(re);
             };
 
@@ -5587,7 +5587,7 @@
              * @api public
              */
 
-            assert.property = function(obj, prop, msg) {
+            assert.property = function (obj, prop, msg) {
               new Assertion(obj, msg, assert.property, true).to.have.property(prop);
             };
 
@@ -5607,7 +5607,7 @@
              * @api public
              */
 
-            assert.notProperty = function(obj, prop, msg) {
+            assert.notProperty = function (obj, prop, msg) {
               new Assertion(obj, msg, assert.notProperty, true).to.not.have.property(prop);
             };
 
@@ -5629,7 +5629,7 @@
              * @api public
              */
 
-            assert.propertyVal = function(obj, prop, val, msg) {
+            assert.propertyVal = function (obj, prop, val, msg) {
               new Assertion(obj, msg, assert.propertyVal, true).to.have.property(prop, val);
             };
 
@@ -5652,7 +5652,7 @@
              * @api public
              */
 
-            assert.notPropertyVal = function(obj, prop, val, msg) {
+            assert.notPropertyVal = function (obj, prop, val, msg) {
               new Assertion(obj, msg, assert.notPropertyVal, true).to.not.have.property(prop, val);
             };
 
@@ -5673,7 +5673,7 @@
              * @api public
              */
 
-            assert.deepPropertyVal = function(obj, prop, val, msg) {
+            assert.deepPropertyVal = function (obj, prop, val, msg) {
               new Assertion(obj, msg, assert.deepPropertyVal, true).to.have.deep.property(
                 prop,
                 val
@@ -5699,7 +5699,7 @@
              * @api public
              */
 
-            assert.notDeepPropertyVal = function(obj, prop, val, msg) {
+            assert.notDeepPropertyVal = function (obj, prop, val, msg) {
               new Assertion(obj, msg, assert.notDeepPropertyVal, true).to.not.have.deep.property(
                 prop,
                 val
@@ -5721,7 +5721,7 @@
              * @api public
              */
 
-            assert.ownProperty = function(obj, prop, msg) {
+            assert.ownProperty = function (obj, prop, msg) {
               new Assertion(obj, msg, assert.ownProperty, true).to.have.own.property(prop);
             };
 
@@ -5741,7 +5741,7 @@
              * @api public
              */
 
-            assert.notOwnProperty = function(obj, prop, msg) {
+            assert.notOwnProperty = function (obj, prop, msg) {
               new Assertion(obj, msg, assert.notOwnProperty, true).to.not.have.own.property(prop);
             };
 
@@ -5762,7 +5762,7 @@
              * @api public
              */
 
-            assert.ownPropertyVal = function(obj, prop, value, msg) {
+            assert.ownPropertyVal = function (obj, prop, value, msg) {
               new Assertion(obj, msg, assert.ownPropertyVal, true).to.have.own.property(
                 prop,
                 value
@@ -5787,7 +5787,7 @@
              * @api public
              */
 
-            assert.notOwnPropertyVal = function(obj, prop, value, msg) {
+            assert.notOwnPropertyVal = function (obj, prop, value, msg) {
               new Assertion(obj, msg, assert.notOwnPropertyVal, true).to.not.have.own.property(
                 prop,
                 value
@@ -5811,7 +5811,7 @@
              * @api public
              */
 
-            assert.deepOwnPropertyVal = function(obj, prop, value, msg) {
+            assert.deepOwnPropertyVal = function (obj, prop, value, msg) {
               new Assertion(obj, msg, assert.deepOwnPropertyVal, true).to.have.deep.own.property(
                 prop,
                 value
@@ -5838,7 +5838,7 @@
              * @api public
              */
 
-            assert.notDeepOwnPropertyVal = function(obj, prop, value, msg) {
+            assert.notDeepOwnPropertyVal = function (obj, prop, value, msg) {
               new Assertion(
                 obj,
                 msg,
@@ -5864,7 +5864,7 @@
              * @api public
              */
 
-            assert.nestedProperty = function(obj, prop, msg) {
+            assert.nestedProperty = function (obj, prop, msg) {
               new Assertion(obj, msg, assert.nestedProperty, true).to.have.nested.property(prop);
             };
 
@@ -5885,7 +5885,7 @@
              * @api public
              */
 
-            assert.notNestedProperty = function(obj, prop, msg) {
+            assert.notNestedProperty = function (obj, prop, msg) {
               new Assertion(obj, msg, assert.notNestedProperty, true).to.not.have.nested.property(
                 prop
               );
@@ -5909,7 +5909,7 @@
              * @api public
              */
 
-            assert.nestedPropertyVal = function(obj, prop, val, msg) {
+            assert.nestedPropertyVal = function (obj, prop, val, msg) {
               new Assertion(obj, msg, assert.nestedPropertyVal, true).to.have.nested.property(
                 prop,
                 val
@@ -5935,7 +5935,7 @@
              * @api public
              */
 
-            assert.notNestedPropertyVal = function(obj, prop, val, msg) {
+            assert.notNestedPropertyVal = function (obj, prop, val, msg) {
               new Assertion(
                 obj,
                 msg,
@@ -5962,7 +5962,7 @@
              * @api public
              */
 
-            assert.deepNestedPropertyVal = function(obj, prop, val, msg) {
+            assert.deepNestedPropertyVal = function (obj, prop, val, msg) {
               new Assertion(
                 obj,
                 msg,
@@ -5991,7 +5991,7 @@
              * @api public
              */
 
-            assert.notDeepNestedPropertyVal = function(obj, prop, val, msg) {
+            assert.notDeepNestedPropertyVal = function (obj, prop, val, msg) {
               new Assertion(
                 obj,
                 msg,
@@ -6018,7 +6018,7 @@
              * @api public
              */
 
-            assert.lengthOf = function(exp, len, msg) {
+            assert.lengthOf = function (exp, len, msg) {
               new Assertion(exp, msg, assert.lengthOf, true).to.have.lengthOf(len);
             };
 
@@ -6042,7 +6042,7 @@
              * @api public
              */
 
-            assert.hasAnyKeys = function(obj, keys, msg) {
+            assert.hasAnyKeys = function (obj, keys, msg) {
               new Assertion(obj, msg, assert.hasAnyKeys, true).to.have.any.keys(keys);
             };
 
@@ -6066,7 +6066,7 @@
              * @api public
              */
 
-            assert.hasAllKeys = function(obj, keys, msg) {
+            assert.hasAllKeys = function (obj, keys, msg) {
               new Assertion(obj, msg, assert.hasAllKeys, true).to.have.all.keys(keys);
             };
 
@@ -6094,7 +6094,7 @@
              * @api public
              */
 
-            assert.containsAllKeys = function(obj, keys, msg) {
+            assert.containsAllKeys = function (obj, keys, msg) {
               new Assertion(obj, msg, assert.containsAllKeys, true).to.contain.all.keys(keys);
             };
 
@@ -6118,7 +6118,7 @@
              * @api public
              */
 
-            assert.doesNotHaveAnyKeys = function(obj, keys, msg) {
+            assert.doesNotHaveAnyKeys = function (obj, keys, msg) {
               new Assertion(obj, msg, assert.doesNotHaveAnyKeys, true).to.not.have.any.keys(keys);
             };
 
@@ -6142,7 +6142,7 @@
              * @api public
              */
 
-            assert.doesNotHaveAllKeys = function(obj, keys, msg) {
+            assert.doesNotHaveAllKeys = function (obj, keys, msg) {
               new Assertion(obj, msg, assert.doesNotHaveAllKeys, true).to.not.have.all.keys(keys);
             };
 
@@ -6170,7 +6170,7 @@
              * @api public
              */
 
-            assert.hasAnyDeepKeys = function(obj, keys, msg) {
+            assert.hasAnyDeepKeys = function (obj, keys, msg) {
               new Assertion(obj, msg, assert.hasAnyDeepKeys, true).to.have.any.deep.keys(keys);
             };
 
@@ -6196,7 +6196,7 @@
              * @api public
              */
 
-            assert.hasAllDeepKeys = function(obj, keys, msg) {
+            assert.hasAllDeepKeys = function (obj, keys, msg) {
               new Assertion(obj, msg, assert.hasAllDeepKeys, true).to.have.all.deep.keys(keys);
             };
 
@@ -6222,7 +6222,7 @@
              * @api public
              */
 
-            assert.containsAllDeepKeys = function(obj, keys, msg) {
+            assert.containsAllDeepKeys = function (obj, keys, msg) {
               new Assertion(obj, msg, assert.containsAllDeepKeys, true).to.contain.all.deep.keys(
                 keys
               );
@@ -6250,7 +6250,7 @@
              * @api public
              */
 
-            assert.doesNotHaveAnyDeepKeys = function(obj, keys, msg) {
+            assert.doesNotHaveAnyDeepKeys = function (obj, keys, msg) {
               new Assertion(
                 obj,
                 msg,
@@ -6281,7 +6281,7 @@
              * @api public
              */
 
-            assert.doesNotHaveAllDeepKeys = function(obj, keys, msg) {
+            assert.doesNotHaveAllDeepKeys = function (obj, keys, msg) {
               new Assertion(
                 obj,
                 msg,
@@ -6321,7 +6321,7 @@
              * @api public
              */
 
-            assert.throws = function(fn, errorLike, errMsgMatcher, msg) {
+            assert.throws = function (fn, errorLike, errMsgMatcher, msg) {
               if ('string' === typeof errorLike || errorLike instanceof RegExp) {
                 errMsgMatcher = errorLike;
                 errorLike = null;
@@ -6363,7 +6363,7 @@
              * @api public
              */
 
-            assert.doesNotThrow = function(fn, errorLike, errMsgMatcher, msg) {
+            assert.doesNotThrow = function (fn, errorLike, errMsgMatcher, msg) {
               if ('string' === typeof errorLike || errorLike instanceof RegExp) {
                 errMsgMatcher = errorLike;
                 errorLike = null;
@@ -6392,7 +6392,7 @@
              * @api public
              */
 
-            assert.operator = function(val, operator, val2, msg) {
+            assert.operator = function (val, operator, val2, msg) {
               var ok;
               switch (operator) {
                 case '==':
@@ -6456,7 +6456,7 @@
              * @api public
              */
 
-            assert.closeTo = function(act, exp, delta, msg) {
+            assert.closeTo = function (act, exp, delta, msg) {
               new Assertion(act, msg, assert.closeTo, true).to.be.closeTo(exp, delta);
             };
 
@@ -6476,7 +6476,7 @@
              * @api public
              */
 
-            assert.approximately = function(act, exp, delta, msg) {
+            assert.approximately = function (act, exp, delta, msg) {
               new Assertion(act, msg, assert.approximately, true).to.be.approximately(exp, delta);
             };
 
@@ -6496,7 +6496,7 @@
              * @api public
              */
 
-            assert.sameMembers = function(set1, set2, msg) {
+            assert.sameMembers = function (set1, set2, msg) {
               new Assertion(set1, msg, assert.sameMembers, true).to.have.same.members(set2);
             };
 
@@ -6516,7 +6516,7 @@
              * @api public
              */
 
-            assert.notSameMembers = function(set1, set2, msg) {
+            assert.notSameMembers = function (set1, set2, msg) {
               new Assertion(set1, msg, assert.notSameMembers, true).to.not.have.same.members(set2);
             };
 
@@ -6536,7 +6536,7 @@
              * @api public
              */
 
-            assert.sameDeepMembers = function(set1, set2, msg) {
+            assert.sameDeepMembers = function (set1, set2, msg) {
               new Assertion(set1, msg, assert.sameDeepMembers, true).to.have.same.deep.members(
                 set2
               );
@@ -6558,7 +6558,7 @@
              * @api public
              */
 
-            assert.notSameDeepMembers = function(set1, set2, msg) {
+            assert.notSameDeepMembers = function (set1, set2, msg) {
               new Assertion(
                 set1,
                 msg,
@@ -6583,7 +6583,7 @@
              * @api public
              */
 
-            assert.sameOrderedMembers = function(set1, set2, msg) {
+            assert.sameOrderedMembers = function (set1, set2, msg) {
               new Assertion(
                 set1,
                 msg,
@@ -6608,7 +6608,7 @@
              * @api public
              */
 
-            assert.notSameOrderedMembers = function(set1, set2, msg) {
+            assert.notSameOrderedMembers = function (set1, set2, msg) {
               new Assertion(
                 set1,
                 msg,
@@ -6633,7 +6633,7 @@
              * @api public
              */
 
-            assert.sameDeepOrderedMembers = function(set1, set2, msg) {
+            assert.sameDeepOrderedMembers = function (set1, set2, msg) {
               new Assertion(
                 set1,
                 msg,
@@ -6659,7 +6659,7 @@
              * @api public
              */
 
-            assert.notSameDeepOrderedMembers = function(set1, set2, msg) {
+            assert.notSameDeepOrderedMembers = function (set1, set2, msg) {
               new Assertion(
                 set1,
                 msg,
@@ -6684,7 +6684,7 @@
              * @api public
              */
 
-            assert.includeMembers = function(superset, subset, msg) {
+            assert.includeMembers = function (superset, subset, msg) {
               new Assertion(superset, msg, assert.includeMembers, true).to.include.members(subset);
             };
 
@@ -6704,7 +6704,7 @@
              * @api public
              */
 
-            assert.notIncludeMembers = function(superset, subset, msg) {
+            assert.notIncludeMembers = function (superset, subset, msg) {
               new Assertion(superset, msg, assert.notIncludeMembers, true).to.not.include.members(
                 subset
               );
@@ -6726,7 +6726,7 @@
              * @api public
              */
 
-            assert.includeDeepMembers = function(superset, subset, msg) {
+            assert.includeDeepMembers = function (superset, subset, msg) {
               new Assertion(superset, msg, assert.includeDeepMembers, true).to.include.deep.members(
                 subset
               );
@@ -6748,7 +6748,7 @@
              * @api public
              */
 
-            assert.notIncludeDeepMembers = function(superset, subset, msg) {
+            assert.notIncludeDeepMembers = function (superset, subset, msg) {
               new Assertion(
                 superset,
                 msg,
@@ -6774,7 +6774,7 @@
              * @api public
              */
 
-            assert.includeOrderedMembers = function(superset, subset, msg) {
+            assert.includeOrderedMembers = function (superset, subset, msg) {
               new Assertion(
                 superset,
                 msg,
@@ -6801,7 +6801,7 @@
              * @api public
              */
 
-            assert.notIncludeOrderedMembers = function(superset, subset, msg) {
+            assert.notIncludeOrderedMembers = function (superset, subset, msg) {
               new Assertion(
                 superset,
                 msg,
@@ -6827,7 +6827,7 @@
              * @api public
              */
 
-            assert.includeDeepOrderedMembers = function(superset, subset, msg) {
+            assert.includeDeepOrderedMembers = function (superset, subset, msg) {
               new Assertion(
                 superset,
                 msg,
@@ -6855,7 +6855,7 @@
              * @api public
              */
 
-            assert.notIncludeDeepOrderedMembers = function(superset, subset, msg) {
+            assert.notIncludeDeepOrderedMembers = function (superset, subset, msg) {
               new Assertion(
                 superset,
                 msg,
@@ -6879,7 +6879,7 @@
              * @api public
              */
 
-            assert.oneOf = function(inList, list, msg) {
+            assert.oneOf = function (inList, list, msg) {
               new Assertion(inList, msg, assert.oneOf, true).to.be.oneOf(list);
             };
 
@@ -6901,7 +6901,7 @@
              * @api public
              */
 
-            assert.changes = function(fn, obj, prop, msg) {
+            assert.changes = function (fn, obj, prop, msg) {
               if (arguments.length === 3 && typeof obj === 'function') {
                 msg = prop;
                 prop = null;
@@ -6929,7 +6929,7 @@
              * @api public
              */
 
-            assert.changesBy = function(fn, obj, prop, delta, msg) {
+            assert.changesBy = function (fn, obj, prop, delta, msg) {
               if (arguments.length === 4 && typeof obj === 'function') {
                 var tmpMsg = delta;
                 delta = prop;
@@ -6960,7 +6960,7 @@
              * @api public
              */
 
-            assert.doesNotChange = function(fn, obj, prop, msg) {
+            assert.doesNotChange = function (fn, obj, prop, msg) {
               if (arguments.length === 3 && typeof obj === 'function') {
                 msg = prop;
                 prop = null;
@@ -6988,7 +6988,7 @@
              * @api public
              */
 
-            assert.changesButNotBy = function(fn, obj, prop, delta, msg) {
+            assert.changesButNotBy = function (fn, obj, prop, delta, msg) {
               if (arguments.length === 4 && typeof obj === 'function') {
                 var tmpMsg = delta;
                 delta = prop;
@@ -7021,7 +7021,7 @@
              * @api public
              */
 
-            assert.increases = function(fn, obj, prop, msg) {
+            assert.increases = function (fn, obj, prop, msg) {
               if (arguments.length === 3 && typeof obj === 'function') {
                 msg = prop;
                 prop = null;
@@ -7049,7 +7049,7 @@
              * @api public
              */
 
-            assert.increasesBy = function(fn, obj, prop, delta, msg) {
+            assert.increasesBy = function (fn, obj, prop, delta, msg) {
               if (arguments.length === 4 && typeof obj === 'function') {
                 var tmpMsg = delta;
                 delta = prop;
@@ -7080,7 +7080,7 @@
              * @api public
              */
 
-            assert.doesNotIncrease = function(fn, obj, prop, msg) {
+            assert.doesNotIncrease = function (fn, obj, prop, msg) {
               if (arguments.length === 3 && typeof obj === 'function') {
                 msg = prop;
                 prop = null;
@@ -7111,7 +7111,7 @@
              * @api public
              */
 
-            assert.increasesButNotBy = function(fn, obj, prop, delta, msg) {
+            assert.increasesButNotBy = function (fn, obj, prop, delta, msg) {
               if (arguments.length === 4 && typeof obj === 'function') {
                 var tmpMsg = delta;
                 delta = prop;
@@ -7144,7 +7144,7 @@
              * @api public
              */
 
-            assert.decreases = function(fn, obj, prop, msg) {
+            assert.decreases = function (fn, obj, prop, msg) {
               if (arguments.length === 3 && typeof obj === 'function') {
                 msg = prop;
                 prop = null;
@@ -7172,7 +7172,7 @@
              * @api public
              */
 
-            assert.decreasesBy = function(fn, obj, prop, delta, msg) {
+            assert.decreasesBy = function (fn, obj, prop, delta, msg) {
               if (arguments.length === 4 && typeof obj === 'function') {
                 var tmpMsg = delta;
                 delta = prop;
@@ -7203,7 +7203,7 @@
              * @api public
              */
 
-            assert.doesNotDecrease = function(fn, obj, prop, msg) {
+            assert.doesNotDecrease = function (fn, obj, prop, msg) {
               if (arguments.length === 3 && typeof obj === 'function') {
                 msg = prop;
                 prop = null;
@@ -7234,7 +7234,7 @@
              * @api public
              */
 
-            assert.doesNotDecreaseBy = function(fn, obj, prop, delta, msg) {
+            assert.doesNotDecreaseBy = function (fn, obj, prop, delta, msg) {
               if (arguments.length === 4 && typeof obj === 'function') {
                 var tmpMsg = delta;
                 delta = prop;
@@ -7268,7 +7268,7 @@
              * @api public
              */
 
-            assert.decreasesButNotBy = function(fn, obj, prop, delta, msg) {
+            assert.decreasesButNotBy = function (fn, obj, prop, delta, msg) {
               if (arguments.length === 4 && typeof obj === 'function') {
                 var tmpMsg = delta;
                 delta = prop;
@@ -7299,7 +7299,7 @@
              * @api public
              */
 
-            assert.ifError = function(val) {
+            assert.ifError = function (val) {
               if (val) {
                 throw val;
               }
@@ -7320,7 +7320,7 @@
              * @api public
              */
 
-            assert.isExtensible = function(obj, msg) {
+            assert.isExtensible = function (obj, msg) {
               new Assertion(obj, msg, assert.isExtensible, true).to.be.extensible;
             };
 
@@ -7345,7 +7345,7 @@
              * @api public
              */
 
-            assert.isNotExtensible = function(obj, msg) {
+            assert.isNotExtensible = function (obj, msg) {
               new Assertion(obj, msg, assert.isNotExtensible, true).to.not.be.extensible;
             };
 
@@ -7369,7 +7369,7 @@
              * @api public
              */
 
-            assert.isSealed = function(obj, msg) {
+            assert.isSealed = function (obj, msg) {
               new Assertion(obj, msg, assert.isSealed, true).to.be.sealed;
             };
 
@@ -7388,7 +7388,7 @@
              * @api public
              */
 
-            assert.isNotSealed = function(obj, msg) {
+            assert.isNotSealed = function (obj, msg) {
               new Assertion(obj, msg, assert.isNotSealed, true).to.not.be.sealed;
             };
 
@@ -7409,7 +7409,7 @@
              * @api public
              */
 
-            assert.isFrozen = function(obj, msg) {
+            assert.isFrozen = function (obj, msg) {
               new Assertion(obj, msg, assert.isFrozen, true).to.be.frozen;
             };
 
@@ -7428,7 +7428,7 @@
              * @api public
              */
 
-            assert.isNotFrozen = function(obj, msg) {
+            assert.isNotFrozen = function (obj, msg) {
               new Assertion(obj, msg, assert.isNotFrozen, true).to.not.be.frozen;
             };
 
@@ -7454,7 +7454,7 @@
              * @api public
              */
 
-            assert.isEmpty = function(val, msg) {
+            assert.isEmpty = function (val, msg) {
               new Assertion(val, msg, assert.isEmpty, true).to.be.empty;
             };
 
@@ -7480,7 +7480,7 @@
              * @api public
              */
 
-            assert.isNotEmpty = function(val, msg) {
+            assert.isNotEmpty = function (val, msg) {
               new Assertion(val, msg, assert.isNotEmpty, true).to.not.be.empty;
             };
 
@@ -7500,18 +7500,18 @@
             )('isNotFrozen', 'notFrozen')('isEmpty', 'empty')('isNotEmpty', 'notEmpty');
           };
         },
-        {}
+        {},
       ],
       7: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * chai
            * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
            * MIT Licensed
            */
 
-          module.exports = function(chai, util) {
-            chai.expect = function(val, message) {
+          module.exports = function (chai, util) {
+            chai.expect = function (val, message) {
               return new chai.Assertion(val, message);
             };
 
@@ -7537,7 +7537,7 @@
              * @api public
              */
 
-            chai.expect.fail = function(actual, expected, message, operator) {
+            chai.expect.fail = function (actual, expected, message, operator) {
               if (arguments.length < 2) {
                 message = actual;
                 actual = undefined;
@@ -7549,24 +7549,24 @@
                 {
                   actual: actual,
                   expected: expected,
-                  operator: operator
+                  operator: operator,
                 },
                 chai.expect.fail
               );
             };
           };
         },
-        {}
+        {},
       ],
       8: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * chai
            * Copyright(c) 2011-2014 Jake Luer <jake@alogicalparadox.com>
            * MIT Licensed
            */
 
-          module.exports = function(chai, util) {
+          module.exports = function (chai, util) {
             var Assertion = chai.Assertion;
 
             function loadShould() {
@@ -7593,14 +7593,14 @@
                   value: value,
                   enumerable: true,
                   configurable: true,
-                  writable: true
+                  writable: true,
                 });
               }
               // modify Object.prototype to have `should`
               Object.defineProperty(Object.prototype, 'should', {
                 set: shouldSetter,
                 get: shouldGetter,
-                configurable: true
+                configurable: true,
               });
 
               var should = {};
@@ -7628,7 +7628,7 @@
                * @api public
                */
 
-              should.fail = function(actual, expected, message, operator) {
+              should.fail = function (actual, expected, message, operator) {
                 if (arguments.length < 2) {
                   message = actual;
                   actual = undefined;
@@ -7640,7 +7640,7 @@
                   {
                     actual: actual,
                     expected: expected,
-                    operator: operator
+                    operator: operator,
                   },
                   should.fail
                 );
@@ -7661,7 +7661,7 @@
                * @api public
                */
 
-              should.equal = function(val1, val2, msg) {
+              should.equal = function (val1, val2, msg) {
                 new Assertion(val1, msg).to.equal(val2);
               };
 
@@ -7689,7 +7689,7 @@
                * @api public
                */
 
-              should.Throw = function(fn, errt, errs, msg) {
+              should.Throw = function (fn, errt, errs, msg) {
                 new Assertion(fn, msg).to.Throw(errt, errs);
               };
 
@@ -7707,7 +7707,7 @@
                * @api public
                */
 
-              should.exist = function(val, msg) {
+              should.exist = function (val, msg) {
                 new Assertion(val, msg).to.exist;
               };
 
@@ -7729,7 +7729,7 @@
                * @api public
                */
 
-              should.not.equal = function(val1, val2, msg) {
+              should.not.equal = function (val1, val2, msg) {
                 new Assertion(val1, msg).to.not.equal(val2);
               };
 
@@ -7753,7 +7753,7 @@
                * @api public
                */
 
-              should.not.Throw = function(fn, errt, errs, msg) {
+              should.not.Throw = function (fn, errt, errs, msg) {
                 new Assertion(fn, msg).to.not.Throw(errt, errs);
               };
 
@@ -7771,7 +7771,7 @@
                * @api public
                */
 
-              should.not.exist = function(val, msg) {
+              should.not.exist = function (val, msg) {
                 new Assertion(val, msg).to.not.exist;
               };
 
@@ -7785,10 +7785,10 @@
             chai.Should = loadShould;
           };
         },
-        {}
+        {},
       ],
       9: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - addChainingMethod utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -7814,8 +7814,8 @@
 
           // Without `Object.setPrototypeOf` support, this module will need to add properties to a function.
           // However, some of functions' own props are not configurable and should be skipped.
-          var testFn = function() {};
-          var excludeNames = Object.getOwnPropertyNames(testFn).filter(function(name) {
+          var testFn = function () {};
+          var excludeNames = Object.getOwnPropertyNames(testFn).filter(function (name) {
             var propDesc = Object.getOwnPropertyDescriptor(testFn, name);
 
             // Note: PhantomJS 1.x includes `callee` as one of `testFn`'s own properties,
@@ -7862,12 +7862,12 @@
 
           module.exports = function addChainableMethod(ctx, name, method, chainingBehavior) {
             if (typeof chainingBehavior !== 'function') {
-              chainingBehavior = function() {};
+              chainingBehavior = function () {};
             }
 
             var chainableBehavior = {
               method: method,
-              chainingBehavior: chainingBehavior
+              chainingBehavior: chainingBehavior,
             };
 
             // save the methods so we can overwrite them later, if we need to.
@@ -7880,7 +7880,7 @@
               get: function chainableMethodGetter() {
                 chainableBehavior.chainingBehavior.call(this);
 
-                var chainableMethodWrapper = function() {
+                var chainableMethodWrapper = function () {
                   // Setting the `ssfi` flag to `chainableMethodWrapper` causes this
                   // function to be the starting point for removing implementation
                   // frames from the stack trace of a failed assertion.
@@ -7924,7 +7924,7 @@
                 // Otherwise, redefine all properties (slow!)
                 else {
                   var asserterNames = Object.getOwnPropertyNames(ctx);
-                  asserterNames.forEach(function(asserterName) {
+                  asserterNames.forEach(function (asserterName) {
                     if (excludeNames.indexOf(asserterName) !== -1) {
                       return;
                     }
@@ -7937,7 +7937,7 @@
                 transferFlags(this, chainableMethodWrapper);
                 return proxify(chainableMethodWrapper);
               },
-              configurable: true
+              configurable: true,
             });
           };
         },
@@ -7946,12 +7946,12 @@
           './addLengthGuard': 10,
           './flag': 15,
           './proxify': 30,
-          './transferFlags': 32
-        }
+          './transferFlags': 32,
+        },
       ],
       10: [
-        function(require, module, exports) {
-          var fnLengthDesc = Object.getOwnPropertyDescriptor(function() {}, 'length');
+        function (require, module, exports) {
+          var fnLengthDesc = Object.getOwnPropertyDescriptor(function () {}, 'length');
 
           /*!
            * Chai - addLengthGuard utility
@@ -7997,7 +7997,7 @@
             if (!fnLengthDesc.configurable) return fn;
 
             Object.defineProperty(fn, 'length', {
-              get: function() {
+              get: function () {
                 if (isChainable) {
                   throw Error(
                     'Invalid Chai property: ' +
@@ -8019,16 +8019,16 @@
                     assertionName +
                     '".'
                 );
-              }
+              },
             });
 
             return fn;
           };
         },
-        {}
+        {},
       ],
       11: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - addMethod utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8068,7 +8068,7 @@
            */
 
           module.exports = function addMethod(ctx, name, method) {
-            var methodWrapper = function() {
+            var methodWrapper = function () {
               // Setting the `ssfi` flag to `methodWrapper` causes this function to be the
               // starting point for removing implementation frames from the stack trace of
               // a failed assertion.
@@ -8102,11 +8102,11 @@
           './addLengthGuard': 10,
           './flag': 15,
           './proxify': 30,
-          './transferFlags': 32
-        }
+          './transferFlags': 32,
+        },
       ],
       12: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - addProperty utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8145,7 +8145,7 @@
            */
 
           module.exports = function addProperty(ctx, name, getter) {
-            getter = getter === undefined ? function() {} : getter;
+            getter = getter === undefined ? function () {} : getter;
 
             Object.defineProperty(ctx, name, {
               get: function propertyGetter() {
@@ -8175,14 +8175,14 @@
                 transferFlags(this, newAssertion);
                 return newAssertion;
               },
-              configurable: true
+              configurable: true,
             });
           };
         },
-        { '../../chai': 2, './flag': 15, './isProxyEnabled': 25, './transferFlags': 32 }
+        { '../../chai': 2, './flag': 15, './isProxyEnabled': 25, './transferFlags': 32 },
       ],
       13: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - compareByInspect utility
            * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
@@ -8215,10 +8215,10 @@
             return inspect(a) < inspect(b) ? -1 : 1;
           };
         },
-        { './inspect': 23 }
+        { './inspect': 23 },
       ],
       14: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - expectTypes utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8250,14 +8250,14 @@
             flagMsg = flagMsg ? flagMsg + ': ' : '';
 
             obj = flag(obj, 'object');
-            types = types.map(function(t) {
+            types = types.map(function (t) {
               return t.toLowerCase();
             });
             types.sort();
 
             // Transforms ['lorem', 'ipsum'] into 'a lorem, or an ipsum'
             var str = types
-              .map(function(t, index) {
+              .map(function (t, index) {
                 var art = ~['a', 'e', 'i', 'o', 'u'].indexOf(t.charAt(0)) ? 'an' : 'a';
                 var or = types.length > 1 && index === types.length - 1 ? 'or ' : '';
                 return or + art + ' ' + t;
@@ -8267,7 +8267,7 @@
             var objType = type(obj).toLowerCase();
 
             if (
-              !types.some(function(expected) {
+              !types.some(function (expected) {
                 return objType === expected;
               })
             ) {
@@ -8279,10 +8279,10 @@
             }
           };
         },
-        { './flag': 15, 'assertion-error': 33, 'type-detect': 38 }
+        { './flag': 15, 'assertion-error': 33, 'type-detect': 38 },
       ],
       15: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - flag utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8317,10 +8317,10 @@
             }
           };
         },
-        {}
+        {},
       ],
       16: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - getActual utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8342,10 +8342,10 @@
             return args.length > 4 ? args[4] : obj._obj;
           };
         },
-        {}
+        {},
       ],
       17: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - getEnumerableProperties utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8373,10 +8373,10 @@
             return result;
           };
         },
-        {}
+        {},
       ],
       18: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - message composition utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8421,23 +8421,23 @@
             if (typeof msg === 'function') msg = msg();
             msg = msg || '';
             msg = msg
-              .replace(/#\{this\}/g, function() {
+              .replace(/#\{this\}/g, function () {
                 return objDisplay(val);
               })
-              .replace(/#\{act\}/g, function() {
+              .replace(/#\{act\}/g, function () {
                 return objDisplay(actual);
               })
-              .replace(/#\{exp\}/g, function() {
+              .replace(/#\{exp\}/g, function () {
                 return objDisplay(expected);
               });
 
             return flagMsg ? flagMsg + ': ' + msg : msg;
           };
         },
-        { './flag': 15, './getActual': 16, './objDisplay': 26 }
+        { './flag': 15, './getActual': 16, './objDisplay': 26 },
       ],
       19: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - getOwnEnumerableProperties utility
            * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
@@ -8468,10 +8468,10 @@
             return Object.keys(obj).concat(getOwnEnumerablePropertySymbols(obj));
           };
         },
-        { './getOwnEnumerablePropertySymbols': 20 }
+        { './getOwnEnumerablePropertySymbols': 20 },
       ],
       20: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - getOwnEnumerablePropertySymbols utility
            * Copyright(c) 2011-2016 Jake Luer <jake@alogicalparadox.com>
@@ -8495,15 +8495,15 @@
           module.exports = function getOwnEnumerablePropertySymbols(obj) {
             if (typeof Object.getOwnPropertySymbols !== 'function') return [];
 
-            return Object.getOwnPropertySymbols(obj).filter(function(sym) {
+            return Object.getOwnPropertySymbols(obj).filter(function (sym) {
               return Object.getOwnPropertyDescriptor(obj, sym).enumerable;
             });
           };
         },
-        {}
+        {},
       ],
       21: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - getProperties utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -8541,10 +8541,10 @@
             return result;
           };
         },
-        {}
+        {},
       ],
       22: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * chai
            * Copyright(c) 2011 Jake Luer <jake@alogicalparadox.com>
@@ -8744,11 +8744,11 @@
           'deep-eql': 35,
           'get-func-name': 36,
           pathval: 37,
-          'type-detect': 38
-        }
+          'type-detect': 38,
+        },
       ],
       23: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           // This is (almost) directly from Node.js utils
           // https://github.com/joyent/node/blob/f8c335d0caf47f16d31413f89aa28eda3878e3aa/lib/util.js
 
@@ -8778,15 +8778,15 @@
             var ctx = {
               showHidden: showHidden,
               seen: [],
-              stylize: function(str) {
+              stylize: function (str) {
                 return str;
-              }
+              },
             };
             return formatValue(ctx, obj, typeof depth === 'undefined' ? 2 : depth);
           }
 
           // Returns true if object is a DOM element.
-          var isDOMElement = function(object) {
+          var isDOMElement = function (object) {
             if (typeof HTMLElement === 'object') {
               return object instanceof HTMLElement;
             } else {
@@ -8945,7 +8945,7 @@
             } else if (typedArray) {
               return formatTypedArray(value);
             } else {
-              output = keys.map(function(key) {
+              output = keys.map(function (key) {
                 return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
               });
             }
@@ -9002,7 +9002,7 @@
               }
             }
 
-            keys.forEach(function(key) {
+            keys.forEach(function (key) {
               if (!key.match(/^\d+$/)) {
                 output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, key, true));
               }
@@ -9062,7 +9062,7 @@
                   if (array) {
                     str = str
                       .split('\n')
-                      .map(function(line) {
+                      .map(function (line) {
                         return '  ' + line;
                       })
                       .join('\n')
@@ -9072,7 +9072,7 @@
                       '\n' +
                       str
                         .split('\n')
-                        .map(function(line) {
+                        .map(function (line) {
                           return '   ' + line;
                         })
                         .join('\n');
@@ -9103,7 +9103,7 @@
           }
 
           function reduceToSingleString(output, base, braces) {
-            var length = output.reduce(function(prev, cur) {
+            var length = output.reduce(function (prev, cur) {
               return prev + cur.length + 1;
             }, 0);
 
@@ -9154,11 +9154,11 @@
           '../config': 4,
           './getEnumerableProperties': 17,
           './getProperties': 21,
-          'get-func-name': 36
-        }
+          'get-func-name': 36,
+        },
       ],
       24: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - isNaN utility
            * Copyright(c) 2012-2015 Sakthipriyan Vairamani <thechargingvolcano@gmail.com>
@@ -9186,10 +9186,10 @@
           // If ECMAScript 6's Number.isNaN is present, prefer that.
           module.exports = Number.isNaN || isNaN;
         },
-        {}
+        {},
       ],
       25: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           var config = require('../config');
 
           /*!
@@ -9215,10 +9215,10 @@
             );
           };
         },
-        { '../config': 4 }
+        { '../config': 4 },
       ],
       26: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - flag utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9266,10 +9266,10 @@
             }
           };
         },
-        { '../config': 4, './inspect': 23 }
+        { '../config': 4, './inspect': 23 },
       ],
       27: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - overwriteChainableMethod utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9340,10 +9340,10 @@
             };
           };
         },
-        { '../../chai': 2, './transferFlags': 32 }
+        { '../../chai': 2, './transferFlags': 32 },
       ],
       28: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - overwriteMethod utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9392,13 +9392,13 @@
 
           module.exports = function overwriteMethod(ctx, name, method) {
             var _method = ctx[name],
-              _super = function() {
+              _super = function () {
                 throw new Error(name + ' is not a function');
               };
 
             if (_method && 'function' === typeof _method) _super = _method;
 
-            var overwritingMethodWrapper = function() {
+            var overwritingMethodWrapper = function () {
               // Setting the `ssfi` flag to `overwritingMethodWrapper` causes this
               // function to be the starting point for removing implementation frames from
               // the stack trace of a failed assertion.
@@ -9441,11 +9441,11 @@
           './addLengthGuard': 10,
           './flag': 15,
           './proxify': 30,
-          './transferFlags': 32
-        }
+          './transferFlags': 32,
+        },
       ],
       29: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - overwriteProperty utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9493,7 +9493,7 @@
 
           module.exports = function overwriteProperty(ctx, name, getter) {
             var _get = Object.getOwnPropertyDescriptor(ctx, name),
-              _super = function() {};
+              _super = function () {};
 
             if (_get && 'function' === typeof _get.get) _super = _get.get;
 
@@ -9534,14 +9534,14 @@
                 transferFlags(this, newAssertion);
                 return newAssertion;
               },
-              configurable: true
+              configurable: true,
             });
           };
         },
-        { '../../chai': 2, './flag': 15, './isProxyEnabled': 25, './transferFlags': 32 }
+        { '../../chai': 2, './flag': 15, './isProxyEnabled': 25, './transferFlags': 32 },
       ],
       30: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           var config = require('../config');
           var flag = require('./flag');
           var getProperties = require('./getProperties');
@@ -9606,7 +9606,7 @@
                   // distance less than 4.
                   var suggestion = null;
                   var suggestionDistance = 4;
-                  getProperties(target).forEach(function(prop) {
+                  getProperties(target).forEach(function (prop) {
                     if (!Object.prototype.hasOwnProperty(prop) && builtins.indexOf(prop) === -1) {
                       var dist = stringDistanceCapped(property, prop, suggestionDistance);
                       if (dist < suggestionDistance) {
@@ -9642,7 +9642,7 @@
                 }
 
                 return Reflect.get(target, property);
-              }
+              },
             });
           };
 
@@ -9691,10 +9691,10 @@
             return memo[strA.length][strB.length];
           }
         },
-        { '../config': 4, './flag': 15, './getProperties': 21, './isProxyEnabled': 25 }
+        { '../config': 4, './flag': 15, './getProperties': 21, './isProxyEnabled': 25 },
       ],
       31: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - test utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9724,10 +9724,10 @@
             return negate ? !expr : expr;
           };
         },
-        { './flag': 15 }
+        { './flag': 15 },
       ],
       32: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * Chai - transferFlags utility
            * Copyright(c) 2012-2014 Jake Luer <jake@alogicalparadox.com>
@@ -9776,10 +9776,10 @@
             }
           };
         },
-        {}
+        {},
       ],
       33: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           /*!
            * assertion-error
            * Copyright(c) 2013 Jake Luer <jake@qualiancy.com>
@@ -9799,7 +9799,7 @@
             var excludes = [].slice.call(arguments);
 
             function excludeProps(res, obj) {
-              Object.keys(obj).forEach(function(key) {
+              Object.keys(obj).forEach(function (key) {
                 if (!~excludes.indexOf(key)) res[key] = obj[key];
               });
             }
@@ -9885,7 +9885,7 @@
            * @return {Object} object that can be `JSON.stringify`
            */
 
-          AssertionError.prototype.toJSON = function(stack) {
+          AssertionError.prototype.toJSON = function (stack) {
             var extend = exclude('constructor', 'toJSON', 'stack'),
               props = extend({ name: this.name }, this);
 
@@ -9897,10 +9897,10 @@
             return props;
           };
         },
-        {}
+        {},
       ],
       34: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           'use strict';
 
           /* !
@@ -10074,13 +10074,13 @@
             compatibleConstructor: compatibleConstructor,
             compatibleMessage: compatibleMessage,
             getMessage: getMessage,
-            getConstructorName: getConstructorName
+            getConstructorName: getConstructorName,
           };
         },
-        {}
+        {},
       ],
       35: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           'use strict';
           /* globals Symbol: false, Uint8Array: false, WeakMap: false */
           /*!
@@ -10102,10 +10102,10 @@
               if (Object.isExtensible(key)) {
                 Object.defineProperty(key, this._key, {
                   value: value,
-                  configurable: true
+                  configurable: true,
                 });
               }
-            }
+            },
           };
 
           var MemoizeMap = typeof WeakMap === 'function' ? WeakMap : FakeMap;
@@ -10574,10 +10574,10 @@
             return value === null || typeof value !== 'object';
           }
         },
-        { 'type-detect': 38 }
+        { 'type-detect': 38 },
       ],
       36: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           'use strict';
 
           /* !
@@ -10626,10 +10626,10 @@
 
           module.exports = getFuncName;
         },
-        {}
+        {},
       ],
       37: [
-        function(require, module, exports) {
+        function (require, module, exports) {
           'use strict';
 
           /* !
@@ -10834,7 +10834,7 @@
               parent:
                 parsed.length > 1 ? internalGetPathValue(obj, parsed, parsed.length - 1) : obj,
               name: last.p || last.i,
-              value: internalGetPathValue(obj, parsed)
+              value: internalGetPathValue(obj, parsed),
             };
             info.exists = hasProperty(info.parent, info.name);
 
@@ -10920,20 +10920,20 @@
             hasProperty: hasProperty,
             getPathInfo: getPathInfo,
             getPathValue: getPathValue,
-            setPathValue: setPathValue
+            setPathValue: setPathValue,
           };
         },
-        {}
+        {},
       ],
       38: [
-        function(require, module, exports) {
-          (function(global, factory) {
+        function (require, module, exports) {
+          (function (global, factory) {
             typeof exports === 'object' && typeof module !== 'undefined'
               ? (module.exports = factory())
               : typeof define === 'function' && define.amd
               ? define(factory)
               : (global.typeDetect = factory());
-          })(this, function() {
+          })(this, function () {
             'use strict';
 
             /* !
@@ -11328,8 +11328,8 @@
             return typeDetect;
           });
         },
-        {}
-      ]
+        {},
+      ],
     },
     {},
     [1]

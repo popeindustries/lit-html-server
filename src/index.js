@@ -105,7 +105,7 @@ export {
   EventAttributePart,
   NodePart,
   Part,
-  PropertyAttributePart
+  PropertyAttributePart,
 } from './parts.js';
 export {
   directive,
@@ -113,7 +113,7 @@ export {
   isDirective,
   isNodePart,
   nothing,
-  unsafePrefixString
+  unsafePrefixString,
 } from './shared.js';
 export {
   defaultTemplateProcessor,
@@ -128,5 +128,5 @@ export {
   html as svg,
   Template,
   templateCache,
-  TemplateResult
+  TemplateResult,
 };

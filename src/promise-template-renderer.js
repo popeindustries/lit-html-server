@@ -34,7 +34,7 @@ export function promiseTemplateRenderer(result, processor, asBuffer = false, opt
           // @ts-ignore
           stack = undefined;
           reject(err);
-        }
+        },
       },
       stack,
       0,

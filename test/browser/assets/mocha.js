@@ -1,4 +1,4 @@
-(function() {
+(function () {
   function r(e, n, t) {
     function o(i, f) {
       if (!n[i]) {
@@ -12,7 +12,7 @@
         var p = (n[i] = { exports: {} });
         e[i][0].call(
           p.exports,
-          function(r) {
+          function (r) {
             var n = e[i][1][r];
             return o(n || r);
           },
@@ -33,8 +33,8 @@
 })()(
   {
     1: [
-      function(require, module, exports) {
-        (function(process, global) {
+      function (require, module, exports) {
+        (function (process, global) {
           'use strict';
 
           /* eslint no-unused-vars: off */
@@ -75,12 +75,12 @@
            * Revert to original onerror handler if previously defined.
            */
 
-          process.removeListener = function(e, fn) {
+          process.removeListener = function (e, fn) {
             if (e === 'uncaughtException') {
               if (originalOnerrorHandler) {
                 global.onerror = originalOnerrorHandler;
               } else {
-                global.onerror = function() {};
+                global.onerror = function () {};
               }
               var i = uncaughtExceptionHandlers.indexOf(fn);
               if (i !== -1) {
@@ -93,9 +93,9 @@
            * Implements uncaughtException listener.
            */
 
-          process.on = function(e, fn) {
+          process.on = function (e, fn) {
             if (e === 'uncaughtException') {
-              global.onerror = function(err, url, line) {
+              global.onerror = function (err, url, line) {
                 fn(new Error(err + ' (' + url + ':' + line + ')'));
                 return !mocha.allowUncaught;
               };
@@ -127,7 +127,7 @@
            * High-performance override of Runner.immediately.
            */
 
-          Mocha.Runner.immediately = function(callback) {
+          Mocha.Runner.immediately = function (callback) {
             immediateQueue.push(callback);
             if (!immediateTimeout) {
               immediateTimeout = setTimeout(timeslice, 0);
@@ -139,8 +139,8 @@
            * This is useful when running tests in a browser because window.onerror will
            * only receive the 'message' attribute of the Error.
            */
-          mocha.throwError = function(err) {
-            uncaughtExceptionHandlers.forEach(function(fn) {
+          mocha.throwError = function (err) {
+            uncaughtExceptionHandlers.forEach(function (fn) {
               fn(err);
             });
             throw err;
@@ -151,7 +151,7 @@
            * Normally this would happen in Mocha.prototype.loadFiles.
            */
 
-          mocha.ui = function(ui) {
+          mocha.ui = function (ui) {
             Mocha.prototype.ui.call(this, ui);
             this.suite.emit('pre-require', global, null, this);
             return this;
@@ -161,7 +161,7 @@
            * Setup mocha with the given setting options.
            */
 
-          mocha.setup = function(opts) {
+          mocha.setup = function (opts) {
             if (typeof opts === 'string') {
               opts = { ui: opts };
             }
@@ -177,7 +177,7 @@
            * Run mocha, returning the Runner.
            */
 
-          mocha.run = function(fn) {
+          mocha.run = function (fn) {
             var options = mocha.options;
             mocha.globals('location');
 
@@ -192,7 +192,7 @@
               mocha.invert();
             }
 
-            return Mocha.prototype.run.call(mocha, function(err) {
+            return Mocha.prototype.run.call(mocha, function (err) {
               // The DOM Document is not available in Web Workers.
               var document = global.document;
               if (document && document.getElementById('mocha') && options.noHighlighting !== true) {
@@ -234,11 +234,11 @@
             : {}
         ));
       },
-      { './lib/mocha': 14, _process: 69, 'browser-stdout': 41 }
+      { './lib/mocha': 14, _process: 69, 'browser-stdout': 41 },
     ],
     2: [
-      function(require, module, exports) {
-        (function(process, global) {
+      function (require, module, exports) {
+        (function (process, global) {
           'use strict';
 
           /**
@@ -263,7 +263,7 @@
            * @see {@link Mocha#isGrowlCapable}
            * @return {boolean} whether browser notification support exists
            */
-          exports.isCapable = function() {
+          exports.isCapable = function () {
             var hasNotificationSupport = 'Notification' in window;
             var hasPromiseSupport = typeof Promise === 'function';
             return process.browser && hasNotificationSupport && hasPromiseSupport;
@@ -279,17 +279,17 @@
            * @see {@link Mocha#_growl}
            * @param {Runner} runner - Runner instance.
            */
-          exports.notify = function(runner) {
+          exports.notify = function (runner) {
             var promise = isPermitted();
 
             /**
              * Attempt notification.
              */
-            var sendNotification = function() {
+            var sendNotification = function () {
               // If user hasn't responded yet... "No notification for you!" (Seinfeld)
               Promise.race([promise, Promise.resolve(undefined)])
                 .then(canNotify)
-                .then(function() {
+                .then(function () {
                   display(runner);
                 })
                 .catch(notPermitted);
@@ -317,10 +317,10 @@
                 return Promise.resolve(false);
               },
               default: function ask() {
-                return Notification.requestPermission().then(function(permission) {
+                return Notification.requestPermission().then(function (permission) {
                   return permission === 'granted';
                 });
-              }
+              },
             };
 
             return permitted[Notification.permission]();
@@ -363,7 +363,7 @@
             var stats = runner.stats;
             var symbol = {
               cross: '\u274C',
-              tick: '\u2705'
+              tick: '\u2705',
             };
             var logo = require('../../package').notifyLogo;
             var _message;
@@ -389,7 +389,7 @@
               lang: 'en-US',
               name: 'mocha',
               requireInteraction: false,
-              timestamp: Date.now()
+              timestamp: Date.now(),
             };
             var notification = new Notification(title, options);
 
@@ -419,10 +419,10 @@
             : {}
         ));
       },
-      { '../../package': 90, '../runner': 34, _process: 69 }
+      { '../../package': 90, '../runner': 34, _process: 69 },
     ],
     3: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         /**
@@ -448,7 +448,7 @@
          * @param {number} size
          * @return {Progress} Progress instance.
          */
-        Progress.prototype.size = function(size) {
+        Progress.prototype.size = function (size) {
           this._size = size;
           return this;
         };
@@ -460,7 +460,7 @@
          * @param {string} text
          * @return {Progress} Progress instance.
          */
-        Progress.prototype.text = function(text) {
+        Progress.prototype.text = function (text) {
           this._text = text;
           return this;
         };
@@ -472,7 +472,7 @@
          * @param {number} size
          * @return {Progress} Progress instance.
          */
-        Progress.prototype.fontSize = function(size) {
+        Progress.prototype.fontSize = function (size) {
           this._fontSize = size;
           return this;
         };
@@ -483,7 +483,7 @@
          * @param {string} family
          * @return {Progress} Progress instance.
          */
-        Progress.prototype.font = function(family) {
+        Progress.prototype.font = function (family) {
           this._font = family;
           return this;
         };
@@ -494,7 +494,7 @@
          * @param {number} n
          * @return {Progress} Progress instance.
          */
-        Progress.prototype.update = function(n) {
+        Progress.prototype.update = function (n) {
           this.percent = n;
           return this;
         };
@@ -505,7 +505,7 @@
          * @param {CanvasRenderingContext2d} ctx
          * @return {Progress} Progress instance.
          */
-        Progress.prototype.draw = function(ctx) {
+        Progress.prototype.draw = function (ctx) {
           try {
             var percent = Math.min(this.percent, 100);
             var size = this._size;
@@ -543,11 +543,11 @@
           return this;
         };
       },
-      {}
+      {},
     ],
     4: [
-      function(require, module, exports) {
-        (function(global) {
+      function (require, module, exports) {
+        (function (global) {
           'use strict';
 
           exports.isatty = function isatty() {
@@ -572,10 +572,10 @@
             : {}
         ));
       },
-      {}
+      {},
     ],
     5: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
         /**
          * @module Context
@@ -600,7 +600,7 @@
          * @param {Runnable} runnable
          * @return {Context} context
          */
-        Context.prototype.runnable = function(runnable) {
+        Context.prototype.runnable = function (runnable) {
           if (!arguments.length) {
             return this._runnable;
           }
@@ -615,7 +615,7 @@
          * @param {number} ms
          * @return {Context} self
          */
-        Context.prototype.timeout = function(ms) {
+        Context.prototype.timeout = function (ms) {
           if (!arguments.length) {
             return this.runnable().timeout();
           }
@@ -630,7 +630,7 @@
          * @param {boolean} enabled
          * @return {Context} self
          */
-        Context.prototype.enableTimeouts = function(enabled) {
+        Context.prototype.enableTimeouts = function (enabled) {
           if (!arguments.length) {
             return this.runnable().enableTimeouts();
           }
@@ -645,7 +645,7 @@
          * @param {number} ms
          * @return {Context} self
          */
-        Context.prototype.slow = function(ms) {
+        Context.prototype.slow = function (ms) {
           if (!arguments.length) {
             return this.runnable().slow();
           }
@@ -659,7 +659,7 @@
          * @private
          * @throws Pending
          */
-        Context.prototype.skip = function() {
+        Context.prototype.skip = function () {
           this.runnable().skip();
         };
 
@@ -670,7 +670,7 @@
          * @param {number} n
          * @return {Context} self
          */
-        Context.prototype.retries = function(n) {
+        Context.prototype.retries = function (n) {
           if (!arguments.length) {
             return this.runnable().retries();
           }
@@ -678,10 +678,10 @@
           return this;
         };
       },
-      {}
+      {},
     ],
     6: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
         /**
          * @module Errors
@@ -821,13 +821,13 @@
           createInvalidReporterError: createInvalidReporterError,
           createMissingArgumentError: createMissingArgumentError,
           createNoFilesMatchPatternError: createNoFilesMatchPatternError,
-          createUnsupportedError: createUnsupportedError
+          createUnsupportedError: createUnsupportedError,
         };
       },
-      {}
+      {},
     ],
     7: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var Runnable = require('./runnable');
@@ -865,7 +865,7 @@
          * @param {Error} err
          * @return {Error}
          */
-        Hook.prototype.error = function(err) {
+        Hook.prototype.error = function (err) {
           if (!arguments.length) {
             err = this._error;
             this._error = null;
@@ -875,10 +875,10 @@
           this._error = err;
         };
       },
-      { './runnable': 33, './utils': 38 }
+      { './runnable': 33, './utils': 38 },
     ],
     8: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var Test = require('../test');
@@ -904,7 +904,7 @@
         module.exports = function bddInterface(suite) {
           var suites = [suite];
 
-          suite.on(EVENT_FILE_PRE_REQUIRE, function(context, file, mocha) {
+          suite.on(EVENT_FILE_PRE_REQUIRE, function (context, file, mocha) {
             var common = require('./common')(suites, context, mocha);
 
             context.before = common.before;
@@ -918,11 +918,11 @@
              * and/or tests.
              */
 
-            context.describe = context.context = function(title, fn) {
+            context.describe = context.context = function (title, fn) {
               return common.suite.create({
                 title: title,
                 file: file,
-                fn: fn
+                fn: fn,
               });
             };
 
@@ -930,11 +930,11 @@
              * Pending describe.
              */
 
-            context.xdescribe = context.xcontext = context.describe.skip = function(title, fn) {
+            context.xdescribe = context.xcontext = context.describe.skip = function (title, fn) {
               return common.suite.skip({
                 title: title,
                 file: file,
-                fn: fn
+                fn: fn,
               });
             };
 
@@ -942,11 +942,11 @@
              * Exclusive suite.
              */
 
-            context.describe.only = function(title, fn) {
+            context.describe.only = function (title, fn) {
               return common.suite.only({
                 title: title,
                 file: file,
-                fn: fn
+                fn: fn,
               });
             };
 
@@ -956,7 +956,7 @@
              * acting as a thunk.
              */
 
-            context.it = context.specify = function(title, fn) {
+            context.it = context.specify = function (title, fn) {
               var suite = suites[0];
               if (suite.isPending()) {
                 fn = null;
@@ -971,7 +971,7 @@
              * Exclusive test-case.
              */
 
-            context.it.only = function(title, fn) {
+            context.it.only = function (title, fn) {
               return common.test.only(mocha, context.it(title, fn));
             };
 
@@ -979,14 +979,14 @@
              * Pending test case.
              */
 
-            context.xit = context.xspecify = context.it.skip = function(title) {
+            context.xit = context.xspecify = context.it.skip = function (title) {
               return context.it(title);
             };
 
             /**
              * Number of attempts to retry.
              */
-            context.it.retries = function(n) {
+            context.it.retries = function (n) {
               context.retries(n);
             };
           });
@@ -994,10 +994,10 @@
 
         module.exports.description = 'BDD or RSpec style [default]';
       },
-      { '../suite': 36, '../test': 37, './common': 9 }
+      { '../suite': 36, '../test': 37, './common': 9 },
     ],
     9: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var Suite = require('../suite');
@@ -1012,7 +1012,7 @@
          * @param {Mocha} mocha
          * @return {Object} An object containing common functions.
          */
-        module.exports = function(suites, context, mocha) {
+        module.exports = function (suites, context, mocha) {
           /**
            * Check if the suite should be tested.
            *
@@ -1049,7 +1049,7 @@
              * @param {string} name
              * @param {Function} fn
              */
-            before: function(name, fn) {
+            before: function (name, fn) {
               suites[0].beforeAll(name, fn);
             },
 
@@ -1059,7 +1059,7 @@
              * @param {string} name
              * @param {Function} fn
              */
-            after: function(name, fn) {
+            after: function (name, fn) {
               suites[0].afterAll(name, fn);
             },
 
@@ -1069,7 +1069,7 @@
              * @param {string} name
              * @param {Function} fn
              */
-            beforeEach: function(name, fn) {
+            beforeEach: function (name, fn) {
               suites[0].beforeEach(name, fn);
             },
 
@@ -1079,7 +1079,7 @@
              * @param {string} name
              * @param {Function} fn
              */
-            afterEach: function(name, fn) {
+            afterEach: function (name, fn) {
               suites[0].afterEach(name, fn);
             },
 
@@ -1153,7 +1153,7 @@
                 }
 
                 return suite;
-              }
+              },
             },
 
             test: {
@@ -1164,7 +1164,7 @@
                * @param {Function} test
                * @returns {*}
                */
-              only: function(mocha, test) {
+              only: function (mocha, test) {
                 test.parent.appendOnlyTest(test);
                 return test;
               },
@@ -1174,7 +1174,7 @@
                *
                * @param {string} title
                */
-              skip: function(title) {
+              skip: function (title) {
                 context.test(title);
               },
 
@@ -1183,17 +1183,17 @@
                *
                * @param {number} n
                */
-              retries: function(n) {
+              retries: function (n) {
                 context.retries(n);
-              }
-            }
+              },
+            },
           };
         };
       },
-      { '../errors': 6, '../suite': 36 }
+      { '../errors': 6, '../suite': 36 },
     ],
     10: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
         var Suite = require('../suite');
         var Test = require('../test');
@@ -1215,7 +1215,7 @@
          *
          * @param {Suite} suite Root suite.
          */
-        module.exports = function(suite) {
+        module.exports = function (suite) {
           var suites = [suite];
 
           suite.on(Suite.constants.EVENT_FILE_REQUIRE, visit);
@@ -1255,10 +1255,10 @@
 
         module.exports.description = 'Node.js module ("exports") style';
       },
-      { '../suite': 36, '../test': 37 }
+      { '../suite': 36, '../test': 37 },
     ],
     11: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         exports.bdd = require('./bdd');
@@ -1266,10 +1266,10 @@
         exports.qunit = require('./qunit');
         exports.exports = require('./exports');
       },
-      { './bdd': 8, './exports': 10, './qunit': 12, './tdd': 13 }
+      { './bdd': 8, './exports': 10, './qunit': 12, './tdd': 13 },
     ],
     12: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var Test = require('../test');
@@ -1303,7 +1303,7 @@
         module.exports = function qUnitInterface(suite) {
           var suites = [suite];
 
-          suite.on(EVENT_FILE_PRE_REQUIRE, function(context, file, mocha) {
+          suite.on(EVENT_FILE_PRE_REQUIRE, function (context, file, mocha) {
             var common = require('./common')(suites, context, mocha);
 
             context.before = common.before;
@@ -1315,14 +1315,14 @@
              * Describe a "suite" with the given `title`.
              */
 
-            context.suite = function(title) {
+            context.suite = function (title) {
               if (suites.length > 1) {
                 suites.shift();
               }
               return common.suite.create({
                 title: title,
                 file: file,
-                fn: false
+                fn: false,
               });
             };
 
@@ -1330,14 +1330,14 @@
              * Exclusive Suite.
              */
 
-            context.suite.only = function(title) {
+            context.suite.only = function (title) {
               if (suites.length > 1) {
                 suites.shift();
               }
               return common.suite.only({
                 title: title,
                 file: file,
-                fn: false
+                fn: false,
               });
             };
 
@@ -1347,7 +1347,7 @@
              * acting as a thunk.
              */
 
-            context.test = function(title, fn) {
+            context.test = function (title, fn) {
               var test = new Test(title, fn);
               test.file = file;
               suites[0].addTest(test);
@@ -1358,7 +1358,7 @@
              * Exclusive test-case.
              */
 
-            context.test.only = function(title, fn) {
+            context.test.only = function (title, fn) {
               return common.test.only(mocha, context.test(title, fn));
             };
 
@@ -1369,10 +1369,10 @@
 
         module.exports.description = 'QUnit style';
       },
-      { '../suite': 36, '../test': 37, './common': 9 }
+      { '../suite': 36, '../test': 37, './common': 9 },
     ],
     13: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var Test = require('../test');
@@ -1403,10 +1403,10 @@
          *
          * @param {Suite} suite Root suite.
          */
-        module.exports = function(suite) {
+        module.exports = function (suite) {
           var suites = [suite];
 
-          suite.on(EVENT_FILE_PRE_REQUIRE, function(context, file, mocha) {
+          suite.on(EVENT_FILE_PRE_REQUIRE, function (context, file, mocha) {
             var common = require('./common')(suites, context, mocha);
 
             context.setup = common.beforeEach;
@@ -1419,33 +1419,33 @@
              * Describe a "suite" with the given `title` and callback `fn` containing
              * nested suites and/or tests.
              */
-            context.suite = function(title, fn) {
+            context.suite = function (title, fn) {
               return common.suite.create({
                 title: title,
                 file: file,
-                fn: fn
+                fn: fn,
               });
             };
 
             /**
              * Pending suite.
              */
-            context.suite.skip = function(title, fn) {
+            context.suite.skip = function (title, fn) {
               return common.suite.skip({
                 title: title,
                 file: file,
-                fn: fn
+                fn: fn,
               });
             };
 
             /**
              * Exclusive test-case.
              */
-            context.suite.only = function(title, fn) {
+            context.suite.only = function (title, fn) {
               return common.suite.only({
                 title: title,
                 file: file,
-                fn: fn
+                fn: fn,
               });
             };
 
@@ -1453,7 +1453,7 @@
              * Describe a specification or test-case with the given `title` and
              * callback `fn` acting as a thunk.
              */
-            context.test = function(title, fn) {
+            context.test = function (title, fn) {
               var suite = suites[0];
               if (suite.isPending()) {
                 fn = null;
@@ -1468,7 +1468,7 @@
              * Exclusive test-case.
              */
 
-            context.test.only = function(title, fn) {
+            context.test.only = function (title, fn) {
               return common.test.only(mocha, context.test(title, fn));
             };
 
@@ -1479,11 +1479,11 @@
 
         module.exports.description = 'traditional "suite"/"test" instead of BDD\'s "describe"/"it"';
       },
-      { '../suite': 36, '../test': 37, './common': 9 }
+      { '../suite': 36, '../test': 37, './common': 9 },
     ],
     14: [
-      function(require, module, exports) {
-        (function(process, global) {
+      function (require, module, exports) {
+        (function (process, global) {
           'use strict';
 
           /*!
@@ -1637,8 +1637,8 @@
               'forbidPending',
               'fullTrace',
               'growl',
-              'invert'
-            ].forEach(function(opt) {
+              'invert',
+            ].forEach(function (opt) {
               if (options[opt]) {
                 this[opt]();
               }
@@ -1654,7 +1654,7 @@
            * @returns {Mocha} this
            * @chainable
            */
-          Mocha.prototype.bail = function(bail) {
+          Mocha.prototype.bail = function (bail) {
             if (!arguments.length) {
               bail = true;
             }
@@ -1675,7 +1675,7 @@
            * @returns {Mocha} this
            * @chainable
            */
-          Mocha.prototype.addFile = function(file) {
+          Mocha.prototype.addFile = function (file) {
             this.files.push(file);
             return this;
           };
@@ -1696,7 +1696,7 @@
            * // Use XUnit reporter and direct its output to file
            * mocha.reporter('xunit', { output: '/path/to/testspec.xunit.xml' });
            */
-          Mocha.prototype.reporter = function(reporter, reporterOptions) {
+          Mocha.prototype.reporter = function (reporter, reporterOptions) {
             if (typeof reporter === 'function') {
               this._reporter = reporter;
             } else {
@@ -1751,7 +1751,7 @@
            * @chainable
            * @throws {Error} if requested interface cannot be loaded
            */
-          Mocha.prototype.ui = function(ui) {
+          Mocha.prototype.ui = function (ui) {
             var bindInterface;
             if (typeof ui === 'function') {
               bindInterface = ui;
@@ -1768,7 +1768,7 @@
             }
             bindInterface(this.suite);
 
-            this.suite.on(EVENT_FILE_PRE_REQUIRE, function(context) {
+            this.suite.on(EVENT_FILE_PRE_REQUIRE, function (context) {
               exports.afterEach = context.afterEach || context.teardown;
               exports.after = context.after || context.suiteTeardown;
               exports.beforeEach = context.beforeEach || context.setup;
@@ -1801,10 +1801,10 @@
            * @see {@link Mocha#unloadFiles}
            * @param {Function} [fn] - Callback invoked upon completion.
            */
-          Mocha.prototype.loadFiles = function(fn) {
+          Mocha.prototype.loadFiles = function (fn) {
             var self = this;
             var suite = this.suite;
-            this.files.forEach(function(file) {
+            this.files.forEach(function (file) {
               file = path.resolve(file);
               suite.emit(EVENT_FILE_PRE_REQUIRE, global, file, self);
               suite.emit(EVENT_FILE_REQUIRE, require(file), file, self);
@@ -1821,7 +1821,7 @@
            * @see {@link Mocha#unloadFiles}
            * @param {string} file - Pathname of file to be unloaded.
            */
-          Mocha.unloadFile = function(file) {
+          Mocha.unloadFile = function (file) {
             delete require.cache[require.resolve(file)];
           };
 
@@ -1841,7 +1841,7 @@
            * @returns {Mocha} this
            * @chainable
            */
-          Mocha.prototype.unloadFiles = function() {
+          Mocha.prototype.unloadFiles = function () {
             this.files.forEach(Mocha.unloadFile);
             return this;
           };
@@ -1859,7 +1859,7 @@
            * // Select tests whose full title begins with `"foo"` followed by a period
            * mocha.fgrep('foo.');
            */
-          Mocha.prototype.fgrep = function(str) {
+          Mocha.prototype.fgrep = function (str) {
             if (!str) {
               return this;
             }
@@ -1900,7 +1900,7 @@
            * // Given embedded test `it('only-this-test')`...
            * mocha.grep('/^only-this-test$/');    // NO! Use `.only()` to do this!
            */
-          Mocha.prototype.grep = function(re) {
+          Mocha.prototype.grep = function (re) {
             if (utils.isString(re)) {
               // extract args if it's regex-like, i.e: [string, pattern, flag]
               var arg = re.match(/^\/(.*)\/(g|i|)$|.*/);
@@ -1923,7 +1923,7 @@
            * // Select tests whose full title does *not* contain `"match"`, ignoring case
            * mocha.grep(/match/i).invert();
            */
-          Mocha.prototype.invert = function() {
+          Mocha.prototype.invert = function () {
             this.options.invert = true;
             return this;
           };
@@ -1941,7 +1941,7 @@
            * // Ignore global leaks
            * mocha.ignoreLeaks(true);
            */
-          Mocha.prototype.ignoreLeaks = function(ignoreLeaks) {
+          Mocha.prototype.ignoreLeaks = function (ignoreLeaks) {
             this.options.ignoreLeaks = Boolean(ignoreLeaks);
             return this;
           };
@@ -1955,7 +1955,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.checkLeaks = function() {
+          Mocha.prototype.checkLeaks = function () {
             this.options.ignoreLeaks = false;
             return this;
           };
@@ -1967,7 +1967,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.fullTrace = function() {
+          Mocha.prototype.fullTrace = function () {
             this.options.fullStackTrace = true;
             return this;
           };
@@ -1981,7 +1981,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.growl = function() {
+          Mocha.prototype.growl = function () {
             this.options.growl = this.isGrowlCapable();
             if (!this.options.growl) {
               var detail = process.browser
@@ -2030,11 +2030,11 @@
            * // Specify variables to be expected in global scope
            * mocha.globals(['jQuery', 'MyLib']);
            */
-          Mocha.prototype.globals = function(globals) {
+          Mocha.prototype.globals = function (globals) {
             this.options.globals = this.options.globals
               .concat(globals)
               .filter(Boolean)
-              .filter(function(elt, idx, arr) {
+              .filter(function (elt, idx, arr) {
                 return arr.indexOf(elt) === idx;
               });
             return this;
@@ -2048,7 +2048,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.useColors = function(colors) {
+          Mocha.prototype.useColors = function (colors) {
             if (colors !== undefined) {
               this.options.useColors = colors;
             }
@@ -2064,7 +2064,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.useInlineDiffs = function(inlineDiffs) {
+          Mocha.prototype.useInlineDiffs = function (inlineDiffs) {
             this.options.useInlineDiffs = inlineDiffs !== undefined && inlineDiffs;
             return this;
           };
@@ -2077,7 +2077,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.hideDiff = function(hideDiff) {
+          Mocha.prototype.hideDiff = function (hideDiff) {
             this.options.hideDiff = hideDiff !== undefined && hideDiff;
             return this;
           };
@@ -2106,7 +2106,7 @@
            * // Same as above but using string argument
            * mocha.timeout('1s');
            */
-          Mocha.prototype.timeout = function(msecs) {
+          Mocha.prototype.timeout = function (msecs) {
             this.suite.timeout(msecs);
             return this;
           };
@@ -2124,7 +2124,7 @@
            * // Allow any failed test to retry one more time
            * mocha.retries(1);
            */
-          Mocha.prototype.retries = function(n) {
+          Mocha.prototype.retries = function (n) {
             this.suite.retries(n);
             return this;
           };
@@ -2146,7 +2146,7 @@
            * // Same as above but using string argument
            * mocha.slow('0.5s');
            */
-          Mocha.prototype.slow = function(msecs) {
+          Mocha.prototype.slow = function (msecs) {
             this.suite.slow(msecs);
             return this;
           };
@@ -2160,7 +2160,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.enableTimeouts = function(enableTimeouts) {
+          Mocha.prototype.enableTimeouts = function (enableTimeouts) {
             this.suite.enableTimeouts(
               arguments.length && enableTimeouts !== undefined ? enableTimeouts : true
             );
@@ -2174,7 +2174,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.asyncOnly = function() {
+          Mocha.prototype.asyncOnly = function () {
             this.options.asyncOnly = true;
             return this;
           };
@@ -2186,7 +2186,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.noHighlighting = function() {
+          Mocha.prototype.noHighlighting = function () {
             this.options.noHighlighting = true;
             return this;
           };
@@ -2198,7 +2198,7 @@
            * @return {Mocha} this
            * @chainable
            */
-          Mocha.prototype.allowUncaught = function() {
+          Mocha.prototype.allowUncaught = function () {
             this.options.allowUncaught = true;
             return this;
           };
@@ -2227,7 +2227,7 @@
            * @returns {Mocha} this
            * @chainable
            */
-          Mocha.prototype.forbidOnly = function() {
+          Mocha.prototype.forbidOnly = function () {
             this.options.forbidOnly = true;
             return this;
           };
@@ -2239,7 +2239,7 @@
            * @returns {Mocha} this
            * @chainable
            */
-          Mocha.prototype.forbidPending = function() {
+          Mocha.prototype.forbidPending = function () {
             this.options.forbidPending = true;
             return this;
           };
@@ -2255,7 +2255,7 @@
             value: require('../package.json').version,
             configurable: false,
             enumerable: true,
-            writable: false
+            writable: false,
           });
 
           /**
@@ -2280,7 +2280,7 @@
            * @param {DoneCB} [fn] - Callback invoked when test execution completed.
            * @return {Runner} runner instance
            */
-          Mocha.prototype.run = function(fn) {
+          Mocha.prototype.run = function (fn) {
             if (this.files.length) {
               this.loadFiles();
             }
@@ -2351,11 +2351,11 @@
         './utils': 38,
         _process: 69,
         'escape-string-regexp': 49,
-        path: 42
-      }
+        path: 42,
+      },
     ],
     15: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         module.exports = {
           diff: true,
           extension: ['js'],
@@ -2364,13 +2364,13 @@
           reporter: 'spec',
           slow: 75,
           timeout: 2000,
-          ui: 'bdd'
+          ui: 'bdd',
         };
       },
-      {}
+      {},
     ],
     16: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         module.exports = Pending;
@@ -2384,11 +2384,11 @@
           this.message = message;
         }
       },
-      {}
+      {},
     ],
     17: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module Base
@@ -2459,7 +2459,7 @@
             light: 90,
             'diff gutter': 90,
             'diff added': 32,
-            'diff removed': 31
+            'diff removed': 31,
           };
 
           /**
@@ -2471,7 +2471,7 @@
             err: '✖',
             dot: '․',
             comma: ',',
-            bang: '!'
+            bang: '!',
           };
 
           // With node.js on Windows: use symbols available in terminal default fonts
@@ -2492,7 +2492,7 @@
            * @param {string} str
            * @return {string}
            */
-          var color = (exports.color = function(type, str) {
+          var color = (exports.color = function (type, str) {
             if (!exports.useColors) {
               return String(str);
             }
@@ -2504,7 +2504,7 @@
            */
 
           exports.window = {
-            width: 75
+            width: 75,
           };
 
           if (isatty) {
@@ -2518,30 +2518,30 @@
            */
 
           exports.cursor = {
-            hide: function() {
+            hide: function () {
               isatty && process.stdout.write('\u001b[?25l');
             },
 
-            show: function() {
+            show: function () {
               isatty && process.stdout.write('\u001b[?25h');
             },
 
-            deleteLine: function() {
+            deleteLine: function () {
               isatty && process.stdout.write('\u001b[2K');
             },
 
-            beginningOfLine: function() {
+            beginningOfLine: function () {
               isatty && process.stdout.write('\u001b[0G');
             },
 
-            CR: function() {
+            CR: function () {
               if (isatty) {
                 exports.cursor.deleteLine();
                 exports.cursor.beginningOfLine();
               } else {
                 process.stdout.write('\r');
               }
-            }
+            },
           };
 
           function showDiff(err) {
@@ -2571,7 +2571,7 @@
            * @param {string} expected
            * @return {string} Diff
            */
-          var generateDiff = (exports.generateDiff = function(actual, expected) {
+          var generateDiff = (exports.generateDiff = function (actual, expected) {
             return exports.inlineDiffs
               ? inlineDiff(actual, expected)
               : unifiedDiff(actual, expected);
@@ -2586,10 +2586,10 @@
            * @param {Object[]} failures - Each is Test instance with corresponding
            *     Error property
            */
-          exports.list = function(failures) {
+          exports.list = function (failures) {
             var multipleErr, multipleTest;
             Base.consoleLog();
-            failures.forEach(function(test, i) {
+            failures.forEach(function (test, i) {
               // format
               var fmt =
                 color('error title', '  %s) %s:\n') +
@@ -2647,7 +2647,7 @@
 
               // indented test title
               var testTitle = '';
-              test.titlePath().forEach(function(str, index) {
+              test.titlePath().forEach(function (str, index) {
                 if (index !== 0) {
                   testTitle += '\n     ';
                 }
@@ -2683,7 +2683,7 @@
             this.runner = runner;
             this.stats = runner.stats; // assigned so Reporters keep a closer reference
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               if (test.duration > test.slow()) {
                 test.speed = 'slow';
               } else if (test.duration > test.slow() / 2) {
@@ -2693,7 +2693,7 @@
               }
             });
 
-            runner.on(EVENT_TEST_FAIL, function(test, err) {
+            runner.on(EVENT_TEST_FAIL, function (test, err) {
               if (showDiff(err)) {
                 stringifyDiffObjs(err);
               }
@@ -2713,7 +2713,7 @@
            * @public
            * @memberof Mocha.reporters
            */
-          Base.prototype.epilogue = function() {
+          Base.prototype.epilogue = function () {
             var stats = this.stats;
             var fmt;
 
@@ -2774,7 +2774,7 @@
             if (lines.length > 4) {
               var width = String(lines.length).length;
               msg = lines
-                .map(function(str, i) {
+                .map(function (str, i) {
                   return pad(++i, width) + ' |' + ' ' + str;
                 })
                 .join('\n');
@@ -2831,10 +2831,7 @@
               ' ' +
               colorLines('diff removed', '- actual') +
               '\n\n' +
-              lines
-                .map(cleanUp)
-                .filter(notBlank)
-                .join('\n')
+              lines.map(cleanUp).filter(notBlank).join('\n')
             );
           }
 
@@ -2849,7 +2846,7 @@
           function errorDiff(actual, expected) {
             return diff
               .diffWordsWithSpace(actual, expected)
-              .map(function(str) {
+              .map(function (str) {
                 if (str.added) {
                   return colorLines('diff added', str.value);
                 }
@@ -2872,7 +2869,7 @@
           function colorLines(name, str) {
             return str
               .split('\n')
-              .map(function(str) {
+              .map(function (str) {
                 return color(name, str);
               })
               .join('\n');
@@ -2907,11 +2904,11 @@
         diff: 48,
         ms: 60,
         'supports-color': 42,
-        tty: 4
-      }
+        tty: 4,
+      },
     ],
     18: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
         /**
          * @module Doc
@@ -2953,7 +2950,7 @@
             return Array(indents).join('  ');
           }
 
-          runner.on(EVENT_SUITE_BEGIN, function(suite) {
+          runner.on(EVENT_SUITE_BEGIN, function (suite) {
             if (suite.root) {
               return;
             }
@@ -2964,7 +2961,7 @@
             Base.consoleLog('%s<dl>', indent());
           });
 
-          runner.on(EVENT_SUITE_END, function(suite) {
+          runner.on(EVENT_SUITE_END, function (suite) {
             if (suite.root) {
               return;
             }
@@ -2974,13 +2971,13 @@
             --indents;
           });
 
-          runner.on(EVENT_TEST_PASS, function(test) {
+          runner.on(EVENT_TEST_PASS, function (test) {
             Base.consoleLog('%s  <dt>%s</dt>', indent(), utils.escape(test.title));
             var code = utils.escape(utils.clean(test.body));
             Base.consoleLog('%s  <dd><pre><code>%s</code></pre></dd>', indent(), code);
           });
 
-          runner.on(EVENT_TEST_FAIL, function(test, err) {
+          runner.on(EVENT_TEST_FAIL, function (test, err) {
             Base.consoleLog('%s  <dt class="error">%s</dt>', indent(), utils.escape(test.title));
             var code = utils.escape(utils.clean(test.body));
             Base.consoleLog(
@@ -2994,11 +2991,11 @@
 
         Doc.description = 'HTML documentation';
       },
-      { '../runner': 34, '../utils': 38, './base': 17 }
+      { '../runner': 34, '../utils': 38, './base': 17 },
     ],
     19: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module Dot
@@ -3039,18 +3036,18 @@
             var width = (Base.window.width * 0.75) | 0;
             var n = -1;
 
-            runner.on(EVENT_RUN_BEGIN, function() {
+            runner.on(EVENT_RUN_BEGIN, function () {
               process.stdout.write('\n');
             });
 
-            runner.on(EVENT_TEST_PENDING, function() {
+            runner.on(EVENT_TEST_PENDING, function () {
               if (++n % width === 0) {
                 process.stdout.write('\n  ');
               }
               process.stdout.write(Base.color('pending', Base.symbols.comma));
             });
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               if (++n % width === 0) {
                 process.stdout.write('\n  ');
               }
@@ -3061,14 +3058,14 @@
               }
             });
 
-            runner.on(EVENT_TEST_FAIL, function() {
+            runner.on(EVENT_TEST_FAIL, function () {
               if (++n % width === 0) {
                 process.stdout.write('\n  ');
               }
               process.stdout.write(Base.color('fail', Base.symbols.bang));
             });
 
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               process.stdout.write('\n');
               self.epilogue();
             });
@@ -3082,11 +3079,11 @@
           Dot.description = 'dot matrix representation';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 }
+      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 },
     ],
     20: [
-      function(require, module, exports) {
-        (function(global) {
+      function (require, module, exports) {
+        (function (global) {
           'use strict';
 
           /* eslint-env browser */
@@ -3180,7 +3177,7 @@
             }
 
             // pass toggle
-            on(passesLink, 'click', function(evt) {
+            on(passesLink, 'click', function (evt) {
               evt.preventDefault();
               unhide();
               var name = /pass/.test(report.className) ? '' : ' pass';
@@ -3191,7 +3188,7 @@
             });
 
             // failure toggle
-            on(failuresLink, 'click', function(evt) {
+            on(failuresLink, 'click', function (evt) {
               evt.preventDefault();
               unhide();
               var name = /fail/.test(report.className) ? '' : ' fail';
@@ -3208,7 +3205,7 @@
               progress.size(40);
             }
 
-            runner.on(EVENT_SUITE_BEGIN, function(suite) {
+            runner.on(EVENT_SUITE_BEGIN, function (suite) {
               if (suite.root) {
                 return;
               }
@@ -3227,7 +3224,7 @@
               el.appendChild(stack[0]);
             });
 
-            runner.on(EVENT_SUITE_END, function(suite) {
+            runner.on(EVENT_SUITE_END, function (suite) {
               if (suite.root) {
                 updateStats();
                 return;
@@ -3235,7 +3232,7 @@
               stack.shift();
             });
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               var url = self.testURL(test);
               var markup =
                 '<li class="test pass %e"><h2>%e<span class="duration">%ems</span> ' +
@@ -3248,7 +3245,7 @@
               updateStats();
             });
 
-            runner.on(EVENT_TEST_FAIL, function(test) {
+            runner.on(EVENT_TEST_FAIL, function (test) {
               var el = fragment(
                 '<li class="test fail"><h2>%e <a href="%e" class="replay">' +
                   playIcon +
@@ -3298,7 +3295,7 @@
               updateStats();
             });
 
-            runner.on(EVENT_TEST_PENDING, function(test) {
+            runner.on(EVENT_TEST_PENDING, function (test) {
               var el = fragment('<li class="test pass pending"><h2>%e</h2></li>', test.title);
               appendToStack(el);
               updateStats();
@@ -3353,7 +3350,7 @@
            *
            * @param {Object} [suite]
            */
-          HTML.prototype.suiteURL = function(suite) {
+          HTML.prototype.suiteURL = function (suite) {
             return makeUrl(suite.fullTitle());
           };
 
@@ -3362,7 +3359,7 @@
            *
            * @param {Object} [test]
            */
-          HTML.prototype.testURL = function(test) {
+          HTML.prototype.testURL = function (test) {
             return makeUrl(test.fullTitle());
           };
 
@@ -3372,10 +3369,10 @@
            * @param {HTMLLIElement} el
            * @param {string} contents
            */
-          HTML.prototype.addCodeToggle = function(el, contents) {
+          HTML.prototype.addCodeToggle = function (el, contents) {
             var h2 = el.getElementsByTagName('h2')[0];
 
-            on(h2, 'click', function() {
+            on(h2, 'click', function () {
               pre.style.display = pre.style.display === 'none' ? 'block' : 'none';
             });
 
@@ -3403,7 +3400,7 @@
             var div = document.createElement('div');
             var i = 1;
 
-            div.innerHTML = html.replace(/%([se])/g, function(_, type) {
+            div.innerHTML = html.replace(/%([se])/g, function (_, type) {
               switch (type) {
                 case 's':
                   return String(args[i++]);
@@ -3484,11 +3481,11 @@
         '../runner': 34,
         '../utils': 38,
         './base': 17,
-        'escape-string-regexp': 49
-      }
+        'escape-string-regexp': 49,
+      },
     ],
     21: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         // Alias exports to a their normalized format Mocha#reporter to prevent a need
@@ -3524,12 +3521,12 @@
         './progress': 29,
         './spec': 30,
         './tap': 31,
-        './xunit': 32
-      }
+        './xunit': 32,
+      },
     ],
     22: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module JSONStream
@@ -3567,22 +3564,22 @@
             var self = this;
             var total = runner.total;
 
-            runner.once(EVENT_RUN_BEGIN, function() {
+            runner.once(EVENT_RUN_BEGIN, function () {
               writeEvent(['start', { total: total }]);
             });
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               writeEvent(['pass', clean(test)]);
             });
 
-            runner.on(EVENT_TEST_FAIL, function(test, err) {
+            runner.on(EVENT_TEST_FAIL, function (test, err) {
               test = clean(test);
               test.err = err.message;
               test.stack = err.stack || null;
               writeEvent(['fail', test]);
             });
 
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               writeEvent(['end', self.stats]);
             });
           }
@@ -3615,18 +3612,18 @@
               title: test.title,
               fullTitle: test.fullTitle(),
               duration: test.duration,
-              currentRetry: test.currentRetry()
+              currentRetry: test.currentRetry(),
             };
           }
 
           JSONStream.description = 'newline delimited JSON events';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, './base': 17, _process: 69 }
+      { '../runner': 34, './base': 17, _process: 69 },
     ],
     23: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module JSON
@@ -3668,29 +3665,29 @@
             var failures = [];
             var passes = [];
 
-            runner.on(EVENT_TEST_END, function(test) {
+            runner.on(EVENT_TEST_END, function (test) {
               tests.push(test);
             });
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               passes.push(test);
             });
 
-            runner.on(EVENT_TEST_FAIL, function(test) {
+            runner.on(EVENT_TEST_FAIL, function (test) {
               failures.push(test);
             });
 
-            runner.on(EVENT_TEST_PENDING, function(test) {
+            runner.on(EVENT_TEST_PENDING, function (test) {
               pending.push(test);
             });
 
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               var obj = {
                 stats: self.stats,
                 tests: tests.map(clean),
                 pending: pending.map(clean),
                 failures: failures.map(clean),
-                passes: passes.map(clean)
+                passes: passes.map(clean),
               };
 
               runner.testResults = obj;
@@ -3718,7 +3715,7 @@
               fullTitle: test.fullTitle(),
               duration: test.duration,
               currentRetry: test.currentRetry(),
-              err: cleanCycles(err)
+              err: cleanCycles(err),
             };
           }
 
@@ -3732,7 +3729,7 @@
           function cleanCycles(obj) {
             var cache = [];
             return JSON.parse(
-              JSON.stringify(obj, function(key, value) {
+              JSON.stringify(obj, function (key, value) {
                 if (typeof value === 'object' && value !== null) {
                   if (cache.indexOf(value) !== -1) {
                     // Instead of going in a circle, we'll print [object Object]
@@ -3755,7 +3752,7 @@
            */
           function errorJSON(err) {
             var res = {};
-            Object.getOwnPropertyNames(err).forEach(function(key) {
+            Object.getOwnPropertyNames(err).forEach(function (key) {
               res[key] = err[key];
             }, err);
             return res;
@@ -3764,11 +3761,11 @@
           JSONReporter.description = 'single JSON object';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, './base': 17, _process: 69 }
+      { '../runner': 34, './base': 17, _process: 69 },
     ],
     24: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module Landing
@@ -3838,12 +3835,12 @@
               return '  ' + color('runway', buf);
             }
 
-            runner.on(EVENT_RUN_BEGIN, function() {
+            runner.on(EVENT_RUN_BEGIN, function () {
               stream.write('\n\n\n  ');
               cursor.hide();
             });
 
-            runner.on(EVENT_TEST_END, function(test) {
+            runner.on(EVENT_TEST_END, function (test) {
               // check if the plane crashed
               var col = crashed === -1 ? ((width * ++n) / total) | 0 : crashed;
 
@@ -3864,7 +3861,7 @@
               stream.write('\u001b[0m');
             });
 
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               cursor.show();
               process.stdout.write('\n');
               self.epilogue();
@@ -3879,11 +3876,11 @@
           Landing.description = 'Unicode landing strip';
         }.call(this, require('_process')));
       },
-      { '../runnable': 33, '../runner': 34, '../utils': 38, './base': 17, _process: 69 }
+      { '../runnable': 33, '../runner': 34, '../utils': 38, './base': 17, _process: 69 },
     ],
     25: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module List
@@ -3926,20 +3923,20 @@
             var self = this;
             var n = 0;
 
-            runner.on(EVENT_RUN_BEGIN, function() {
+            runner.on(EVENT_RUN_BEGIN, function () {
               Base.consoleLog();
             });
 
-            runner.on(EVENT_TEST_BEGIN, function(test) {
+            runner.on(EVENT_TEST_BEGIN, function (test) {
               process.stdout.write(color('pass', '    ' + test.fullTitle() + ': '));
             });
 
-            runner.on(EVENT_TEST_PENDING, function(test) {
+            runner.on(EVENT_TEST_PENDING, function (test) {
               var fmt = color('checkmark', '  -') + color('pending', ' %s');
               Base.consoleLog(fmt, test.fullTitle());
             });
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               var fmt =
                 color('checkmark', '  ' + Base.symbols.ok) +
                 color('pass', ' %s: ') +
@@ -3948,7 +3945,7 @@
               Base.consoleLog(fmt, test.fullTitle(), test.duration);
             });
 
-            runner.on(EVENT_TEST_FAIL, function(test) {
+            runner.on(EVENT_TEST_FAIL, function (test) {
               cursor.CR();
               Base.consoleLog(color('fail', '  %d) %s'), ++n, test.fullTitle());
             });
@@ -3964,11 +3961,11 @@
           List.description = 'like "spec" reporter but flat';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 }
+      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 },
     ],
     26: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module Markdown
@@ -4022,7 +4019,7 @@
               var key = SUITE_PREFIX + suite.title;
 
               obj = obj[key] = obj[key] || { suite: suite };
-              suite.suites.forEach(function(suite) {
+              suite.suites.forEach(function (suite) {
                 mapTOC(suite, obj);
               });
 
@@ -4054,18 +4051,18 @@
 
             generateTOC(runner.suite);
 
-            runner.on(EVENT_SUITE_BEGIN, function(suite) {
+            runner.on(EVENT_SUITE_BEGIN, function (suite) {
               ++level;
               var slug = utils.slug(suite.fullTitle());
               buf += '<a name="' + slug + '"></a>' + '\n';
               buf += title(suite.title) + '\n';
             });
 
-            runner.on(EVENT_SUITE_END, function() {
+            runner.on(EVENT_SUITE_END, function () {
               --level;
             });
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               var code = utils.clean(test.body);
               buf += test.title + '.\n';
               buf += '\n```js\n';
@@ -4073,7 +4070,7 @@
               buf += '```\n\n';
             });
 
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               process.stdout.write('# TOC\n');
               process.stdout.write(generateTOC(runner.suite));
               process.stdout.write(buf);
@@ -4083,11 +4080,11 @@
           Markdown.description = 'GitHub Flavored Markdown';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 }
+      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 },
     ],
     27: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module Min
@@ -4124,7 +4121,7 @@
           function Min(runner, options) {
             Base.call(this, runner, options);
 
-            runner.on(EVENT_RUN_BEGIN, function() {
+            runner.on(EVENT_RUN_BEGIN, function () {
               // clear screen
               process.stdout.write('\u001b[2J');
               // set cursor position
@@ -4142,11 +4139,11 @@
           Min.description = 'essentially just a summary';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 }
+      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 },
     ],
     28: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module Nyan
@@ -4195,24 +4192,24 @@
             this.trajectories = [[], [], [], []];
             this.trajectoryWidthMax = width - nyanCatWidth;
 
-            runner.on(EVENT_RUN_BEGIN, function() {
+            runner.on(EVENT_RUN_BEGIN, function () {
               Base.cursor.hide();
               self.draw();
             });
 
-            runner.on(EVENT_TEST_PENDING, function() {
+            runner.on(EVENT_TEST_PENDING, function () {
               self.draw();
             });
 
-            runner.on(EVENT_TEST_PASS, function() {
+            runner.on(EVENT_TEST_PASS, function () {
               self.draw();
             });
 
-            runner.on(EVENT_TEST_FAIL, function() {
+            runner.on(EVENT_TEST_FAIL, function () {
               self.draw();
             });
 
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               Base.cursor.show();
               for (var i = 0; i < self.numberOfLines; i++) {
                 write('\n');
@@ -4232,7 +4229,7 @@
            * @private
            */
 
-          NyanCat.prototype.draw = function() {
+          NyanCat.prototype.draw = function () {
             this.appendRainbow();
             this.drawScoreboard();
             this.drawRainbow();
@@ -4247,7 +4244,7 @@
            * @private
            */
 
-          NyanCat.prototype.drawScoreboard = function() {
+          NyanCat.prototype.drawScoreboard = function () {
             var stats = this.stats;
 
             function draw(type, n) {
@@ -4270,7 +4267,7 @@
            * @private
            */
 
-          NyanCat.prototype.appendRainbow = function() {
+          NyanCat.prototype.appendRainbow = function () {
             var segment = this.tick ? '_' : '-';
             var rainbowified = this.rainbowify(segment);
 
@@ -4289,10 +4286,10 @@
            * @private
            */
 
-          NyanCat.prototype.drawRainbow = function() {
+          NyanCat.prototype.drawRainbow = function () {
             var self = this;
 
-            this.trajectories.forEach(function(line) {
+            this.trajectories.forEach(function (line) {
               write('\u001b[' + self.scoreboardWidth + 'C');
               write(line.join(''));
               write('\n');
@@ -4306,7 +4303,7 @@
            *
            * @private
            */
-          NyanCat.prototype.drawNyanCat = function() {
+          NyanCat.prototype.drawNyanCat = function () {
             var self = this;
             var startWidth = this.scoreboardWidth + this.trajectories[0].length;
             var dist = '\u001b[' + startWidth + 'C';
@@ -4342,7 +4339,7 @@
            * @return {string}
            */
 
-          NyanCat.prototype.face = function() {
+          NyanCat.prototype.face = function () {
             var stats = this.stats;
             if (stats.failures) {
               return '( x .x)';
@@ -4361,7 +4358,7 @@
            * @param {number} n
            */
 
-          NyanCat.prototype.cursorUp = function(n) {
+          NyanCat.prototype.cursorUp = function (n) {
             write('\u001b[' + n + 'A');
           };
 
@@ -4372,7 +4369,7 @@
            * @param {number} n
            */
 
-          NyanCat.prototype.cursorDown = function(n) {
+          NyanCat.prototype.cursorDown = function (n) {
             write('\u001b[' + n + 'B');
           };
 
@@ -4382,7 +4379,7 @@
            * @private
            * @return {Array}
            */
-          NyanCat.prototype.generateColors = function() {
+          NyanCat.prototype.generateColors = function () {
             var colors = [];
 
             for (var i = 0; i < 6 * 7; i++) {
@@ -4404,7 +4401,7 @@
            * @param {string} str
            * @return {string}
            */
-          NyanCat.prototype.rainbowify = function(str) {
+          NyanCat.prototype.rainbowify = function (str) {
             if (!Base.useColors) {
               return str;
             }
@@ -4425,11 +4422,11 @@
           NyanCat.description = '"nyan cat"';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 }
+      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 },
     ],
     29: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module Progress
@@ -4489,13 +4486,13 @@
             options.verbose = reporterOptions.verbose || false;
 
             // tests started
-            runner.on(EVENT_RUN_BEGIN, function() {
+            runner.on(EVENT_RUN_BEGIN, function () {
               process.stdout.write('\n');
               cursor.hide();
             });
 
             // tests complete
-            runner.on(EVENT_TEST_END, function() {
+            runner.on(EVENT_TEST_END, function () {
               complete++;
 
               var percent = complete / total;
@@ -4521,7 +4518,7 @@
 
             // tests are complete, output some stats
             // and the failures if any
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               cursor.show();
               process.stdout.write('\n');
               self.epilogue();
@@ -4536,10 +4533,10 @@
           Progress.description = 'a progress bar';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 }
+      { '../runner': 34, '../utils': 38, './base': 17, _process: 69 },
     ],
     30: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
         /**
          * @module Spec
@@ -4587,28 +4584,28 @@
             return Array(indents).join('  ');
           }
 
-          runner.on(EVENT_RUN_BEGIN, function() {
+          runner.on(EVENT_RUN_BEGIN, function () {
             Base.consoleLog();
           });
 
-          runner.on(EVENT_SUITE_BEGIN, function(suite) {
+          runner.on(EVENT_SUITE_BEGIN, function (suite) {
             ++indents;
             Base.consoleLog(color('suite', '%s%s'), indent(), suite.title);
           });
 
-          runner.on(EVENT_SUITE_END, function() {
+          runner.on(EVENT_SUITE_END, function () {
             --indents;
             if (indents === 1) {
               Base.consoleLog();
             }
           });
 
-          runner.on(EVENT_TEST_PENDING, function(test) {
+          runner.on(EVENT_TEST_PENDING, function (test) {
             var fmt = indent() + color('pending', '  - %s');
             Base.consoleLog(fmt, test.title);
           });
 
-          runner.on(EVENT_TEST_PASS, function(test) {
+          runner.on(EVENT_TEST_PASS, function (test) {
             var fmt;
             if (test.speed === 'fast') {
               fmt = indent() + color('checkmark', '  ' + Base.symbols.ok) + color('pass', ' %s');
@@ -4623,7 +4620,7 @@
             }
           });
 
-          runner.on(EVENT_TEST_FAIL, function(test) {
+          runner.on(EVENT_TEST_FAIL, function (test) {
             Base.consoleLog(indent() + color('fail', '  %d) %s'), ++n, test.title);
           });
 
@@ -4637,11 +4634,11 @@
 
         Spec.description = 'hierarchical & verbose [default]';
       },
-      { '../runner': 34, '../utils': 38, './base': 17 }
+      { '../runner': 34, '../utils': 38, './base': 17 },
     ],
     31: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
           /**
            * @module TAP
@@ -4693,29 +4690,29 @@
 
             this._producer = createProducer(tapVersion);
 
-            runner.once(EVENT_RUN_BEGIN, function() {
+            runner.once(EVENT_RUN_BEGIN, function () {
               var ntests = runner.grepTotal(runner.suite);
               self._producer.writeVersion();
               self._producer.writePlan(ntests);
             });
 
-            runner.on(EVENT_TEST_END, function() {
+            runner.on(EVENT_TEST_END, function () {
               ++n;
             });
 
-            runner.on(EVENT_TEST_PENDING, function(test) {
+            runner.on(EVENT_TEST_PENDING, function (test) {
               self._producer.writePending(n, test);
             });
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               self._producer.writePass(n, test);
             });
 
-            runner.on(EVENT_TEST_FAIL, function(test, err) {
+            runner.on(EVENT_TEST_FAIL, function (test, err) {
               self._producer.writeFail(n, test, err);
             });
 
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               self._producer.writeEpilogue(runner.stats);
             });
           }
@@ -4760,7 +4757,7 @@
           function createProducer(tapVersion) {
             var producers = {
               '12': new TAP12Producer(),
-              '13': new TAP13Producer()
+              '13': new TAP13Producer(),
             };
             var producer = producers[tapVersion];
 
@@ -4788,7 +4785,7 @@
            *
            * @abstract
            */
-          TAPProducer.prototype.writeVersion = function() {};
+          TAPProducer.prototype.writeVersion = function () {};
 
           /**
            * Writes the plan to reporter output stream.
@@ -4796,7 +4793,7 @@
            * @abstract
            * @param {number} ntests - Number of tests that are planned to run.
            */
-          TAPProducer.prototype.writePlan = function(ntests) {
+          TAPProducer.prototype.writePlan = function (ntests) {
             println('%d..%d', 1, ntests);
           };
 
@@ -4807,7 +4804,7 @@
            * @param {number} n - Index of test that passed.
            * @param {Test} test - Instance containing test information.
            */
-          TAPProducer.prototype.writePass = function(n, test) {
+          TAPProducer.prototype.writePass = function (n, test) {
             println('ok %d %s', n, title(test));
           };
 
@@ -4818,7 +4815,7 @@
            * @param {number} n - Index of test that was skipped.
            * @param {Test} test - Instance containing test information.
            */
-          TAPProducer.prototype.writePending = function(n, test) {
+          TAPProducer.prototype.writePending = function (n, test) {
             println('ok %d %s # SKIP -', n, title(test));
           };
 
@@ -4830,7 +4827,7 @@
            * @param {Test} test - Instance containing test information.
            * @param {Error} err - Reason the test failed.
            */
-          TAPProducer.prototype.writeFail = function(n, test, err) {
+          TAPProducer.prototype.writeFail = function (n, test, err) {
             println('not ok %d %s', n, title(test));
           };
 
@@ -4840,7 +4837,7 @@
            * @abstract
            * @param {Object} stats - Object containing run statistics.
            */
-          TAPProducer.prototype.writeEpilogue = function(stats) {
+          TAPProducer.prototype.writeEpilogue = function (stats) {
             // :TBD: Why is this not counting pending tests?
             println('# tests ' + (stats.passes + stats.failures));
             println('# pass ' + stats.passes);
@@ -4865,7 +4862,7 @@
              * Writes that test failed to reporter output stream, with error formatting.
              * @override
              */
-            this.writeFail = function(n, test, err) {
+            this.writeFail = function (n, test, err) {
               TAPProducer.prototype.writeFail.call(this, n, test, err);
               if (err.message) {
                 println(err.message.replace(/^/gm, '  '));
@@ -4898,7 +4895,7 @@
              * Writes the TAP version to reporter output stream.
              * @override
              */
-            this.writeVersion = function() {
+            this.writeVersion = function () {
               println('TAP version 13');
             };
 
@@ -4906,7 +4903,7 @@
              * Writes that test failed to reporter output stream, with error formatting.
              * @override
              */
-            this.writeFail = function(n, test, err) {
+            this.writeFail = function (n, test, err) {
               TAPProducer.prototype.writeFail.call(this, n, test, err);
               var emitYamlBlock = err.message != null || err.stack != null;
               if (emitYamlBlock) {
@@ -4936,11 +4933,11 @@
           TAP.description = 'TAP-compatible output';
         }.call(this, require('_process')));
       },
-      { '../runner': 34, '../utils': 38, './base': 17, _process: 69, util: 89 }
+      { '../runner': 34, '../utils': 38, './base': 17, _process: 69, util: 89 },
     ],
     32: [
-      function(require, module, exports) {
-        (function(process, global) {
+      function (require, module, exports) {
+        (function (process, global) {
           'use strict';
           /**
            * @module XUnit
@@ -5016,19 +5013,19 @@
             // fall back to the default suite name
             suiteName = suiteName || DEFAULT_SUITE_NAME;
 
-            runner.on(EVENT_TEST_PENDING, function(test) {
+            runner.on(EVENT_TEST_PENDING, function (test) {
               tests.push(test);
             });
 
-            runner.on(EVENT_TEST_PASS, function(test) {
+            runner.on(EVENT_TEST_PASS, function (test) {
               tests.push(test);
             });
 
-            runner.on(EVENT_TEST_FAIL, function(test) {
+            runner.on(EVENT_TEST_FAIL, function (test) {
               tests.push(test);
             });
 
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               self.write(
                 tag(
                   'testsuite',
@@ -5039,13 +5036,13 @@
                     errors: stats.failures,
                     skipped: stats.tests - stats.failures - stats.passes,
                     timestamp: new Date().toUTCString(),
-                    time: stats.duration / 1000 || 0
+                    time: stats.duration / 1000 || 0,
                   },
                   false
                 )
               );
 
-              tests.forEach(function(t) {
+              tests.forEach(function (t) {
                 self.test(t);
               });
 
@@ -5064,9 +5061,9 @@
            * @param failures
            * @param {Function} fn
            */
-          XUnit.prototype.done = function(failures, fn) {
+          XUnit.prototype.done = function (failures, fn) {
             if (this.fileStream) {
-              this.fileStream.end(function() {
+              this.fileStream.end(function () {
                 fn(failures);
               });
             } else {
@@ -5079,7 +5076,7 @@
            *
            * @param {string} line
            */
-          XUnit.prototype.write = function(line) {
+          XUnit.prototype.write = function (line) {
             if (this.fileStream) {
               this.fileStream.write(line + '\n');
             } else if (typeof process === 'object' && process.stdout) {
@@ -5094,13 +5091,13 @@
            *
            * @param {Test} test
            */
-          XUnit.prototype.test = function(test) {
+          XUnit.prototype.test = function (test) {
             Base.useColors = false;
 
             var attrs = {
               classname: test.parent.fullTitle(),
               name: test.title,
-              time: test.duration / 1000 || 0
+              time: test.duration / 1000 || 0,
             };
 
             if (test.state === STATE_FAILED) {
@@ -5178,12 +5175,12 @@
         _process: 69,
         fs: 42,
         mkdirp: 59,
-        path: 42
-      }
+        path: 42,
+      },
     ],
     33: [
-      function(require, module, exports) {
-        (function(global) {
+      function (require, module, exports) {
+        (function (global) {
           'use strict';
 
           var EventEmitter = require('events').EventEmitter;
@@ -5253,7 +5250,7 @@
            * @returns {Runnable} this
            * @chainable
            */
-          Runnable.prototype.timeout = function(ms) {
+          Runnable.prototype.timeout = function (ms) {
             if (!arguments.length) {
               return this._timeout;
             }
@@ -5285,7 +5282,7 @@
            * @param {number|string} ms
            * @return {Runnable|number} ms or Runnable instance.
            */
-          Runnable.prototype.slow = function(ms) {
+          Runnable.prototype.slow = function (ms) {
             if (!arguments.length || typeof ms === 'undefined') {
               return this._slow;
             }
@@ -5304,7 +5301,7 @@
            * @param {boolean} enabled
            * @return {Runnable|boolean} enabled or Runnable instance.
            */
-          Runnable.prototype.enableTimeouts = function(enabled) {
+          Runnable.prototype.enableTimeouts = function (enabled) {
             if (!arguments.length) {
               return this._enableTimeouts;
             }
@@ -5319,7 +5316,7 @@
            * @memberof Mocha.Runnable
            * @public
            */
-          Runnable.prototype.skip = function() {
+          Runnable.prototype.skip = function () {
             throw new Pending('sync skip');
           };
 
@@ -5328,7 +5325,7 @@
            *
            * @private
            */
-          Runnable.prototype.isPending = function() {
+          Runnable.prototype.isPending = function () {
             return this.pending || (this.parent && this.parent.isPending());
           };
 
@@ -5337,7 +5334,7 @@
            * @return {boolean}
            * @private
            */
-          Runnable.prototype.isFailed = function() {
+          Runnable.prototype.isFailed = function () {
             return !this.isPending() && this.state === constants.STATE_FAILED;
           };
 
@@ -5346,7 +5343,7 @@
            * @return {boolean}
            * @private
            */
-          Runnable.prototype.isPassed = function() {
+          Runnable.prototype.isPassed = function () {
             return !this.isPending() && this.state === constants.STATE_PASSED;
           };
 
@@ -5355,7 +5352,7 @@
            *
            * @private
            */
-          Runnable.prototype.retries = function(n) {
+          Runnable.prototype.retries = function (n) {
             if (!arguments.length) {
               return this._retries;
             }
@@ -5367,7 +5364,7 @@
            *
            * @private
            */
-          Runnable.prototype.currentRetry = function(n) {
+          Runnable.prototype.currentRetry = function (n) {
             if (!arguments.length) {
               return this._currentRetry;
             }
@@ -5382,7 +5379,7 @@
            * @public
            * @return {string}
            */
-          Runnable.prototype.fullTitle = function() {
+          Runnable.prototype.fullTitle = function () {
             return this.titlePath().join(' ');
           };
 
@@ -5393,7 +5390,7 @@
            * @public
            * @return {string}
            */
-          Runnable.prototype.titlePath = function() {
+          Runnable.prototype.titlePath = function () {
             return this.parent.titlePath().concat([this.title]);
           };
 
@@ -5402,7 +5399,7 @@
            *
            * @private
            */
-          Runnable.prototype.clearTimeout = function() {
+          Runnable.prototype.clearTimeout = function () {
             clearTimeout(this.timer);
           };
 
@@ -5412,10 +5409,10 @@
            * @private
            * @return {string}
            */
-          Runnable.prototype.inspect = function() {
+          Runnable.prototype.inspect = function () {
             return JSON.stringify(
               this,
-              function(key, val) {
+              function (key, val) {
                 if (key[0] === '_') {
                   return;
                 }
@@ -5436,7 +5433,7 @@
            *
            * @private
            */
-          Runnable.prototype.resetTimeout = function() {
+          Runnable.prototype.resetTimeout = function () {
             var self = this;
             var ms = this.timeout() || 1e9;
 
@@ -5444,7 +5441,7 @@
               return;
             }
             this.clearTimeout();
-            this.timer = setTimeout(function() {
+            this.timer = setTimeout(function () {
               if (!self._enableTimeouts) {
                 return;
               }
@@ -5459,7 +5456,7 @@
            * @private
            * @param {string[]} globals
            */
-          Runnable.prototype.globals = function(globals) {
+          Runnable.prototype.globals = function (globals) {
             if (!arguments.length) {
               return this._allowedGlobals;
             }
@@ -5472,7 +5469,7 @@
            * @param {Function} fn
            * @private
            */
-          Runnable.prototype.run = function(fn) {
+          Runnable.prototype.run = function (fn) {
             var self = this;
             var start = new Date();
             var ctx = this.ctx;
@@ -5573,13 +5570,13 @@
               if (result && typeof result.then === 'function') {
                 self.resetTimeout();
                 result.then(
-                  function() {
+                  function () {
                     done();
                     // Return null so libraries like bluebird do not warn about
                     // subsequently constructed Promises.
                     return null;
                   },
-                  function(reason) {
+                  function (reason) {
                     done(reason || new Error('Promise rejected with no or falsy reason'));
                   }
                 );
@@ -5597,7 +5594,7 @@
             }
 
             function callFnAsync(fn) {
-              var result = fn.call(ctx, function(err) {
+              var result = fn.call(ctx, function (err) {
                 if (err instanceof Error || toString.call(err) === '[object Error]') {
                   return done(err);
                 }
@@ -5627,7 +5624,7 @@
            * @returns {Error} a "timeout" error
            * @private
            */
-          Runnable.prototype._timeoutError = function(ms) {
+          Runnable.prototype._timeoutError = function (ms) {
             var msg =
               'Timeout of ' +
               ms +
@@ -5656,7 +5653,7 @@
               /**
                * Value of `state` prop when a `Runnable` has passed
                */
-              STATE_PASSED: 'passed'
+              STATE_PASSED: 'passed',
             }
           );
 
@@ -5666,7 +5663,7 @@
            * @returns {*|Error} `value`, otherwise an `Error`
            * @private
            */
-          Runnable.toValueOrError = function(value) {
+          Runnable.toValueOrError = function (value) {
             return (
               value ||
               createInvalidExceptionError(
@@ -5688,11 +5685,11 @@
             : {}
         ));
       },
-      { './errors': 6, './pending': 16, './utils': 38, debug: 45, events: 50, ms: 60 }
+      { './errors': 6, './pending': 16, './utils': 38, debug: 45, events: 50, ms: 60 },
     ],
     34: [
-      function(require, module, exports) {
-        (function(process, global) {
+      function (require, module, exports) {
+        (function (process, global) {
           'use strict';
 
           /**
@@ -5733,7 +5730,7 @@
             'XMLHttpRequest',
             'Date',
             'setImmediate',
-            'clearImmediate'
+            'clearImmediate',
           ];
 
           var constants = utils.defineConstants(
@@ -5802,7 +5799,7 @@
               /**
                * Emitted when {@link Test} execution has failed, but will retry
                */
-              EVENT_TEST_RETRY: 'retry'
+              EVENT_TEST_RETRY: 'retry',
             }
           );
 
@@ -5827,10 +5824,10 @@
             this.started = false;
             this.total = suite.total();
             this.failures = 0;
-            this.on(constants.EVENT_TEST_END, function(test) {
+            this.on(constants.EVENT_TEST_END, function (test) {
               self.checkGlobals(test);
             });
-            this.on(constants.EVENT_HOOK_END, function(hook) {
+            this.on(constants.EVENT_HOOK_END, function (hook) {
               self.checkGlobals(hook);
             });
             this._defaultGrep = /.*/;
@@ -5861,7 +5858,7 @@
            * @param {boolean} invert
            * @return {Runner} Runner instance.
            */
-          Runner.prototype.grep = function(re, invert) {
+          Runner.prototype.grep = function (re, invert) {
             debug('grep %s', re);
             this._grep = re;
             this._invert = invert;
@@ -5878,11 +5875,11 @@
            * @param {Suite} suite
            * @return {number}
            */
-          Runner.prototype.grepTotal = function(suite) {
+          Runner.prototype.grepTotal = function (suite) {
             var self = this;
             var total = 0;
 
-            suite.eachTest(function(test) {
+            suite.eachTest(function (test) {
               var match = self._grep.test(test.fullTitle());
               if (self._invert) {
                 match = !match;
@@ -5901,7 +5898,7 @@
            * @return {Array}
            * @private
            */
-          Runner.prototype.globalProps = function() {
+          Runner.prototype.globalProps = function () {
             var props = Object.keys(global);
 
             // non-enumerables
@@ -5923,7 +5920,7 @@
            * @param {Array} arr
            * @return {Runner} Runner instance.
            */
-          Runner.prototype.globals = function(arr) {
+          Runner.prototype.globals = function (arr) {
             if (!arguments.length) {
               return this._globals;
             }
@@ -5937,7 +5934,7 @@
            *
            * @private
            */
-          Runner.prototype.checkGlobals = function(test) {
+          Runner.prototype.checkGlobals = function (test) {
             if (this.ignoreLeaks) {
               return;
             }
@@ -5976,7 +5973,7 @@
            * @param {Test} test
            * @param {Error} err
            */
-          Runner.prototype.fail = function(test, err) {
+          Runner.prototype.fail = function (test, err) {
             if (test.isPending()) {
               return;
             }
@@ -6018,7 +6015,7 @@
            * @param {Hook} hook
            * @param {Error} err
            */
-          Runner.prototype.failHook = function(hook, err) {
+          Runner.prototype.failHook = function (hook, err) {
             hook.originalTitle = hook.originalTitle || hook.title;
             if (hook.ctx && hook.ctx.currentTest) {
               hook.title = hook.originalTitle + ' for ' + dQuote(hook.ctx.currentTest.title);
@@ -6043,7 +6040,7 @@
            * @param {Function} fn
            */
 
-          Runner.prototype.hook = function(name, fn) {
+          Runner.prototype.hook = function (name, fn) {
             var suite = this.suite;
             var hooks = suite.getHooks(name);
             var self = this;
@@ -6068,12 +6065,12 @@
               self.emit(constants.EVENT_HOOK_BEGIN, hook);
 
               if (!hook.listeners('error').length) {
-                hook.on('error', function(err) {
+                hook.on('error', function (err) {
                   self.failHook(hook, err);
                 });
               }
 
-              hook.run(function(err) {
+              hook.run(function (err) {
                 var testError = hook.error();
                 if (testError) {
                   self.fail(self.test, testError);
@@ -6091,10 +6088,10 @@
                         self.test.pending = true;
                       }
                     } else {
-                      suite.tests.forEach(function(test) {
+                      suite.tests.forEach(function (test) {
                         test.pending = true;
                       });
-                      suite.suites.forEach(function(suite) {
+                      suite.suites.forEach(function (suite) {
                         suite.pending = true;
                       });
                       // a pending hook won't be executed twice.
@@ -6113,7 +6110,7 @@
               });
             }
 
-            Runner.immediately(function() {
+            Runner.immediately(function () {
               next(0);
             });
           };
@@ -6127,7 +6124,7 @@
            * @param {Array} suites
            * @param {Function} fn
            */
-          Runner.prototype.hooks = function(name, suites, fn) {
+          Runner.prototype.hooks = function (name, suites, fn) {
             var self = this;
             var orig = this.suite;
 
@@ -6139,7 +6136,7 @@
                 return fn();
               }
 
-              self.hook(name, function(err) {
+              self.hook(name, function (err) {
                 if (err) {
                   var errSuite = self.suite;
                   self.suite = orig;
@@ -6160,7 +6157,7 @@
            * @param {Function} fn
            * @private
            */
-          Runner.prototype.hookUp = function(name, fn) {
+          Runner.prototype.hookUp = function (name, fn) {
             var suites = [this.suite].concat(this.parents()).reverse();
             this.hooks(name, suites, fn);
           };
@@ -6172,7 +6169,7 @@
            * @param {Function} fn
            * @private
            */
-          Runner.prototype.hookDown = function(name, fn) {
+          Runner.prototype.hookDown = function (name, fn) {
             var suites = [this.suite].concat(this.parents());
             this.hooks(name, suites, fn);
           };
@@ -6184,7 +6181,7 @@
            * @return {Array}
            * @private
            */
-          Runner.prototype.parents = function() {
+          Runner.prototype.parents = function () {
             var suite = this.suite;
             var suites = [];
             while (suite.parent) {
@@ -6200,7 +6197,7 @@
            * @param {Function} fn
            * @private
            */
-          Runner.prototype.runTest = function(fn) {
+          Runner.prototype.runTest = function (fn) {
             var self = this;
             var test = this.test;
 
@@ -6216,7 +6213,7 @@
             if (this.asyncOnly) {
               test.asyncOnly = true;
             }
-            test.on('error', function(err) {
+            test.on('error', function (err) {
               self.fail(test, err);
             });
             if (this.allowUncaught) {
@@ -6237,7 +6234,7 @@
            * @param {Suite} suite
            * @param {Function} fn
            */
-          Runner.prototype.runTests = function(suite, fn) {
+          Runner.prototype.runTests = function (suite, fn) {
             var self = this;
             var tests = suite.tests.slice();
             var test;
@@ -6252,7 +6249,7 @@
 
               if (self.suite) {
                 // call hookUp afterEach
-                self.hookUp(HOOK_TYPE_AFTER_EACH, function(err2, errSuite2) {
+                self.hookUp(HOOK_TYPE_AFTER_EACH, function (err2, errSuite2) {
                   self.suite = orig;
                   // some hooks may fail even now
                   if (err2) {
@@ -6326,7 +6323,7 @@
 
               // execute test and hook(s)
               self.emit(constants.EVENT_TEST_BEGIN, (self.test = test));
-              self.hookDown(HOOK_TYPE_BEFORE_EACH, function(err, errSuite) {
+              self.hookDown(HOOK_TYPE_BEFORE_EACH, function (err, errSuite) {
                 if (test.isPending()) {
                   if (self.forbidPending) {
                     test.isPending = alwaysFalse;
@@ -6342,7 +6339,7 @@
                   return hookErr(err, errSuite, false);
                 }
                 self.currentRunnable = self.test;
-                self.runTest(function(err) {
+                self.runTest(function (err) {
                   test = self.test;
                   if (err) {
                     var retry = test.currentRetry();
@@ -6397,7 +6394,7 @@
            * @param {Suite} suite
            * @param {Function} fn
            */
-          Runner.prototype.runSuite = function(suite, fn) {
+          Runner.prototype.runSuite = function (suite, fn) {
             var i = 0;
             var self = this;
             var total = this.grepTotal(suite);
@@ -6437,7 +6434,7 @@
               // huge recursive loop and thus a maximum call stack error.
               // See comment in `this.runTests()` for more information.
               if (self._grep !== self._defaultGrep) {
-                Runner.immediately(function() {
+                Runner.immediately(function () {
                   self.runSuite(curr, next);
                 });
               } else {
@@ -6459,7 +6456,7 @@
                 // remove reference to test
                 delete self.test;
 
-                self.hook(HOOK_TYPE_AFTER_ALL, function() {
+                self.hook(HOOK_TYPE_AFTER_ALL, function () {
                   self.emit(constants.EVENT_SUITE_END, suite);
                   fn(errSuite);
                 });
@@ -6468,7 +6465,7 @@
 
             this.nextSuite = next;
 
-            this.hook(HOOK_TYPE_BEFORE_ALL, function(err) {
+            this.hook(HOOK_TYPE_BEFORE_ALL, function (err) {
               if (err) {
                 return done();
               }
@@ -6482,7 +6479,7 @@
            * @param {Error} err
            * @private
            */
-          Runner.prototype.uncaught = function(err) {
+          Runner.prototype.uncaught = function (err) {
             if (err instanceof Pending) {
               return;
             }
@@ -6569,11 +6566,11 @@
            * @param {Function} fn
            * @return {Runner} Runner instance.
            */
-          Runner.prototype.run = function(fn) {
+          Runner.prototype.run = function (fn) {
             var self = this;
             var rootSuite = this.suite;
 
-            fn = fn || function() {};
+            fn = fn || function () {};
 
             function uncaught(err) {
               self.uncaught(err);
@@ -6590,7 +6587,7 @@
               }
               self.emit(constants.EVENT_RUN_BEGIN);
 
-              self.runSuite(rootSuite, function() {
+              self.runSuite(rootSuite, function () {
                 debug('finished running');
                 self.emit(constants.EVENT_RUN_END);
               });
@@ -6599,12 +6596,12 @@
             debug(constants.EVENT_RUN_BEGIN);
 
             // references cleanup to avoid memory leaks
-            this.on(constants.EVENT_SUITE_END, function(suite) {
+            this.on(constants.EVENT_SUITE_END, function (suite) {
               suite.cleanReferences();
             });
 
             // callback
-            this.on(constants.EVENT_RUN_END, function() {
+            this.on(constants.EVENT_RUN_END, function () {
               debug(constants.EVENT_RUN_END);
               process.removeListener('uncaughtException', uncaught);
               fn(self.failures);
@@ -6632,7 +6629,7 @@
            * @public
            * @return {Runner} Runner instance.
            */
-          Runner.prototype.abort = function() {
+          Runner.prototype.abort = function () {
             debug('aborting');
             this._abort = true;
 
@@ -6648,7 +6645,7 @@
            * @return {Array}
            */
           function filterLeaks(ok, globals) {
-            return globals.filter(function(key) {
+            return globals.filter(function (key) {
               // Firefox and Chrome exposes iframes as index inside the window object
               if (/^\d+/.test(key)) {
                 return false;
@@ -6672,7 +6669,7 @@
                 return false;
               }
 
-              var matched = ok.filter(function(ok) {
+              var matched = ok.filter(function (ok) {
                 if (~ok.indexOf('*')) {
                   return key.indexOf(ok.split('*')[0]) === 0;
                 }
@@ -6736,12 +6733,12 @@
         _process: 69,
         debug: 45,
         events: 50,
-        util: 89
-      }
+        util: 89,
+      },
     ],
     35: [
-      function(require, module, exports) {
-        (function(global) {
+      function (require, module, exports) {
+        (function (global) {
           'use strict';
 
           /**
@@ -6791,7 +6788,7 @@
               tests: 0,
               passes: 0,
               pending: 0,
-              failures: 0
+              failures: 0,
             };
 
             if (!runner) {
@@ -6800,25 +6797,25 @@
 
             runner.stats = stats;
 
-            runner.once(EVENT_RUN_BEGIN, function() {
+            runner.once(EVENT_RUN_BEGIN, function () {
               stats.start = new Date();
             });
-            runner.on(EVENT_SUITE_BEGIN, function(suite) {
+            runner.on(EVENT_SUITE_BEGIN, function (suite) {
               suite.root || stats.suites++;
             });
-            runner.on(EVENT_TEST_PASS, function() {
+            runner.on(EVENT_TEST_PASS, function () {
               stats.passes++;
             });
-            runner.on(EVENT_TEST_FAIL, function() {
+            runner.on(EVENT_TEST_FAIL, function () {
               stats.failures++;
             });
-            runner.on(EVENT_TEST_PENDING, function() {
+            runner.on(EVENT_TEST_PENDING, function () {
               stats.pending++;
             });
-            runner.on(EVENT_TEST_END, function() {
+            runner.on(EVENT_TEST_END, function () {
               stats.tests++;
             });
-            runner.once(EVENT_RUN_END, function() {
+            runner.once(EVENT_RUN_END, function () {
               stats.end = new Date();
               stats.duration = stats.end - stats.start;
             });
@@ -6836,10 +6833,10 @@
             : {}
         ));
       },
-      { './runner': 34 }
+      { './runner': 34 },
     ],
     36: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         /**
@@ -6868,7 +6865,7 @@
          * @param {string} title - Title
          * @return {Suite}
          */
-        Suite.create = function(parent, title) {
+        Suite.create = function (parent, title) {
           var suite = new Suite(title, parent.ctx);
           suite.parent = parent;
           title = suite.fullTitle();
@@ -6916,7 +6913,7 @@
           this._onlySuites = [];
           this.delayed = false;
 
-          this.on('newListener', function(event) {
+          this.on('newListener', function (event) {
             if (deprecatedEvents[event]) {
               utils.deprecate(
                 'Event "' +
@@ -6938,7 +6935,7 @@
          * @private
          * @return {Suite}
          */
-        Suite.prototype.clone = function() {
+        Suite.prototype.clone = function () {
           var suite = new Suite(this.title);
           debug('clone');
           suite.ctx = this.ctx;
@@ -6959,7 +6956,7 @@
          * @param {number|string} ms
          * @return {Suite|number} for chaining
          */
-        Suite.prototype.timeout = function(ms) {
+        Suite.prototype.timeout = function (ms) {
           if (!arguments.length) {
             return this._timeout;
           }
@@ -6981,7 +6978,7 @@
          * @param {number|string} n
          * @return {Suite|number} for chaining
          */
-        Suite.prototype.retries = function(n) {
+        Suite.prototype.retries = function (n) {
           if (!arguments.length) {
             return this._retries;
           }
@@ -6997,7 +6994,7 @@
          * @param {boolean} enabled
          * @return {Suite|boolean} self or enabled
          */
-        Suite.prototype.enableTimeouts = function(enabled) {
+        Suite.prototype.enableTimeouts = function (enabled) {
           if (!arguments.length) {
             return this._enableTimeouts;
           }
@@ -7013,7 +7010,7 @@
          * @param {number|string} ms
          * @return {Suite|number} for chaining
          */
-        Suite.prototype.slow = function(ms) {
+        Suite.prototype.slow = function (ms) {
           if (!arguments.length) {
             return this._slow;
           }
@@ -7032,7 +7029,7 @@
          * @param {boolean} bail
          * @return {Suite|number} for chaining
          */
-        Suite.prototype.bail = function(bail) {
+        Suite.prototype.bail = function (bail) {
           if (!arguments.length) {
             return this._bail;
           }
@@ -7046,7 +7043,7 @@
          *
          * @private
          */
-        Suite.prototype.isPending = function() {
+        Suite.prototype.isPending = function () {
           return this.pending || (this.parent && this.parent.isPending());
         };
 
@@ -7057,7 +7054,7 @@
          * @param {Function} fn - Hook callback
          * @returns {Hook} A new hook
          */
-        Suite.prototype._createHook = function(title, fn) {
+        Suite.prototype._createHook = function (title, fn) {
           var hook = new Hook(title, fn);
           hook.parent = this;
           hook.timeout(this.timeout());
@@ -7077,7 +7074,7 @@
          * @param {Function} fn
          * @return {Suite} for chaining
          */
-        Suite.prototype.beforeAll = function(title, fn) {
+        Suite.prototype.beforeAll = function (title, fn) {
           if (this.isPending()) {
             return this;
           }
@@ -7101,7 +7098,7 @@
          * @param {Function} fn
          * @return {Suite} for chaining
          */
-        Suite.prototype.afterAll = function(title, fn) {
+        Suite.prototype.afterAll = function (title, fn) {
           if (this.isPending()) {
             return this;
           }
@@ -7125,7 +7122,7 @@
          * @param {Function} fn
          * @return {Suite} for chaining
          */
-        Suite.prototype.beforeEach = function(title, fn) {
+        Suite.prototype.beforeEach = function (title, fn) {
           if (this.isPending()) {
             return this;
           }
@@ -7149,7 +7146,7 @@
          * @param {Function} fn
          * @return {Suite} for chaining
          */
-        Suite.prototype.afterEach = function(title, fn) {
+        Suite.prototype.afterEach = function (title, fn) {
           if (this.isPending()) {
             return this;
           }
@@ -7172,7 +7169,7 @@
          * @param {Suite} suite
          * @return {Suite} for chaining
          */
-        Suite.prototype.addSuite = function(suite) {
+        Suite.prototype.addSuite = function (suite) {
           suite.parent = this;
           suite.root = false;
           suite.timeout(this.timeout());
@@ -7192,7 +7189,7 @@
          * @param {Test} test
          * @return {Suite} for chaining
          */
-        Suite.prototype.addTest = function(test) {
+        Suite.prototype.addTest = function (test) {
           test.parent = this;
           test.timeout(this.timeout());
           test.retries(this.retries());
@@ -7212,7 +7209,7 @@
          * @public
          * @return {string}
          */
-        Suite.prototype.fullTitle = function() {
+        Suite.prototype.fullTitle = function () {
           return this.titlePath().join(' ');
         };
 
@@ -7224,7 +7221,7 @@
          * @public
          * @return {string}
          */
-        Suite.prototype.titlePath = function() {
+        Suite.prototype.titlePath = function () {
           var result = [];
           if (this.parent) {
             result = result.concat(this.parent.titlePath());
@@ -7242,9 +7239,9 @@
          * @public
          * @return {number}
          */
-        Suite.prototype.total = function() {
+        Suite.prototype.total = function () {
           return (
-            this.suites.reduce(function(sum, suite) {
+            this.suites.reduce(function (sum, suite) {
               return sum + suite.total();
             }, 0) + this.tests.length
           );
@@ -7258,9 +7255,9 @@
          * @param {Function} fn
          * @return {Suite}
          */
-        Suite.prototype.eachTest = function(fn) {
+        Suite.prototype.eachTest = function (fn) {
           this.tests.forEach(fn);
-          this.suites.forEach(function(suite) {
+          this.suites.forEach(function (suite) {
             suite.eachTest(fn);
           });
           return this;
@@ -7286,7 +7283,7 @@
           return (
             this._onlyTests.length > 0 ||
             this._onlySuites.length > 0 ||
-            this.suites.some(function(suite) {
+            this.suites.some(function (suite) {
               return suite.hasOnly();
             })
           );
@@ -7306,7 +7303,7 @@
           } else {
             // Otherwise, do not run any of the tests in this suite.
             this.tests = [];
-            this._onlySuites.forEach(function(onlySuite) {
+            this._onlySuites.forEach(function (onlySuite) {
               // If there are other `only` tests/suites nested in the current `only` suite, then filter that `only` suite.
               // Otherwise, all of the tests on this `only` suite should be run, so don't filter it.
               if (onlySuite.hasOnly()) {
@@ -7315,7 +7312,7 @@
             });
             // Run the `only` suites, as well as any other suites that have `only` tests/suites as descendants.
             var onlySuites = this._onlySuites;
-            this.suites = this.suites.filter(function(childSuite) {
+            this.suites = this.suites.filter(function (childSuite) {
               return onlySuites.indexOf(childSuite) !== -1 || childSuite.filterOnly();
             });
           }
@@ -7329,7 +7326,7 @@
          * @private
          * @param {Suite} suite
          */
-        Suite.prototype.appendOnlySuite = function(suite) {
+        Suite.prototype.appendOnlySuite = function (suite) {
           this._onlySuites.push(suite);
         };
 
@@ -7339,7 +7336,7 @@
          * @private
          * @param {Test} test
          */
-        Suite.prototype.appendOnlyTest = function(test) {
+        Suite.prototype.appendOnlyTest = function (test) {
           this._onlyTests.push(test);
         };
 
@@ -7459,7 +7456,7 @@
             /**
              * Emitted after a `Test` has been added to a `Suite`. Deprecated
              */
-            EVENT_SUITE_ADD_TEST: 'test'
+            EVENT_SUITE_ADD_TEST: 'test',
           }
         );
 
@@ -7471,20 +7468,20 @@
          * @ignore
          */
         var deprecatedEvents = Object.keys(constants)
-          .filter(function(constant) {
+          .filter(function (constant) {
             return constant.substring(0, 15) === 'EVENT_SUITE_ADD';
           })
-          .reduce(function(acc, constant) {
+          .reduce(function (acc, constant) {
             acc[constants[constant]] = true;
             return acc;
           }, utils.createMap());
 
         Suite.constants = constants;
       },
-      { './errors': 6, './hook': 7, './utils': 38, debug: 45, events: 50, ms: 60 }
+      { './errors': 6, './hook': 7, './utils': 38, debug: 45, events: 50, ms: 60 },
     ],
     37: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
         var Runnable = require('./runnable');
         var utils = require('./utils');
@@ -7521,7 +7518,7 @@
          */
         utils.inherits(Test, Runnable);
 
-        Test.prototype.clone = function() {
+        Test.prototype.clone = function () {
           var test = new Test(this.title, this.fn);
           test.timeout(this.timeout());
           test.slow(this.slow());
@@ -7535,11 +7532,11 @@
           return test;
         };
       },
-      { './errors': 6, './runnable': 33, './utils': 38 }
+      { './errors': 6, './runnable': 33, './utils': 38 },
     ],
     38: [
-      function(require, module, exports) {
-        (function(process, Buffer) {
+      function (require, module, exports) {
+        (function (process, Buffer) {
           'use strict';
 
           /**
@@ -7580,7 +7577,7 @@
            * @param  {string} html
            * @return {string}
            */
-          exports.escape = function(html) {
+          exports.escape = function (html) {
             return he.encode(String(html), { useNamedReferences: false });
           };
 
@@ -7591,7 +7588,7 @@
            * @param {Object} obj
            * @return {boolean}
            */
-          exports.isString = function(obj) {
+          exports.isString = function (obj) {
             return typeof obj === 'string';
           };
 
@@ -7603,12 +7600,12 @@
            * @param {Array} files
            * @param {Function} fn
            */
-          exports.watch = function(files, fn) {
+          exports.watch = function (files, fn) {
             var options = { interval: 100 };
             var debug = require('debug')('mocha:watch');
-            files.forEach(function(file) {
+            files.forEach(function (file) {
               debug('file %s', file);
-              fs.watchFile(file, options, function(curr, prev) {
+              fs.watchFile(file, options, function (curr, prev) {
                 if (prev.mtime < curr.mtime) {
                   fn(file);
                 }
@@ -7651,13 +7648,13 @@
            * @param {Array} [ret=[]]
            * @return {Array}
            */
-          exports.files = function(dir, exts, ret) {
+          exports.files = function (dir, exts, ret) {
             ret = ret || [];
             exts = exts || ['js'];
 
             fs.readdirSync(dir)
               .filter(considerFurther)
-              .forEach(function(dirent) {
+              .forEach(function (dirent) {
                 var pathname = path.join(dir, dirent);
                 if (fs.lstatSync(pathname).isDirectory()) {
                   exports.files(pathname, exts, ret);
@@ -7676,7 +7673,7 @@
            * @param {string} str
            * @return {string}
            */
-          exports.slug = function(str) {
+          exports.slug = function (str) {
             return str
               .toLowerCase()
               .replace(/ +/g, '-')
@@ -7689,7 +7686,7 @@
            * @param {string} str
            * @return {string}
            */
-          exports.clean = function(str) {
+          exports.clean = function (str) {
             str = str
               .replace(/\r\n?|[\n\u2028\u2029]/g, '\n')
               .replace(/^\uFEFF/, '')
@@ -7715,11 +7712,11 @@
            * @param {string} qs
            * @return {Object}
            */
-          exports.parseQuery = function(qs) {
+          exports.parseQuery = function (qs) {
             return qs
               .replace('?', '')
               .split('&')
-              .reduce(function(obj, pair) {
+              .reduce(function (obj, pair) {
                 var i = pair.indexOf('=');
                 var key = pair.slice(0, i);
                 var val = pair.slice(++i);
@@ -7762,7 +7759,7 @@
            * @private
            * @param {string} name
            */
-          exports.highlightTags = function(name) {
+          exports.highlightTags = function (name) {
             var code = document.getElementById('mocha').getElementsByTagName(name);
             for (var i = 0, len = code.length; i < len; ++i) {
               code[i].innerHTML = highlight(code[i].innerHTML);
@@ -7846,7 +7843,7 @@
            * @param {*} value
            * @return {string}
            */
-          exports.stringify = function(value) {
+          exports.stringify = function (value) {
             var typeHint = type(value);
 
             if (!~['object', 'array', 'function'].indexOf(typeHint)) {
@@ -7862,7 +7859,7 @@
               // IE7/IE8 has a bizarre String constructor; needs to be coerced
               // into an array and back to obj.
               if (typeHint === 'string' && typeof value === 'object') {
-                value = value.split('').reduce(function(acc, char, idx) {
+                value = value.split('').reduce(function (acc, char, idx) {
                   acc[idx] = char;
                   return acc;
                 }, {});
@@ -8009,8 +8006,8 @@
                 canonicalizedObj = value;
                 break;
               case 'array':
-                withStack(value, function() {
-                  canonicalizedObj = value.map(function(item) {
+                withStack(value, function () {
+                  canonicalizedObj = value.map(function (item) {
                     return exports.canonicalize(item, stack);
                   });
                 });
@@ -8029,10 +8026,10 @@
               /* falls through */
               case 'object':
                 canonicalizedObj = canonicalizedObj || {};
-                withStack(value, function() {
+                withStack(value, function () {
                   Object.keys(value)
                     .sort()
-                    .forEach(function(key) {
+                    .forEach(function (key) {
                       canonicalizedObj[key] = exports.canonicalize(value[key], stack);
                     });
                 });
@@ -8063,7 +8060,7 @@
            */
           function hasMatchingExtname(pathname, exts) {
             var suffix = path.extname(pathname).slice(1);
-            return exts.some(function(element) {
+            return exts.some(function (element) {
               return suffix === element;
             });
           }
@@ -8117,7 +8114,7 @@
               } else {
                 // glob pattern e.g. 'filepath+(.js|.ts)'
                 var strExtensions = extensions
-                  .map(function(v) {
+                  .map(function (v) {
                     return '.' + v;
                   })
                   .join('|');
@@ -8145,7 +8142,7 @@
             }
 
             // Handle directory
-            fs.readdirSync(filepath).forEach(function(dirent) {
+            fs.readdirSync(filepath).forEach(function (dirent) {
               var pathname = path.join(filepath, dirent);
               var stat;
 
@@ -8195,7 +8192,7 @@
             if (process.emitWarning) {
               process.emitWarning(msg, type);
             } else {
-              process.nextTick(function() {
+              process.nextTick(function () {
                 console.warn(type + ': ' + msg);
               });
             }
@@ -8239,7 +8236,7 @@
            * (i.e: strip Mocha and internal node functions from stack trace).
            * @returns {Function}
            */
-          exports.stackTraceFilter = function() {
+          exports.stackTraceFilter = function () {
             // TODO: Replace with `process.browser`
             var is = typeof document === 'undefined' ? { node: true } : { browser: true };
             var slash = path.sep;
@@ -8273,10 +8270,10 @@
               );
             }
 
-            return function(stack) {
+            return function (stack) {
               stack = stack.split('\n');
 
-              stack = stack.reduce(function(list, line) {
+              stack = stack.reduce(function (list, line) {
                 if (isMochaInternal(line)) {
                   return list;
                 }
@@ -8334,7 +8331,7 @@
            * @example
            * sQuote('n') // => 'n'
            */
-          exports.sQuote = function(str) {
+          exports.sQuote = function (str) {
             return "'" + str + "'";
           };
 
@@ -8353,7 +8350,7 @@
            * @example
            * dQuote('number') // => "number"
            */
-          exports.dQuote = function(str) {
+          exports.dQuote = function (str) {
             return '"' + str + '"';
           };
 
@@ -8383,7 +8380,7 @@
            * );
            * console.log(msg); // => cannot load packages: 'one', 'two'
            */
-          exports.ngettext = function(n, msg1, msg2) {
+          exports.ngettext = function (n, msg1, msg2) {
             if (typeof n === 'number' && n >= 0) {
               return n === 1 ? msg1 : msg2;
             }
@@ -8393,7 +8390,7 @@
            * It's a noop.
            * @public
            */
-          exports.noop = function() {};
+          exports.noop = function () {};
 
           /**
            * Creates a map-like object.
@@ -8410,7 +8407,7 @@
            * @param {...*} [obj] - Arguments to `Object.assign()`.
            * @returns {Object} An object with no prototype, having `...obj` properties
            */
-          exports.createMap = function(obj) {
+          exports.createMap = function (obj) {
             return assign.apply(
               null,
               [Object.create(null)].concat(Array.prototype.slice.call(arguments))
@@ -8429,7 +8426,7 @@
            * @returns {Object} A frozen object with no prototype, having `...obj` properties
            * @throws {TypeError} if argument is not a non-empty object.
            */
-          exports.defineConstants = function(obj) {
+          exports.defineConstants = function (obj) {
             if (type(obj) !== 'object' || !Object.keys(obj).length) {
               throw new TypeError('Invalid argument; expected a non-empty object');
             }
@@ -8447,11 +8444,11 @@
         he: 54,
         'object.assign': 65,
         path: 42,
-        util: 89
-      }
+        util: 89,
+      },
     ],
     39: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         exports.byteLength = byteLength;
@@ -8593,12 +8590,12 @@
           return parts.join('');
         }
       },
-      {}
+      {},
     ],
-    40: [function(require, module, exports) {}, {}],
+    40: [function (require, module, exports) {}, {}],
     41: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           var WritableStream = require('stream').Writable;
           var inherits = require('util').inherits;
 
@@ -8614,7 +8611,7 @@
             this.label = opts.label !== undefined ? opts.label : 'stdout';
           }
 
-          BrowserStdout.prototype._write = function(chunks, encoding, cb) {
+          BrowserStdout.prototype._write = function (chunks, encoding, cb) {
             var output = chunks.toString ? chunks.toString() : chunks;
             if (this.label === false) {
               console.log(output);
@@ -8625,17 +8622,17 @@
           };
         }.call(this, require('_process')));
       },
-      { _process: 69, stream: 84, util: 89 }
+      { _process: 69, stream: 84, util: 89 },
     ],
     42: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         arguments[4][40][0].apply(exports, arguments);
       },
-      { dup: 40 }
+      { dup: 40 },
     ],
     43: [
-      function(require, module, exports) {
-        (function(Buffer) {
+      function (require, module, exports) {
+        (function (Buffer) {
           /*!
            * The buffer module from node.js, for the browser.
            *
@@ -8689,9 +8686,9 @@
               var arr = new Uint8Array(1);
               arr.__proto__ = {
                 __proto__: Uint8Array.prototype,
-                foo: function() {
+                foo: function () {
                   return 42;
-                }
+                },
               };
               return arr.foo() === 42;
             } catch (e) {
@@ -8701,18 +8698,18 @@
 
           Object.defineProperty(Buffer.prototype, 'parent', {
             enumerable: true,
-            get: function() {
+            get: function () {
               if (!Buffer.isBuffer(this)) return undefined;
               return this.buffer;
-            }
+            },
           });
 
           Object.defineProperty(Buffer.prototype, 'offset', {
             enumerable: true,
-            get: function() {
+            get: function () {
               if (!Buffer.isBuffer(this)) return undefined;
               return this.byteOffset;
-            }
+            },
           });
 
           function createBuffer(length) {
@@ -8758,7 +8755,7 @@
               value: null,
               configurable: true,
               enumerable: false,
-              writable: false
+              writable: false,
             });
           }
 
@@ -8825,7 +8822,7 @@
            * Buffer.from(buffer)
            * Buffer.from(arrayBuffer[, byteOffset[, length]])
            **/
-          Buffer.from = function(value, encodingOrOffset, length) {
+          Buffer.from = function (value, encodingOrOffset, length) {
             return from(value, encodingOrOffset, length);
           };
 
@@ -8862,7 +8859,7 @@
            * Creates a new filled Buffer instance.
            * alloc(size[, fill[, encoding]])
            **/
-          Buffer.alloc = function(size, fill, encoding) {
+          Buffer.alloc = function (size, fill, encoding) {
             return alloc(size, fill, encoding);
           };
 
@@ -8874,13 +8871,13 @@
           /**
            * Equivalent to Buffer(num), by default creates a non-zero-filled Buffer instance.
            * */
-          Buffer.allocUnsafe = function(size) {
+          Buffer.allocUnsafe = function (size) {
             return allocUnsafe(size);
           };
           /**
            * Equivalent to SlowBuffer(num), by default creates a non-zero-filled Buffer instance.
            */
-          Buffer.allocUnsafeSlow = function(size) {
+          Buffer.allocUnsafeSlow = function (size) {
             return allocUnsafe(size);
           };
 
@@ -9588,7 +9585,7 @@
           Buffer.prototype.toJSON = function toJSON() {
             return {
               type: 'Buffer',
-              data: Array.prototype.slice.call(this._arr || this, 0)
+              data: Array.prototype.slice.call(this._arr || this, 0),
             };
           };
 
@@ -10455,11 +10452,11 @@
           }
         }.call(this, require('buffer').Buffer));
       },
-      { 'base64-js': 39, buffer: 43, ieee754: 55 }
+      { 'base64-js': 39, buffer: 43, ieee754: 55 },
     ],
     44: [
-      function(require, module, exports) {
-        (function(Buffer) {
+      function (require, module, exports) {
+        (function (Buffer) {
           // Copyright Joyent, Inc. and other Node contributors.
           //
           // Permission is hereby granted, free of charge, to any person obtaining a
@@ -10571,11 +10568,11 @@
           }
         }.call(this, { isBuffer: require('../../is-buffer/index.js') }));
       },
-      { '../../is-buffer/index.js': 57 }
+      { '../../is-buffer/index.js': 57 },
     ],
     45: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
 
           function _typeof(obj) {
@@ -10687,7 +10684,7 @@
             '#FF9900',
             '#FF9933',
             '#FFCC00',
-            '#FFCC33'
+            '#FFCC33',
           ];
           /**
            * Currently only WebKit-based Web Inspectors, Firefox >= v31,
@@ -10764,7 +10761,7 @@
 
             var index = 0;
             var lastC = 0;
-            args[0].replace(/%[a-zA-Z%]/g, function(match) {
+            args[0].replace(/%[a-zA-Z%]/g, function (match) {
               if (match === '%%') {
                 return;
               }
@@ -10866,7 +10863,7 @@
            * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
            */
 
-          formatters.j = function(v) {
+          formatters.j = function (v) {
             try {
               return JSON.stringify(v);
             } catch (error) {
@@ -10875,10 +10872,10 @@
           };
         }.call(this, require('_process')));
       },
-      { './common': 46, _process: 69 }
+      { './common': 46, _process: 69 },
     ],
     46: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         /**
@@ -10893,7 +10890,7 @@
           createDebug.enable = enable;
           createDebug.enabled = enabled;
           createDebug.humanize = require('ms');
-          Object.keys(env).forEach(function(key) {
+          Object.keys(env).forEach(function (key) {
             createDebug[key] = env[key];
           });
           /**
@@ -10974,7 +10971,7 @@
               } // Apply any `formatters` transformations
 
               var index = 0;
-              args[0] = args[0].replace(/%([a-zA-Z%])/g, function(match, format) {
+              args[0] = args[0].replace(/%([a-zA-Z%])/g, function (match, format) {
                 // If we encounter an escaped % then don't increase the array index
                 if (match === '%%') {
                   return match;
@@ -11129,10 +11126,10 @@
 
         module.exports = setup;
       },
-      { ms: 60 }
+      { ms: 60 },
     ],
     47: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var keys = require('object-keys');
@@ -11142,11 +11139,11 @@
         var concat = Array.prototype.concat;
         var origDefineProperty = Object.defineProperty;
 
-        var isFunction = function(fn) {
+        var isFunction = function (fn) {
           return typeof fn === 'function' && toStr.call(fn) === '[object Function]';
         };
 
-        var arePropertyDescriptorsSupported = function() {
+        var arePropertyDescriptorsSupported = function () {
           var obj = {};
           try {
             origDefineProperty(obj, 'x', { enumerable: false, value: obj });
@@ -11163,7 +11160,7 @@
         };
         var supportsDescriptors = origDefineProperty && arePropertyDescriptorsSupported();
 
-        var defineProperty = function(object, name, value, predicate) {
+        var defineProperty = function (object, name, value, predicate) {
           if (name in object && (!isFunction(predicate) || !predicate())) {
             return;
           }
@@ -11172,14 +11169,14 @@
               configurable: true,
               enumerable: false,
               value: value,
-              writable: true
+              writable: true,
             });
           } else {
             object[name] = value;
           }
         };
 
-        var defineProperties = function(object, map) {
+        var defineProperties = function (object, map) {
           var predicates = arguments.length > 2 ? arguments[2] : {};
           var props = keys(map);
           if (hasSymbols) {
@@ -11194,10 +11191,10 @@
 
         module.exports = defineProperties;
       },
-      { 'object-keys': 62 }
+      { 'object-keys': 62 },
     ],
     48: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         /*!
 
  diff v3.5.0
@@ -11240,8 +11237,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           else if (false) define([], factory);
           else if (typeof exports === 'object') exports['JsDiff'] = factory();
           else root['JsDiff'] = factory();
-        })(this, function() {
-          return /******/ (function(modules) {
+        })(this, function () {
+          return /******/ (function (modules) {
             // webpackBootstrap
             /******/ // The module cache
             /******/ var installedModules = {}; // The require function
@@ -11254,7 +11251,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               /******/ /******/ var module = (installedModules[moduleId] = {
                 /******/ exports: {},
                 /******/ id: moduleId,
-                /******/ loaded: false
+                /******/ loaded: false,
                 /******/
               }); // Execute the module function
 
@@ -11283,7 +11280,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             /************************************************************************/
             /******/ [
               /* 0 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11405,7 +11402,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 1 */
-              /***/ function(module, exports) {
+              /***/ function (module, exports) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11431,7 +11428,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
                     function done(value) {
                       if (callback) {
-                        setTimeout(function() {
+                        setTimeout(function () {
                           callback(undefined, value);
                         }, 0);
                         return true;
@@ -11523,7 +11520,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     // is produced.
                     if (callback) {
                       (function exec() {
-                        setTimeout(function() {
+                        setTimeout(function () {
                           // This should not happen, but we want to be safe.
                           /* istanbul ignore next */
                           if (editLength > maxEditLength) {
@@ -11556,7 +11553,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                       components[components.length - 1] = {
                         count: last.count + 1,
                         added: added,
-                        removed: removed
+                        removed: removed,
                       };
                     } else {
                       components.push({ count: 1, added: added, removed: removed });
@@ -11626,7 +11623,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   },
                   /*istanbul ignore start*/ /*istanbul ignore end*/ join: function join(chars) {
                     return chars.join('');
-                  }
+                  },
                 };
 
                 function buildValues(diff, components, newString, oldString, useLongestToken) {
@@ -11640,7 +11637,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     if (!component.removed) {
                       if (!component.added && useLongestToken) {
                         var value = newString.slice(newPos, newPos + component.count);
-                        value = value.map(function(value, i) {
+                        value = value.map(function (value, i) {
                           var oldValue = oldString[oldPos + i];
                           return oldValue.length > value.length ? oldValue : value;
                         });
@@ -11698,7 +11695,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 2 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11725,7 +11722,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 3 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11745,12 +11742,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
                 /*istanbul ignore start*/ function _interopRequireDefault(obj) {
                   return obj && obj.__esModule ? obj : { default: obj };
-                } // Based on https://en.wikipedia.org/wiki/Latin_script_in_Unicode // // Ranges and exceptions:
+                } // Based on https://en.wikipedia.org/wiki/Latin_script_in_Unicode // // Ranges and exceptions: // Latin-1 Supplement, 0080–00FF //  - U+00D7  × Multiplication sign //  - U+00F7  ÷ Division sign
 
-                /*istanbul ignore end*/ // Latin-1 Supplement, 0080–00FF
-                //  - U+00D7  × Multiplication sign
-                //  - U+00F7  ÷ Division sign
-                // Latin Extended-A, 0100–017F
+                /*istanbul ignore end*/ // Latin Extended-A, 0100–017F
                 // Latin Extended-B, 0180–024F
                 // IPA Extensions, 0250–02AF
                 // Spacing Modifier Letters, 02B0–02FF
@@ -11769,7 +11763,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 var wordDiff = /*istanbul ignore start*/ (exports./*istanbul ignore end*/ wordDiff = new /*istanbul ignore start*/ _base2[
                   'default'
                 ] /*istanbul ignore end*/());
-                wordDiff.equals = function(left, right) {
+                wordDiff.equals = function (left, right) {
                   if (this.options.ignoreCase) {
                     left = left.toLowerCase();
                     right = right.toLowerCase();
@@ -11781,7 +11775,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                       !reWhitespace.test(right))
                   );
                 };
-                wordDiff.tokenize = function(value) {
+                wordDiff.tokenize = function (value) {
                   var tokens = value.split(/(\s+|\b)/);
 
                   // Join the boundary splits that we do not consider to be boundaries. This is primarily the extended Latin character set.
@@ -11806,7 +11800,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   options = /*istanbul ignore start*/ (0, _params.generateOptions)(
                     /*istanbul ignore end*/ options,
                     {
-                      ignoreWhitespace: true
+                      ignoreWhitespace: true,
                     }
                   );
                   return wordDiff.diff(oldStr, newStr, options);
@@ -11819,7 +11813,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 4 */
-              /***/ function(module, exports) {
+              /***/ function (module, exports) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11841,7 +11835,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 5 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11866,7 +11860,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /*istanbul ignore end*/ var lineDiff = /*istanbul ignore start*/ (exports./*istanbul ignore end*/ lineDiff = new /*istanbul ignore start*/ _base2[
                   'default'
                 ] /*istanbul ignore end*/());
-                lineDiff.tokenize = function(value) {
+                lineDiff.tokenize = function (value) {
                   var retLines = [],
                     linesAndNewlines = value.split(/(\n|\r\n)/);
 
@@ -11896,17 +11890,19 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   return lineDiff.diff(oldStr, newStr, callback);
                 }
                 function diffTrimmedLines(oldStr, newStr, callback) {
-                  var options = /*istanbul ignore start*/ (0,
-                  _params.generateOptions)(/*istanbul ignore end*/ callback, {
-                    ignoreWhitespace: true
-                  });
+                  var options = /*istanbul ignore start*/ (0, _params.generateOptions)(
+                    /*istanbul ignore end*/ callback,
+                    {
+                      ignoreWhitespace: true,
+                    }
+                  );
                   return lineDiff.diff(oldStr, newStr, options);
                 }
 
                 /***/
               },
               /* 6 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11926,7 +11922,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /*istanbul ignore end*/ var sentenceDiff = /*istanbul ignore start*/ (exports./*istanbul ignore end*/ sentenceDiff = new /*istanbul ignore start*/ _base2[
                   'default'
                 ] /*istanbul ignore end*/());
-                sentenceDiff.tokenize = function(value) {
+                sentenceDiff.tokenize = function (value) {
                   return value.split(/(\S.+?[.!?])(?=\s+|$)/);
                 };
 
@@ -11937,7 +11933,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 7 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11957,7 +11953,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /*istanbul ignore end*/ var cssDiff = /*istanbul ignore start*/ (exports./*istanbul ignore end*/ cssDiff = new /*istanbul ignore start*/ _base2[
                   'default'
                 ] /*istanbul ignore end*/());
-                cssDiff.tokenize = function(value) {
+                cssDiff.tokenize = function (value) {
                   return value.split(/([{}:;,]|\s+)/);
                 };
 
@@ -11968,7 +11964,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 8 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -11976,10 +11972,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
                 var _typeof =
                   typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
-                    ? function(obj) {
+                    ? function (obj) {
                         return typeof obj;
                       }
-                    : function(obj) {
+                    : function (obj) {
                         return obj &&
                           typeof Symbol === 'function' &&
                           obj.constructor === Symbol &&
@@ -12016,13 +12012,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
                 jsonDiff.tokenize =
                   /*istanbul ignore start*/ _line.lineDiff /*istanbul ignore end*/.tokenize;
-                jsonDiff.castInput = function(value) {
+                jsonDiff.castInput = function (value) {
                   /*istanbul ignore start*/ var _options = /*istanbul ignore end*/ this.options,
                     undefinedReplacement = _options.undefinedReplacement,
                     _options$stringifyRep = _options.stringifyReplacer,
                     stringifyReplacer =
                       _options$stringifyRep === undefined
-                        ? function(k, v) /*istanbul ignore start*/ {
+                        ? function (k, v) /*istanbul ignore start*/ {
                             return /*istanbul ignore end*/ typeof v === 'undefined'
                               ? undefinedReplacement
                               : v;
@@ -12037,7 +12033,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                         '  '
                       );
                 };
-                jsonDiff.equals = function(left, right) {
+                jsonDiff.equals = function (left, right) {
                   return /*istanbul ignore start*/ _base2[
                     'default'
                   ] /*istanbul ignore end*/.prototype.equals
@@ -12133,7 +12129,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 9 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -12153,10 +12149,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /*istanbul ignore end*/ var arrayDiff = /*istanbul ignore start*/ (exports./*istanbul ignore end*/ arrayDiff = new /*istanbul ignore start*/ _base2[
                   'default'
                 ] /*istanbul ignore end*/());
-                arrayDiff.tokenize = function(value) {
+                arrayDiff.tokenize = function (value) {
                   return value.slice();
                 };
-                arrayDiff.join = arrayDiff.removeEmpty = function(value) {
+                arrayDiff.join = arrayDiff.removeEmpty = function (value) {
                   return value;
                 };
 
@@ -12167,7 +12163,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 10 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -12214,7 +12210,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     hunks = uniDiff.hunks,
                     compareLine =
                       options.compareLine ||
-                      function(
+                      function (
                         lineNumber,
                         line,
                         operation,
@@ -12353,13 +12349,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                       return options.complete();
                     }
 
-                    options.loadFile(index, function(err, data) {
+                    options.loadFile(index, function (err, data) {
                       if (err) {
                         return options.complete(err);
                       }
 
                       var updatedContent = applyPatch(data, index, options);
-                      options.patched(index, updatedContent, function(err) {
+                      options.patched(index, updatedContent, function (err) {
                         if (err) {
                           return options.complete(err);
                         }
@@ -12374,7 +12370,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 11 */
-              /***/ function(module, exports) {
+              /***/ function (module, exports) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -12467,7 +12463,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                       newStart: +chunkHeader[3],
                       newLines: +chunkHeader[4] || 1,
                       lines: [],
-                      linedelimiters: []
+                      linedelimiters: [],
                     };
 
                     var addCount = 0,
@@ -12545,12 +12541,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 12 */
-              /***/ function(module, exports) {
+              /***/ function (module, exports) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
 
-                exports['default'] = /*istanbul ignore end*/ function(start, minLine, maxLine) {
+                exports['default'] = /*istanbul ignore end*/ function (start, minLine, maxLine) {
                   var wantForward = true,
                     backwardExhausted = false,
                     forwardExhausted = false,
@@ -12596,7 +12592,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 13 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -12712,7 +12708,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                           theirsCurrent.oldStart + theirsOffset
                         ),
                         newLines: 0,
-                        lines: []
+                        lines: [],
                       };
                       mergeLines(
                         mergedHunk,
@@ -12778,7 +12774,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     oldLines: hunk.oldLines,
                     newStart: hunk.newStart + offset,
                     newLines: hunk.newLines,
-                    lines: hunk.lines
+                    lines: hunk.lines,
                   };
                 }
 
@@ -12936,7 +12932,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   hunk.lines.push({
                     conflict: true,
                     mine: mine,
-                    theirs: their
+                    theirs: their,
                   });
                 }
 
@@ -13028,12 +13024,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
                   return {
                     merged: merged,
-                    changes: changes
+                    changes: changes,
                   };
                 }
 
                 function allRemoves(changes) {
-                  return changes.reduce(function(prev, change) {
+                  return changes.reduce(function (prev, change) {
                     return prev && change[0] === '-';
                   }, true);
                 }
@@ -13053,7 +13049,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   var oldLines = 0;
                   var newLines = 0;
 
-                  lines.forEach(function(line) {
+                  lines.forEach(function (line) {
                     if (typeof line !== 'string') {
                       var myCount = calcOldNewLineCount(line.mine);
                       var theirCount = calcOldNewLineCount(line.theirs);
@@ -13089,7 +13085,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 14 */
-              /***/ function(module, exports, __webpack_require__) {
+              /***/ function (module, exports, __webpack_require__) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -13136,7 +13132,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   diff.push({ value: '', lines: [] }); // Append an empty value to make cleanup easier
 
                   function contextLines(lines) {
-                    return lines.map(function(entry) {
+                    return lines.map(function (entry) {
                       return ' ' + entry;
                     });
                   }
@@ -13175,7 +13171,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                       /*istanbul ignore start*/ (_curRange = /*istanbul ignore end*/ curRange).push./*istanbul ignore start*/ apply(
                         /*istanbul ignore end*/ /*istanbul ignore start*/ _curRange /*istanbul ignore end*/,
                         /*istanbul ignore start*/ _toConsumableArray(
-                          /*istanbul ignore end*/ lines.map(function(entry) {
+                          /*istanbul ignore end*/ lines.map(function (entry) {
                             return (current.added ? '+' : '-') + entry;
                           })
                         )
@@ -13219,7 +13215,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                             oldLines: oldLine - oldRangeStart + contextSize,
                             newStart: newRangeStart,
                             newLines: newLine - newRangeStart + contextSize,
-                            lines: curRange
+                            lines: curRange,
                           };
                           if (i >= diff.length - 2 && lines.length <= options.context) {
                             // EOF is inside this hunk
@@ -13253,7 +13249,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                     newFileName: newFileName,
                     oldHeader: oldHeader,
                     newHeader: newHeader,
-                    hunks: hunks
+                    hunks: hunks,
                   };
                 }
 
@@ -13326,7 +13322,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 15 */
-              /***/ function(module, exports) {
+              /***/ function (module, exports) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -13357,7 +13353,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 16 */
-              /***/ function(module, exports) {
+              /***/ function (module, exports) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -13385,7 +13381,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 /***/
               },
               /* 17 */
-              /***/ function(module, exports) {
+              /***/ function (module, exports) {
                 /*istanbul ignore start*/ 'use strict';
 
                 exports.__esModule = true;
@@ -13422,21 +13418,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 }
 
                 /***/
-              }
+              },
               /******/
             ]
           );
         });
       },
-      {}
+      {},
     ],
     49: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
 
-        module.exports = function(str) {
+        module.exports = function (str) {
           if (typeof str !== 'string') {
             throw new TypeError('Expected a string');
           }
@@ -13444,10 +13440,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return str.replace(matchOperatorsRe, '\\$&');
         };
       },
-      {}
+      {},
     ],
     50: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
         // Permission is hereby granted, free of charge, to any person obtaining a
@@ -13504,16 +13500,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         if (hasDefineProperty) {
           Object.defineProperty(EventEmitter, 'defaultMaxListeners', {
             enumerable: true,
-            get: function() {
+            get: function () {
               return defaultMaxListeners;
             },
-            set: function(arg) {
+            set: function (arg) {
               // check whether the input is a positive number (whose value is zero or
               // greater and not a NaN).
               if (typeof arg !== 'number' || arg < 0 || arg !== arg)
                 throw new TypeError('"defaultMaxListeners" must be a positive number');
               defaultMaxListeners = arg;
-            }
+            },
           });
         } else {
           EventEmitter.defaultMaxListeners = defaultMaxListeners;
@@ -13743,7 +13739,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             wrapFn: undefined,
             target: target,
             type: type,
-            listener: listener
+            listener: listener,
           };
           var wrapped = bind.call(onceWrapper, state);
           wrapped.listener = listener;
@@ -13879,7 +13875,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return _listeners(this, type, false);
         };
 
-        EventEmitter.listenerCount = function(emitter, type) {
+        EventEmitter.listenerCount = function (emitter, type) {
           if (typeof emitter.listenerCount === 'function') {
             return emitter.listenerCount(type);
           } else {
@@ -13929,7 +13925,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
 
         function objectCreatePolyfill(proto) {
-          var F = function() {};
+          var F = function () {};
           F.prototype = proto;
           return new F();
         }
@@ -13943,15 +13939,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
         function functionBindPolyfill(context) {
           var fn = this;
-          return function() {
+          return function () {
             return fn.apply(context, arguments);
           };
         }
       },
-      {}
+      {},
     ],
     51: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         /* eslint no-invalid-this: 1 */
@@ -13969,7 +13965,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           var args = slice.call(arguments, 1);
 
           var bound;
-          var binder = function() {
+          var binder = function () {
             if (this instanceof bound) {
               var result = target.apply(this, args.concat(slice.call(arguments)));
               if (Object(result) === result) {
@@ -14002,20 +13998,20 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return bound;
         };
       },
-      {}
+      {},
     ],
     52: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var implementation = require('./implementation');
 
         module.exports = Function.prototype.bind || implementation;
       },
-      { './implementation': 51 }
+      { './implementation': 51 },
     ],
     53: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         /* eslint complexity: [2, 17], max-statements: [2, 33] */
@@ -14084,13 +14080,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return true;
         };
       },
-      {}
+      {},
     ],
     54: [
-      function(require, module, exports) {
-        (function(global) {
+      function (require, module, exports) {
+        (function (global) {
           /*! https://mths.be/he v1.2.0 by @mathias | MIT license */
-          (function(root) {
+          (function (root) {
             // Detect free variables `exports`.
             var freeExports = typeof exports == 'object' && exports;
 
@@ -15630,7 +15626,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               ℵ: 'aleph',
               ℶ: 'beth',
               ℷ: 'gimel',
-              ℸ: 'daleth'
+              ℸ: 'daleth',
             };
 
             var regexEscape = /["&'<>`]/g;
@@ -15648,7 +15644,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               // to break out of (un)quoted attribute values or HTML comments.
               // See http://html5sec.org/#102, http://html5sec.org/#108, and
               // http://html5sec.org/#133.
-              '`': '&#x60;'
+              '`': '&#x60;',
             };
 
             var regexInvalidEntity = /&#(?:[xX][^a-fA-F0-9]|[^0-9xX])/;
@@ -17779,7 +17775,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               zscr: '\uD835\uDCCF',
               Zscr: '\uD835\uDCB5',
               zwj: '\u200D',
-              zwnj: '\u200C'
+              zwnj: '\u200C',
             };
             var decodeMapLegacy = {
               aacute: '\xE1',
@@ -17887,7 +17883,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               yacute: '\xFD',
               Yacute: '\xDD',
               yen: '\xA5',
-              yuml: '\xFF'
+              yuml: '\xFF',
             };
             var decodeMapNumeric = {
               '0': '\uFFFD',
@@ -17917,7 +17913,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               '155': '\u203A',
               '156': '\u0153',
               '158': '\u017E',
-              '159': '\u0178'
+              '159': '\u0178',
             };
             var invalidReferenceCodePoints = [
               1,
@@ -18046,7 +18042,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               1048574,
               1048575,
               1114110,
-              1114111
+              1114111,
             ];
 
             /*--------------------------------------------------------------------------*/
@@ -18055,11 +18051,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             var object = {};
             var hasOwnProperty = object.hasOwnProperty;
-            var has = function(object, propertyName) {
+            var has = function (object, propertyName) {
               return hasOwnProperty.call(object, propertyName);
             };
 
-            var contains = function(array, value) {
+            var contains = function (array, value) {
               var index = -1;
               var length = array.length;
               while (++index < length) {
@@ -18070,7 +18066,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               return false;
             };
 
-            var merge = function(options, defaults) {
+            var merge = function (options, defaults) {
               if (!options) {
                 return defaults;
               }
@@ -18085,7 +18081,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             };
 
             // Modified version of `ucs2encode`; see https://mths.be/punycode.
-            var codePointToSymbol = function(codePoint, strict) {
+            var codePointToSymbol = function (codePoint, strict) {
               var output = '';
               if ((codePoint >= 0xd800 && codePoint <= 0xdfff) || codePoint > 0x10ffff) {
                 // See issue #4:
@@ -18115,21 +18111,21 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               return output;
             };
 
-            var hexEscape = function(codePoint) {
+            var hexEscape = function (codePoint) {
               return '&#x' + codePoint.toString(16).toUpperCase() + ';';
             };
 
-            var decEscape = function(codePoint) {
+            var decEscape = function (codePoint) {
               return '&#' + codePoint + ';';
             };
 
-            var parseError = function(message) {
+            var parseError = function (message) {
               throw Error('Parse error: ' + message);
             };
 
             /*--------------------------------------------------------------------------*/
 
-            var encode = function(string, options) {
+            var encode = function (string, options) {
               options = merge(options, encode.options);
               var strict = options.strict;
               if (strict && regexInvalidRawCodePoint.test(string)) {
@@ -18140,13 +18136,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               var allowUnsafeSymbols = options.allowUnsafeSymbols;
               var escapeCodePoint = options.decimal ? decEscape : hexEscape;
 
-              var escapeBmpSymbol = function(symbol) {
+              var escapeBmpSymbol = function (symbol) {
                 return escapeCodePoint(symbol.charCodeAt(0));
               };
 
               if (encodeEverything) {
                 // Encode ASCII symbols.
-                string = string.replace(regexAsciiWhitelist, function(symbol) {
+                string = string.replace(regexAsciiWhitelist, function (symbol) {
                   // Use named references if requested & possible.
                   if (useNamedReferences && has(encodeMap, symbol)) {
                     return '&' + encodeMap[symbol] + ';';
@@ -18164,7 +18160,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 // Encode non-ASCII symbols.
                 if (useNamedReferences) {
                   // Encode non-ASCII symbols that can be replaced with a named reference.
-                  string = string.replace(regexEncodeNonAscii, function(string) {
+                  string = string.replace(regexEncodeNonAscii, function (string) {
                     // Note: there is no need to check `has(encodeMap, string)` here.
                     return '&' + encodeMap[string] + ';';
                   });
@@ -18174,7 +18170,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 // Apply named character references.
                 // Encode `<>"'&` using named character references.
                 if (!allowUnsafeSymbols) {
-                  string = string.replace(regexEscape, function(string) {
+                  string = string.replace(regexEscape, function (string) {
                     return '&' + encodeMap[string] + ';'; // no need to check `has()` here
                   });
                 }
@@ -18182,7 +18178,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 // `<>"'&`.
                 string = string.replace(/&gt;\u20D2/g, '&nvgt;').replace(/&lt;\u20D2/g, '&nvlt;');
                 // Encode non-ASCII symbols that can be replaced with a named reference.
-                string = string.replace(regexEncodeNonAscii, function(string) {
+                string = string.replace(regexEncodeNonAscii, function (string) {
                   // Note: there is no need to check `has(encodeMap, string)` here.
                   return '&' + encodeMap[string] + ';';
                 });
@@ -18194,7 +18190,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               return (
                 string
                   // Encode astral symbols.
-                  .replace(regexAstralSymbols, function($0) {
+                  .replace(regexAstralSymbols, function ($0) {
                     // https://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
                     var high = $0.charCodeAt(0);
                     var low = $0.charCodeAt(1);
@@ -18212,16 +18208,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               encodeEverything: false,
               strict: false,
               useNamedReferences: false,
-              decimal: false
+              decimal: false,
             };
 
-            var decode = function(html, options) {
+            var decode = function (html, options) {
               options = merge(options, decode.options);
               var strict = options.strict;
               if (strict && regexInvalidEntity.test(html)) {
                 parseError('malformed character reference');
               }
-              return html.replace(regexDecode, function($0, $1, $2, $3, $4, $5, $6, $7, $8) {
+              return html.replace(regexDecode, function ($0, $1, $2, $3, $4, $5, $6, $7, $8) {
                 var codePoint;
                 var semicolon;
                 var decDigits;
@@ -18288,11 +18284,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             // Expose default options (so they can be overridden globally).
             decode.options = {
               isAttributeValue: false,
-              strict: false
+              strict: false,
             };
 
-            var escape = function(string) {
-              return string.replace(regexEscape, function($0) {
+            var escape = function (string) {
+              return string.replace(regexEscape, function ($0) {
                 // Note: there is no need to check `has(escapeMap, $0)` here.
                 return escapeMap[$0];
               });
@@ -18305,13 +18301,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               encode: encode,
               decode: decode,
               escape: escape,
-              unescape: decode
+              unescape: decode,
             };
 
             // Some AMD build optimizers, like r.js, check for specific condition patterns
             // like the following:
             if (false) {
-              define(function() {
+              define(function () {
                 return he;
               });
             } else if (freeExports && !freeExports.nodeType) {
@@ -18340,11 +18336,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             : {}
         ));
       },
-      {}
+      {},
     ],
     55: [
-      function(require, module, exports) {
-        exports.read = function(buffer, offset, isLE, mLen, nBytes) {
+      function (require, module, exports) {
+        exports.read = function (buffer, offset, isLE, mLen, nBytes) {
           var e, m;
           var eLen = nBytes * 8 - mLen - 1;
           var eMax = (1 << eLen) - 1;
@@ -18377,7 +18373,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
         };
 
-        exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
+        exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
           var e, m, c;
           var eLen = nBytes * 8 - mLen - 1;
           var eMax = (1 << eLen) - 1;
@@ -18429,10 +18425,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           buffer[offset + i - d] |= s * 128;
         };
       },
-      {}
+      {},
     ],
     56: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         if (typeof Object.create === 'function') {
           // implementation from standard node.js 'util' module
           module.exports = function inherits(ctor, superCtor) {
@@ -18442,25 +18438,25 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 value: ctor,
                 enumerable: false,
                 writable: true,
-                configurable: true
-              }
+                configurable: true,
+              },
             });
           };
         } else {
           // old school shim for old browsers
           module.exports = function inherits(ctor, superCtor) {
             ctor.super_ = superCtor;
-            var TempCtor = function() {};
+            var TempCtor = function () {};
             TempCtor.prototype = superCtor.prototype;
             ctor.prototype = new TempCtor();
             ctor.prototype.constructor = ctor;
           };
         }
       },
-      {}
+      {},
     ],
     57: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         /*!
          * Determine if an object is a Buffer
          *
@@ -18470,7 +18466,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         // The _isBuffer check is for Safari 5-7 support, because it's missing
         // Object.prototype.constructor. Remove this eventually
-        module.exports = function(obj) {
+        module.exports = function (obj) {
           return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer);
         };
 
@@ -18491,23 +18487,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           );
         }
       },
-      {}
+      {},
     ],
     58: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         var toString = {}.toString;
 
         module.exports =
           Array.isArray ||
-          function(arr) {
+          function (arr) {
             return toString.call(arr) == '[object Array]';
           };
       },
-      {}
+      {},
     ],
     59: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           var path = require('path');
           var fs = require('fs');
           var _0777 = parseInt('0777', 8);
@@ -18530,17 +18526,17 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             }
             if (!made) made = null;
 
-            var cb = f || function() {};
+            var cb = f || function () {};
             p = path.resolve(p);
 
-            xfs.mkdir(p, mode, function(er) {
+            xfs.mkdir(p, mode, function (er) {
               if (!er) {
                 made = made || p;
                 return cb(null, made);
               }
               switch (er.code) {
                 case 'ENOENT':
-                  mkdirP(path.dirname(p), opts, function(er, made) {
+                  mkdirP(path.dirname(p), opts, function (er, made) {
                     if (er) cb(er, made);
                     else mkdirP(p, opts, cb, made);
                   });
@@ -18550,7 +18546,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 // there already.  If so, then hooray!  If not, then something
                 // is borked.
                 default:
-                  xfs.stat(p, function(er2, stat) {
+                  xfs.stat(p, function (er2, stat) {
                     // if the stat fails, then that's super weird.
                     // let the original error be the failure reason.
                     if (er2 || !stat.isDirectory()) cb(er, made);
@@ -18605,10 +18601,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           };
         }.call(this, require('_process')));
       },
-      { _process: 69, fs: 42, path: 42 }
+      { _process: 69, fs: 42, path: 42 },
     ],
     60: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         /**
          * Helpers.
          */
@@ -18634,7 +18630,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
          * @api public
          */
 
-        module.exports = function(val, options) {
+        module.exports = function (val, options) {
           options = options || {};
           var type = typeof val;
           if (type === 'string' && val.length > 0) {
@@ -18771,10 +18767,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return Math.round(ms / n) + ' ' + name + (isPlural ? 's' : '');
         }
       },
-      {}
+      {},
     ],
     61: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var keysShim;
@@ -18785,7 +18781,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           var isArgs = require('./isArguments'); // eslint-disable-line global-require
           var isEnumerable = Object.prototype.propertyIsEnumerable;
           var hasDontEnumBug = !isEnumerable.call({ toString: null }, 'toString');
-          var hasProtoEnumBug = isEnumerable.call(function() {}, 'prototype');
+          var hasProtoEnumBug = isEnumerable.call(function () {}, 'prototype');
           var dontEnums = [
             'toString',
             'toLocaleString',
@@ -18793,9 +18789,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             'hasOwnProperty',
             'isPrototypeOf',
             'propertyIsEnumerable',
-            'constructor'
+            'constructor',
           ];
-          var equalsConstructorPrototype = function(o) {
+          var equalsConstructorPrototype = function (o) {
             var ctor = o.constructor;
             return ctor && ctor.prototype === o;
           };
@@ -18820,9 +18816,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             $self: true,
             $webkitIndexedDB: true,
             $webkitStorageInfo: true,
-            $window: true
+            $window: true,
           };
-          var hasAutomationEqualityBug = (function() {
+          var hasAutomationEqualityBug = (function () {
             /* global window */
             if (typeof window === 'undefined') {
               return false;
@@ -18847,7 +18843,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             }
             return false;
           })();
-          var equalsConstructorPrototypeIfNotBuggy = function(o) {
+          var equalsConstructorPrototypeIfNotBuggy = function (o) {
             /* global window */
             if (typeof window === 'undefined' || !hasAutomationEqualityBug) {
               return equalsConstructorPrototype(o);
@@ -18906,10 +18902,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
         module.exports = keysShim;
       },
-      { './isArguments': 63 }
+      { './isArguments': 63 },
     ],
     62: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var slice = Array.prototype.slice;
@@ -18926,7 +18922,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         keysShim.shim = function shimObjectKeys() {
           if (Object.keys) {
-            var keysWorksWithArguments = (function() {
+            var keysWorksWithArguments = (function () {
               // Safari 5.0 bug
               var args = Object.keys(arguments);
               return args && args.length === arguments.length;
@@ -18948,10 +18944,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         module.exports = keysShim;
       },
-      { './implementation': 61, './isArguments': 63 }
+      { './implementation': 61, './isArguments': 63 },
     ],
     63: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var toStr = Object.prototype.toString;
@@ -18971,16 +18967,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return isArgs;
         };
       },
-      {}
+      {},
     ],
     64: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         // modified from https://github.com/es-shims/es6-shim
         var keys = require('object-keys');
         var bind = require('function-bind');
-        var canBeObject = function(obj) {
+        var canBeObject = function (obj) {
           return typeof obj !== 'undefined' && obj !== null;
         };
         var hasSymbols = require('has-symbols/shams')();
@@ -19019,10 +19015,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return objTarget;
         };
       },
-      { 'function-bind': 52, 'has-symbols/shams': 53, 'object-keys': 62 }
+      { 'function-bind': 52, 'has-symbols/shams': 53, 'object-keys': 62 },
     ],
     65: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var defineProperties = require('define-properties');
@@ -19036,20 +19032,20 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         defineProperties(polyfill, {
           getPolyfill: getPolyfill,
           implementation: implementation,
-          shim: shim
+          shim: shim,
         });
 
         module.exports = polyfill;
       },
-      { './implementation': 64, './polyfill': 66, './shim': 67, 'define-properties': 47 }
+      { './implementation': 64, './polyfill': 66, './shim': 67, 'define-properties': 47 },
     ],
     66: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var implementation = require('./implementation');
 
-        var lacksProperEnumerationOrder = function() {
+        var lacksProperEnumerationOrder = function () {
           if (!Object.assign) {
             return false;
           }
@@ -19069,7 +19065,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return str !== actual;
         };
 
-        var assignHasPendingExceptions = function() {
+        var assignHasPendingExceptions = function () {
           if (!Object.assign || !Object.preventExtensions) {
             return false;
           }
@@ -19097,10 +19093,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return Object.assign;
         };
       },
-      { './implementation': 64 }
+      { './implementation': 64 },
     ],
     67: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         var define = require('define-properties');
@@ -19109,18 +19105,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         module.exports = function shimAssign() {
           var polyfill = getPolyfill();
           define(Object, { assign: polyfill }, {
-            assign: function() {
+            assign: function () {
               return Object.assign !== polyfill;
-            }
+            },
           });
           return polyfill;
         };
       },
-      { './polyfill': 66, 'define-properties': 47 }
+      { './polyfill': 66, 'define-properties': 47 },
     ],
     68: [
-      function(require, module, exports) {
-        (function(process) {
+      function (require, module, exports) {
+        (function (process) {
           'use strict';
 
           if (
@@ -19168,10 +19164,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
         }.call(this, require('_process')));
       },
-      { _process: 69 }
+      { _process: 69 },
     ],
     69: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         // shim for using process in browser
         var process = (module.exports = {});
 
@@ -19189,7 +19185,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         function defaultClearTimeout() {
           throw new Error('clearTimeout has not been defined');
         }
-        (function() {
+        (function () {
           try {
             if (typeof setTimeout === 'function') {
               cachedSetTimeout = setTimeout;
@@ -19300,7 +19296,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           runClearTimeout(timeout);
         }
 
-        process.nextTick = function(fun) {
+        process.nextTick = function (fun) {
           var args = new Array(arguments.length - 1);
           if (arguments.length > 1) {
             for (var i = 1; i < arguments.length; i++) {
@@ -19318,7 +19314,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           this.fun = fun;
           this.array = array;
         }
-        Item.prototype.run = function() {
+        Item.prototype.run = function () {
           this.fun.apply(null, this.array);
         };
         process.title = 'browser';
@@ -19340,34 +19336,34 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         process.prependListener = noop;
         process.prependOnceListener = noop;
 
-        process.listeners = function(name) {
+        process.listeners = function (name) {
           return [];
         };
 
-        process.binding = function(name) {
+        process.binding = function (name) {
           throw new Error('process.binding is not supported');
         };
 
-        process.cwd = function() {
+        process.cwd = function () {
           return '/';
         };
-        process.chdir = function(dir) {
+        process.chdir = function (dir) {
           throw new Error('process.chdir is not supported');
         };
-        process.umask = function() {
+        process.umask = function () {
           return 0;
         };
       },
-      {}
+      {},
     ],
     70: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         module.exports = require('./lib/_stream_duplex.js');
       },
-      { './lib/_stream_duplex.js': 71 }
+      { './lib/_stream_duplex.js': 71 },
     ],
     71: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
         // Permission is hereby granted, free of charge, to any person obtaining a
@@ -19404,7 +19400,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         /*<replacement>*/
         var objectKeys =
           Object.keys ||
-          function(obj) {
+          function (obj) {
             var keys = [];
             for (var key in obj) {
               keys.push(key);
@@ -19455,9 +19451,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           // because otherwise some prototype manipulation in
           // userland will fail
           enumerable: false,
-          get: function() {
+          get: function () {
             return this._writableState.highWaterMark;
-          }
+          },
         });
 
         // the no-half-open enforcer
@@ -19476,13 +19472,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
 
         Object.defineProperty(Duplex.prototype, 'destroyed', {
-          get: function() {
+          get: function () {
             if (this._readableState === undefined || this._writableState === undefined) {
               return false;
             }
             return this._readableState.destroyed && this._writableState.destroyed;
           },
-          set: function(value) {
+          set: function (value) {
             // we ignore the value if the stream
             // has not been initialized yet
             if (this._readableState === undefined || this._writableState === undefined) {
@@ -19493,10 +19489,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             // managing destroyed
             this._readableState.destroyed = value;
             this._writableState.destroyed = value;
-          }
+          },
         });
 
-        Duplex.prototype._destroy = function(err, cb) {
+        Duplex.prototype._destroy = function (err, cb) {
           this.push(null);
           this.end();
 
@@ -19508,11 +19504,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         './_stream_writable': 75,
         'core-util-is': 44,
         inherits: 56,
-        'process-nextick-args': 68
-      }
+        'process-nextick-args': 68,
+      },
     ],
     72: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
         // Permission is hereby granted, free of charge, to any person obtaining a
@@ -19557,15 +19553,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           Transform.call(this, options);
         }
 
-        PassThrough.prototype._transform = function(chunk, encoding, cb) {
+        PassThrough.prototype._transform = function (chunk, encoding, cb) {
           cb(null, chunk);
         };
       },
-      { './_stream_transform': 74, 'core-util-is': 44, inherits: 56 }
+      { './_stream_transform': 74, 'core-util-is': 44, inherits: 56 },
     ],
     73: [
-      function(require, module, exports) {
-        (function(process, global) {
+      function (require, module, exports) {
+        (function (process, global) {
           // Copyright Joyent, Inc. and other Node contributors.
           //
           // Permission is hereby granted, free of charge, to any person obtaining a
@@ -19609,7 +19605,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           /*<replacement>*/
           var EE = require('events').EventEmitter;
 
-          var EElistenerCount = function(emitter, type) {
+          var EElistenerCount = function (emitter, type) {
             return emitter.listeners(type).length;
           };
           /*</replacement>*/
@@ -19621,7 +19617,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           /*<replacement>*/
 
           var Buffer = require('safe-buffer').Buffer;
-          var OurUint8Array = global.Uint8Array || function() {};
+          var OurUint8Array = global.Uint8Array || function () {};
           function _uint8ArrayToBuffer(chunk) {
             return Buffer.from(chunk);
           }
@@ -19642,7 +19638,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           if (debugUtil && debugUtil.debuglog) {
             debug = debugUtil.debuglog('stream');
           } else {
-            debug = function() {};
+            debug = function () {};
           }
           /*</replacement>*/
 
@@ -19769,13 +19765,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
 
           Object.defineProperty(Readable.prototype, 'destroyed', {
-            get: function() {
+            get: function () {
               if (this._readableState === undefined) {
                 return false;
               }
               return this._readableState.destroyed;
             },
-            set: function(value) {
+            set: function (value) {
               // we ignore the value if the stream
               // has not been initialized yet
               if (!this._readableState) {
@@ -19785,12 +19781,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               // backward compatibility, the user is explicitly
               // managing destroyed
               this._readableState.destroyed = value;
-            }
+            },
           });
 
           Readable.prototype.destroy = destroyImpl.destroy;
           Readable.prototype._undestroy = destroyImpl.undestroy;
-          Readable.prototype._destroy = function(err, cb) {
+          Readable.prototype._destroy = function (err, cb) {
             this.push(null);
             cb(err);
           };
@@ -19799,7 +19795,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           // This returns true if the highWaterMark has not been hit yet,
           // similar to how Writable.write() returns true if you should
           // write() some more.
-          Readable.prototype.push = function(chunk, encoding) {
+          Readable.prototype.push = function (chunk, encoding) {
             var state = this._readableState;
             var skipChunkCheck;
 
@@ -19820,7 +19816,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           };
 
           // Unshift should *always* be something directly out of read()
-          Readable.prototype.unshift = function(chunk) {
+          Readable.prototype.unshift = function (chunk) {
             return readableAddChunk(this, chunk, null, true, false);
           };
 
@@ -19910,12 +19906,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             );
           }
 
-          Readable.prototype.isPaused = function() {
+          Readable.prototype.isPaused = function () {
             return this._readableState.flowing === false;
           };
 
           // backwards compatibility.
-          Readable.prototype.setEncoding = function(enc) {
+          Readable.prototype.setEncoding = function (enc) {
             if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
             this._readableState.decoder = new StringDecoder(enc);
             this._readableState.encoding = enc;
@@ -19963,7 +19959,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
 
           // you can override either this method, or the async _read(n) below.
-          Readable.prototype.read = function(n) {
+          Readable.prototype.read = function (n) {
             debug('read', n);
             n = parseInt(n, 10);
             var state = this._readableState;
@@ -20139,11 +20135,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           // call cb(er, data) where data is <= n in length.
           // for virtual (non-string, non-buffer) streams, "length" is somewhat
           // arbitrary, and perhaps not very meaningful.
-          Readable.prototype._read = function(n) {
+          Readable.prototype._read = function (n) {
             this.emit('error', new Error('_read() is not implemented'));
           };
 
-          Readable.prototype.pipe = function(dest, pipeOpts) {
+          Readable.prototype.pipe = function (dest, pipeOpts) {
             var src = this;
             var state = this._readableState;
 
@@ -20288,7 +20284,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           };
 
           function pipeOnDrain(src) {
-            return function() {
+            return function () {
               var state = src._readableState;
               debug('pipeOnDrain', state.awaitDrain);
               if (state.awaitDrain) state.awaitDrain--;
@@ -20299,7 +20295,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             };
           }
 
-          Readable.prototype.unpipe = function(dest) {
+          Readable.prototype.unpipe = function (dest) {
             var state = this._readableState;
             var unpipeInfo = { hasUnpiped: false };
 
@@ -20352,7 +20348,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
           // set up data events if they are asked for
           // Ensure readable listeners eventually get something
-          Readable.prototype.on = function(ev, fn) {
+          Readable.prototype.on = function (ev, fn) {
             var res = Stream.prototype.on.call(this, ev, fn);
 
             if (ev === 'data') {
@@ -20382,7 +20378,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
           // pause() and resume() are remnants of the legacy readable stream API
           // If the user uses them, then switch into old mode.
-          Readable.prototype.resume = function() {
+          Readable.prototype.resume = function () {
             var state = this._readableState;
             if (!state.flowing) {
               debug('resume');
@@ -20412,7 +20408,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             if (state.flowing && !state.reading) stream.read(0);
           }
 
-          Readable.prototype.pause = function() {
+          Readable.prototype.pause = function () {
             debug('call pause flowing=%j', this._readableState.flowing);
             if (false !== this._readableState.flowing) {
               debug('pause');
@@ -20431,13 +20427,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           // wrap an old-style stream as the async data source.
           // This is *not* part of the readable stream interface.
           // It is an ugly unfortunate mess of history.
-          Readable.prototype.wrap = function(stream) {
+          Readable.prototype.wrap = function (stream) {
             var _this = this;
 
             var state = this._readableState;
             var paused = false;
 
-            stream.on('end', function() {
+            stream.on('end', function () {
               debug('wrapped end');
               if (state.decoder && !state.ended) {
                 var chunk = state.decoder.end();
@@ -20447,7 +20443,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               _this.push(null);
             });
 
-            stream.on('data', function(chunk) {
+            stream.on('data', function (chunk) {
               debug('wrapped data');
               if (state.decoder) chunk = state.decoder.write(chunk);
 
@@ -20466,8 +20462,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             // important when wrapping filters and duplexes.
             for (var i in stream) {
               if (this[i] === undefined && typeof stream[i] === 'function') {
-                this[i] = (function(method) {
-                  return function() {
+                this[i] = (function (method) {
+                  return function () {
                     return stream[method].apply(stream, arguments);
                   };
                 })(i);
@@ -20481,7 +20477,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             // when we try to consume some more bytes, simply unpause the
             // underlying stream.
-            this._read = function(n) {
+            this._read = function (n) {
               debug('wrapped _read', n);
               if (paused) {
                 paused = false;
@@ -20497,9 +20493,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             // because otherwise some prototype manipulation in
             // userland will fail
             enumerable: false,
-            get: function() {
+            get: function () {
               return this._readableState.highWaterMark;
-            }
+            },
           });
 
           // exposed for testing purposes only.
@@ -20664,11 +20660,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         'process-nextick-args': 68,
         'safe-buffer': 83,
         'string_decoder/': 85,
-        util: 40
-      }
+        util: 40,
+      },
     ],
     74: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
         // Permission is hereby granted, free of charge, to any person obtaining a
@@ -20782,7 +20778,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             transforming: false,
             writecb: null,
             writechunk: null,
-            writeencoding: null
+            writeencoding: null,
           };
 
           // start out asking for a readable event once data is transformed.
@@ -20807,7 +20803,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           var _this = this;
 
           if (typeof this._flush === 'function') {
-            this._flush(function(er, data) {
+            this._flush(function (er, data) {
               done(_this, er, data);
             });
           } else {
@@ -20815,7 +20811,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
         }
 
-        Transform.prototype.push = function(chunk, encoding) {
+        Transform.prototype.push = function (chunk, encoding) {
           this._transformState.needTransform = false;
           return Duplex.prototype.push.call(this, chunk, encoding);
         };
@@ -20830,11 +20826,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         // Call `cb(err)` when you are done with this chunk.  If you pass
         // an error, then that'll put the hurt on the whole operation.  If you
         // never call cb(), then you'll never get another chunk.
-        Transform.prototype._transform = function(chunk, encoding, cb) {
+        Transform.prototype._transform = function (chunk, encoding, cb) {
           throw new Error('_transform() is not implemented');
         };
 
-        Transform.prototype._write = function(chunk, encoding, cb) {
+        Transform.prototype._write = function (chunk, encoding, cb) {
           var ts = this._transformState;
           ts.writecb = cb;
           ts.writechunk = chunk;
@@ -20849,7 +20845,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         // Doesn't matter what the args are here.
         // _transform does all the work.
         // That we got here means that the readable side wants more data.
-        Transform.prototype._read = function(n) {
+        Transform.prototype._read = function (n) {
           var ts = this._transformState;
 
           if (ts.writechunk !== null && ts.writecb && !ts.transforming) {
@@ -20862,10 +20858,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
         };
 
-        Transform.prototype._destroy = function(err, cb) {
+        Transform.prototype._destroy = function (err, cb) {
           var _this2 = this;
 
-          Duplex.prototype._destroy.call(this, err, function(err2) {
+          Duplex.prototype._destroy.call(this, err, function (err2) {
             cb(err2);
             _this2.emit('close');
           });
@@ -20889,11 +20885,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return stream.push(null);
         }
       },
-      { './_stream_duplex': 71, 'core-util-is': 44, inherits: 56 }
+      { './_stream_duplex': 71, 'core-util-is': 44, inherits: 56 },
     ],
     75: [
-      function(require, module, exports) {
-        (function(process, global, setImmediate) {
+      function (require, module, exports) {
+        (function (process, global, setImmediate) {
           // Copyright Joyent, Inc. and other Node contributors.
           //
           // Permission is hereby granted, free of charge, to any person obtaining a
@@ -20943,7 +20939,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
             this.next = null;
             this.entry = null;
-            this.finish = function() {
+            this.finish = function () {
               onCorkedFinish(_this, state);
             };
           }
@@ -20969,7 +20965,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
           /*<replacement>*/
           var internalUtil = {
-            deprecate: require('util-deprecate')
+            deprecate: require('util-deprecate'),
           };
           /*</replacement>*/
 
@@ -20980,7 +20976,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           /*<replacement>*/
 
           var Buffer = require('safe-buffer').Buffer;
-          var OurUint8Array = global.Uint8Array || function() {};
+          var OurUint8Array = global.Uint8Array || function () {};
           function _uint8ArrayToBuffer(chunk) {
             return Buffer.from(chunk);
           }
@@ -21078,7 +21074,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             this.bufferProcessing = false;
 
             // the callback that's passed to _write(chunk,cb)
-            this.onwrite = function(er) {
+            this.onwrite = function (er) {
               onwrite(stream, er);
             };
 
@@ -21120,16 +21116,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             return out;
           };
 
-          (function() {
+          (function () {
             try {
               Object.defineProperty(WritableState.prototype, 'buffer', {
                 get: internalUtil.deprecate(
-                  function() {
+                  function () {
                     return this.getBuffer();
                   },
                   '_writableState.buffer is deprecated. Use _writableState.getBuffer ' + 'instead.',
                   'DEP0003'
-                )
+                ),
               });
             } catch (_) {}
           })();
@@ -21144,15 +21140,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           ) {
             realHasInstance = Function.prototype[Symbol.hasInstance];
             Object.defineProperty(Writable, Symbol.hasInstance, {
-              value: function(object) {
+              value: function (object) {
                 if (realHasInstance.call(this, object)) return true;
                 if (this !== Writable) return false;
 
                 return object && object._writableState instanceof WritableState;
-              }
+              },
             });
           } else {
-            realHasInstance = function(object) {
+            realHasInstance = function (object) {
               return object instanceof this;
             };
           }
@@ -21190,7 +21186,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
 
           // Otherwise people can pipe Writable streams, which is just wrong.
-          Writable.prototype.pipe = function() {
+          Writable.prototype.pipe = function () {
             this.emit('error', new Error('Cannot pipe, not readable'));
           };
 
@@ -21221,7 +21217,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             return valid;
           }
 
-          Writable.prototype.write = function(chunk, encoding, cb) {
+          Writable.prototype.write = function (chunk, encoding, cb) {
             var state = this._writableState;
             var ret = false;
             var isBuf = !state.objectMode && _isUint8Array(chunk);
@@ -21249,13 +21245,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             return ret;
           };
 
-          Writable.prototype.cork = function() {
+          Writable.prototype.cork = function () {
             var state = this._writableState;
 
             state.corked++;
           };
 
-          Writable.prototype.uncork = function() {
+          Writable.prototype.uncork = function () {
             var state = this._writableState;
 
             if (state.corked) {
@@ -21288,7 +21284,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   'ucs-2',
                   'utf16le',
                   'utf-16le',
-                  'raw'
+                  'raw',
                 ].indexOf((encoding + '').toLowerCase()) > -1
               )
             )
@@ -21309,9 +21305,9 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             // because otherwise some prototype manipulation in
             // userland will fail
             enumerable: false,
-            get: function() {
+            get: function () {
               return this._writableState.highWaterMark;
-            }
+            },
           });
 
           // if we're already writing something, then just put this
@@ -21341,7 +21337,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 encoding: encoding,
                 isBuf: isBuf,
                 callback: cb,
-                next: null
+                next: null,
               };
               if (last) {
                 last.next = state.lastBufferedRequest;
@@ -21502,13 +21498,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             state.bufferProcessing = false;
           }
 
-          Writable.prototype._write = function(chunk, encoding, cb) {
+          Writable.prototype._write = function (chunk, encoding, cb) {
             cb(new Error('_write() is not implemented'));
           };
 
           Writable.prototype._writev = null;
 
-          Writable.prototype.end = function(chunk, encoding, cb) {
+          Writable.prototype.end = function (chunk, encoding, cb) {
             var state = this._writableState;
 
             if (typeof chunk === 'function') {
@@ -21542,7 +21538,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             );
           }
           function callFinal(stream, state) {
-            stream._final(function(err) {
+            stream._final(function (err) {
               state.pendingcb--;
               if (err) {
                 stream.emit('error', err);
@@ -21605,13 +21601,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
 
           Object.defineProperty(Writable.prototype, 'destroyed', {
-            get: function() {
+            get: function () {
               if (this._writableState === undefined) {
                 return false;
               }
               return this._writableState.destroyed;
             },
-            set: function(value) {
+            set: function (value) {
               // we ignore the value if the stream
               // has not been initialized yet
               if (!this._writableState) {
@@ -21621,12 +21617,12 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               // backward compatibility, the user is explicitly
               // managing destroyed
               this._writableState.destroyed = value;
-            }
+            },
           });
 
           Writable.prototype.destroy = destroyImpl.destroy;
           Writable.prototype._undestroy = destroyImpl.undestroy;
-          Writable.prototype._destroy = function(err, cb) {
+          Writable.prototype._destroy = function (err, cb) {
             this.end();
             cb(err);
           };
@@ -21653,11 +21649,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         'process-nextick-args': 68,
         'safe-buffer': 83,
         timers: 86,
-        'util-deprecate': 87
-      }
+        'util-deprecate': 87,
+      },
     ],
     76: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         function _classCallCheck(instance, Constructor) {
@@ -21673,7 +21669,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           src.copy(target, offset);
         }
 
-        module.exports = (function() {
+        module.exports = (function () {
           function BufferList() {
             _classCallCheck(this, BufferList);
 
@@ -21739,16 +21735,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         })();
 
         if (util && util.inspect && util.inspect.custom) {
-          module.exports.prototype[util.inspect.custom] = function() {
+          module.exports.prototype[util.inspect.custom] = function () {
             var obj = util.inspect({ length: this.length });
             return this.constructor.name + ' ' + obj;
           };
         }
       },
-      { 'safe-buffer': 83, util: 40 }
+      { 'safe-buffer': 83, util: 40 },
     ],
     77: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         'use strict';
 
         /*<replacement>*/
@@ -21784,7 +21780,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             this._writableState.destroyed = true;
           }
 
-          this._destroy(err || null, function(err) {
+          this._destroy(err || null, function (err) {
             if (!cb && err) {
               pna.nextTick(emitErrorNT, _this, err);
               if (_this._writableState) {
@@ -21821,25 +21817,25 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         module.exports = {
           destroy: destroy,
-          undestroy: undestroy
+          undestroy: undestroy,
         };
       },
-      { 'process-nextick-args': 68 }
+      { 'process-nextick-args': 68 },
     ],
     78: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         module.exports = require('events').EventEmitter;
       },
-      { events: 50 }
+      { events: 50 },
     ],
     79: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         module.exports = require('./readable').PassThrough;
       },
-      { './readable': 80 }
+      { './readable': 80 },
     ],
     80: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         exports = module.exports = require('./lib/_stream_readable.js');
         exports.Stream = exports;
         exports.Readable = exports;
@@ -21853,23 +21849,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         './lib/_stream_passthrough.js': 72,
         './lib/_stream_readable.js': 73,
         './lib/_stream_transform.js': 74,
-        './lib/_stream_writable.js': 75
-      }
+        './lib/_stream_writable.js': 75,
+      },
     ],
     81: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         module.exports = require('./readable').Transform;
       },
-      { './readable': 80 }
+      { './readable': 80 },
     ],
     82: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         module.exports = require('./lib/_stream_writable.js');
       },
-      { './lib/_stream_writable.js': 75 }
+      { './lib/_stream_writable.js': 75 },
     ],
     83: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         /* eslint-disable node/no-deprecated-api */
         var buffer = require('buffer');
         var Buffer = buffer.Buffer;
@@ -21895,14 +21891,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         // Copy static methods from Buffer
         copyProps(Buffer, SafeBuffer);
 
-        SafeBuffer.from = function(arg, encodingOrOffset, length) {
+        SafeBuffer.from = function (arg, encodingOrOffset, length) {
           if (typeof arg === 'number') {
             throw new TypeError('Argument must not be a number');
           }
           return Buffer(arg, encodingOrOffset, length);
         };
 
-        SafeBuffer.alloc = function(size, fill, encoding) {
+        SafeBuffer.alloc = function (size, fill, encoding) {
           if (typeof size !== 'number') {
             throw new TypeError('Argument must be a number');
           }
@@ -21919,24 +21915,24 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return buf;
         };
 
-        SafeBuffer.allocUnsafe = function(size) {
+        SafeBuffer.allocUnsafe = function (size) {
           if (typeof size !== 'number') {
             throw new TypeError('Argument must be a number');
           }
           return Buffer(size);
         };
 
-        SafeBuffer.allocUnsafeSlow = function(size) {
+        SafeBuffer.allocUnsafeSlow = function (size) {
           if (typeof size !== 'number') {
             throw new TypeError('Argument must be a number');
           }
           return buffer.SlowBuffer(size);
         };
       },
-      { buffer: 43 }
+      { buffer: 43 },
     ],
     84: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
         // Permission is hereby granted, free of charge, to any person obtaining a
@@ -21980,7 +21976,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           EE.call(this);
         }
 
-        Stream.prototype.pipe = function(dest, options) {
+        Stream.prototype.pipe = function (dest, options) {
           var source = this;
 
           function ondata(chunk) {
@@ -22069,11 +22065,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         'readable-stream/passthrough.js': 79,
         'readable-stream/readable.js': 80,
         'readable-stream/transform.js': 81,
-        'readable-stream/writable.js': 82
-      }
+        'readable-stream/writable.js': 82,
+      },
     ],
     85: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
         // Permission is hereby granted, free of charge, to any person obtaining a
@@ -22104,7 +22100,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         var isEncoding =
           Buffer.isEncoding ||
-          function(encoding) {
+          function (encoding) {
             encoding = '' + encoding;
             switch (encoding && encoding.toLowerCase()) {
               case 'hex':
@@ -22193,7 +22189,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           this.lastChar = Buffer.allocUnsafe(nb);
         }
 
-        StringDecoder.prototype.write = function(buf) {
+        StringDecoder.prototype.write = function (buf) {
           if (buf.length === 0) return '';
           var r;
           var i;
@@ -22215,7 +22211,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         StringDecoder.prototype.text = utf8Text;
 
         // Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
-        StringDecoder.prototype.fillLast = function(buf) {
+        StringDecoder.prototype.fillLast = function (buf) {
           if (this.lastNeed <= buf.length) {
             buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
             return this.lastChar.toString(this.encoding, 0, this.lastTotal);
@@ -22388,11 +22384,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           return buf && buf.length ? this.write(buf) : '';
         }
       },
-      { 'safe-buffer': 83 }
+      { 'safe-buffer': 83 },
     ],
     86: [
-      function(require, module, exports) {
-        (function(setImmediate, clearImmediate) {
+      function (require, module, exports) {
+        (function (setImmediate, clearImmediate) {
           var nextTick = require('process/browser.js').nextTick;
           var apply = Function.prototype.apply;
           var slice = Array.prototype.slice;
@@ -22401,13 +22397,13 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
           // DOM APIs, for completeness
 
-          exports.setTimeout = function() {
+          exports.setTimeout = function () {
             return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
           };
-          exports.setInterval = function() {
+          exports.setInterval = function () {
             return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
           };
-          exports.clearTimeout = exports.clearInterval = function(timeout) {
+          exports.clearTimeout = exports.clearInterval = function (timeout) {
             timeout.close();
           };
 
@@ -22415,23 +22411,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             this._id = id;
             this._clearFn = clearFn;
           }
-          Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-          Timeout.prototype.close = function() {
+          Timeout.prototype.unref = Timeout.prototype.ref = function () {};
+          Timeout.prototype.close = function () {
             this._clearFn.call(window, this._id);
           };
 
           // Does not start the time, just sets up the members needed.
-          exports.enroll = function(item, msecs) {
+          exports.enroll = function (item, msecs) {
             clearTimeout(item._idleTimeoutId);
             item._idleTimeout = msecs;
           };
 
-          exports.unenroll = function(item) {
+          exports.unenroll = function (item) {
             clearTimeout(item._idleTimeoutId);
             item._idleTimeout = -1;
           };
 
-          exports._unrefActive = exports.active = function(item) {
+          exports._unrefActive = exports.active = function (item) {
             clearTimeout(item._idleTimeoutId);
 
             var msecs = item._idleTimeout;
@@ -22446,7 +22442,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           exports.setImmediate =
             typeof setImmediate === 'function'
               ? setImmediate
-              : function(fn) {
+              : function (fn) {
                   var id = nextImmediateId++;
                   var args = arguments.length < 2 ? false : slice.call(arguments, 1);
 
@@ -22472,16 +22468,16 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           exports.clearImmediate =
             typeof clearImmediate === 'function'
               ? clearImmediate
-              : function(id) {
+              : function (id) {
                   delete immediateIds[id];
                 };
         }.call(this, require('timers').setImmediate, require('timers').clearImmediate));
       },
-      { 'process/browser.js': 69, timers: 86 }
+      { 'process/browser.js': 69, timers: 86 },
     ],
     87: [
-      function(require, module, exports) {
-        (function(global) {
+      function (require, module, exports) {
+        (function (global) {
           /**
            * Module exports.
            */
@@ -22559,10 +22555,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             : {}
         ));
       },
-      {}
+      {},
     ],
     88: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         module.exports = function isBuffer(arg) {
           return (
             arg &&
@@ -22573,11 +22569,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           );
         };
       },
-      {}
+      {},
     ],
     89: [
-      function(require, module, exports) {
-        (function(process, global) {
+      function (require, module, exports) {
+        (function (process, global) {
           // Copyright Joyent, Inc. and other Node contributors.
           //
           // Permission is hereby granted, free of charge, to any person obtaining a
@@ -22600,7 +22596,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           // USE OR OTHER DEALINGS IN THE SOFTWARE.
 
           var formatRegExp = /%[sdj%]/g;
-          exports.format = function(f) {
+          exports.format = function (f) {
             if (!isString(f)) {
               var objects = [];
               for (var i = 0; i < arguments.length; i++) {
@@ -22612,7 +22608,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             var i = 1;
             var args = arguments;
             var len = args.length;
-            var str = String(f).replace(formatRegExp, function(x) {
+            var str = String(f).replace(formatRegExp, function (x) {
               if (x === '%%') return '%';
               if (i >= len) return x;
               switch (x) {
@@ -22643,10 +22639,10 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           // Mark that a method should not be used.
           // Returns a modified function which warns once by default.
           // If --no-deprecation is set, then it is a no-op.
-          exports.deprecate = function(fn, msg) {
+          exports.deprecate = function (fn, msg) {
             // Allow for deprecating things in the process of starting up.
             if (isUndefined(global.process)) {
-              return function() {
+              return function () {
                 return exports.deprecate(fn, msg).apply(this, arguments);
               };
             }
@@ -22675,18 +22671,18 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
           var debugs = {};
           var debugEnviron;
-          exports.debuglog = function(set) {
+          exports.debuglog = function (set) {
             if (isUndefined(debugEnviron)) debugEnviron = process.env.NODE_DEBUG || '';
             set = set.toUpperCase();
             if (!debugs[set]) {
               if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
                 var pid = process.pid;
-                debugs[set] = function() {
+                debugs[set] = function () {
                   var msg = exports.format.apply(exports, arguments);
                   console.error('%s %d: %s', set, pid, msg);
                 };
               } else {
-                debugs[set] = function() {};
+                debugs[set] = function () {};
               }
             }
             return debugs[set];
@@ -22704,7 +22700,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             // default options
             var ctx = {
               seen: [],
-              stylize: stylizeNoColor
+              stylize: stylizeNoColor,
             };
             // legacy...
             if (arguments.length >= 3) ctx.depth = arguments[2];
@@ -22740,7 +22736,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             green: [32, 39],
             magenta: [35, 39],
             red: [31, 39],
-            yellow: [33, 39]
+            yellow: [33, 39],
           };
 
           // Don't use 'blue' not visible on cmd.exe
@@ -22753,7 +22749,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             string: 'green',
             date: 'magenta',
             // "name": intentionally not styling
-            regexp: 'red'
+            regexp: 'red',
           };
 
           function stylizeWithColor(str, styleType) {
@@ -22781,7 +22777,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           function arrayToHash(array) {
             var hash = {};
 
-            array.forEach(function(val, idx) {
+            array.forEach(function (val, idx) {
               hash[val] = true;
             });
 
@@ -22896,7 +22892,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             if (array) {
               output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
             } else {
-              output = keys.map(function(key) {
+              output = keys.map(function (key) {
                 return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
               });
             }
@@ -22937,7 +22933,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 output.push('');
               }
             }
-            keys.forEach(function(key) {
+            keys.forEach(function (key) {
               if (!key.match(/^\d+$/)) {
                 output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, key, true));
               }
@@ -22973,7 +22969,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   if (array) {
                     str = str
                       .split('\n')
-                      .map(function(line) {
+                      .map(function (line) {
                         return '  ' + line;
                       })
                       .join('\n')
@@ -22983,7 +22979,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                       '\n' +
                       str
                         .split('\n')
-                        .map(function(line) {
+                        .map(function (line) {
                           return '   ' + line;
                         })
                         .join('\n');
@@ -23015,7 +23011,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
           function reduceToSingleString(output, base, braces) {
             var numLinesEst = 0;
-            var length = output.reduce(function(prev, cur) {
+            var length = output.reduce(function (prev, cur) {
               numLinesEst++;
               if (cur.indexOf('\n') >= 0) numLinesEst++;
               return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
@@ -23136,7 +23132,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             'Sep',
             'Oct',
             'Nov',
-            'Dec'
+            'Dec',
           ];
 
           // 26 Feb 16:19:34
@@ -23147,7 +23143,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           }
 
           // log is just a thin wrapper to console.log that prepends a timestamp
-          exports.log = function() {
+          exports.log = function () {
             console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
           };
 
@@ -23166,7 +23162,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
            */
           exports.inherits = require('inherits');
 
-          exports._extend = function(origin, add) {
+          exports._extend = function (origin, add) {
             // Don't do anything if add isn't an object
             if (!add || !isObject(add)) return origin;
 
@@ -23193,19 +23189,19 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             : {}
         ));
       },
-      { './support/isBuffer': 88, _process: 69, inherits: 56 }
+      { './support/isBuffer': 88, _process: 69, inherits: 56 },
     ],
     90: [
-      function(require, module, exports) {
+      function (require, module, exports) {
         module.exports = {
           name: 'mocha',
           version: '6.2.2',
           homepage: 'https://mochajs.org/',
-          notifyLogo: 'https://ibin.co/4QuRuGjXvl36.png'
+          notifyLogo: 'https://ibin.co/4QuRuGjXvl36.png',
         };
       },
-      {}
-    ]
+      {},
+    ],
   },
   {},
   [1]

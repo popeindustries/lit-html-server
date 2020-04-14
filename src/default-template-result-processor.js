@@ -5,7 +5,7 @@ import {
   isBuffer,
   isIteratorResult,
   isPromise,
-  isTemplateResult
+  isTemplateResult,
 } from './is.js';
 import { Buffer } from 'buffer';
 

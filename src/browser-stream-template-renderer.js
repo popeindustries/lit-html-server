@@ -40,7 +40,7 @@ export function browserStreamTemplateRenderer(result, processor, options) {
             underlyingSource.process = undefined;
             // @ts-ignore
             stack = undefined;
-          }
+          },
         },
         stack,
         16384,
@@ -49,6 +49,6 @@ export function browserStreamTemplateRenderer(result, processor, options) {
     },
     pull() {
       this.process();
-    }
+    },
   });
 }

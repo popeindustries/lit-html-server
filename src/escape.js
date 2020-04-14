@@ -7,7 +7,7 @@ const HTML_ESCAPES = {
   "'": '&#x27;',
   '&': '&amp;',
   '<': '&lt;',
-  '>': '&gt;'
+  '>': '&gt;',
 };
 const RE_HTML = /["'&<>]/g;
 const RE_SCRIPT_STYLE_TAG = /<\/(script|style)/gi;

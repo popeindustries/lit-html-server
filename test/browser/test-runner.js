@@ -1,10 +1,10 @@
 /* global window, fetch, location */
 // @ts-nocheck
-window.onload = function() {
+window.onload = function () {
   const runner = mocha.run();
   const failedTests = [];
 
-  runner.on('end', function() {
+  runner.on('end', function () {
     const url = new URL(location.href);
     const worker = Number(url.searchParams.get('worker'));
     const retry = Number(url.searchParams.get('retry'));
@@ -17,9 +17,9 @@ window.onload = function() {
     fetch('/results', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(window.mochaResults)
+      body: JSON.stringify(window.mochaResults),
     });
   });
 
@@ -29,7 +29,7 @@ window.onload = function() {
       result: false,
       message: err.message,
       stack: err.stack,
-      titles: flattenTitles(test)
+      titles: flattenTitles(test),
     });
   });
 };

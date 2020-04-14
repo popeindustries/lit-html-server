@@ -3,7 +3,7 @@ import {
   BooleanAttributePart,
   EventAttributePart,
   NodePart,
-  PropertyAttributePart
+  PropertyAttributePart,
 } from './parts.js';
 
 /**

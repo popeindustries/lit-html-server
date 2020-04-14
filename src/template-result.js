@@ -4,7 +4,7 @@ import {
   isAttributePart,
   isBuffer,
   isPromise,
-  isTemplateResult
+  isTemplateResult,
 } from './is.js';
 import { Buffer } from 'buffer';
 
