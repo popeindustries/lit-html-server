@@ -148,6 +148,12 @@ describe('Server template render', () => {
       expect(await getStream(renderToStream(result))).to.equal(expected);
       expect(await getStream(renderToStream(result))).to.equal(expected);
     });
+    it('should render plain string result', async () => {
+      const result = () => 'text';
+      const expected = 'text';
+      expect(await renderToString(result())).to.equal(expected);
+      expect(await getStream(renderToStream(result()))).to.equal(expected);
+    });
   });
 
   describe('attributes', () => {

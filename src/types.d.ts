@@ -257,7 +257,7 @@ declare class DefaultTemplateResultProcessor {
  * Render a template result to a string resolving Promise.
  */
 /* export */ declare function renderToString(
-  result: TemplateResult,
+  result: unknown,
   options?: RenderOptions
 ): Promise<string>;
 
@@ -265,7 +265,7 @@ declare class DefaultTemplateResultProcessor {
  * Render a template result to a Readable stream
  */
 /* export */ declare function renderToStream(
-  result: TemplateResult,
+  result: unknown,
   options?: RenderOptions
 ): import('stream').Readable;
 
@@ -273,6 +273,6 @@ declare class DefaultTemplateResultProcessor {
  * Render a template result to a Buffer resolving Promise.
  */
 /* export */ declare function renderToBuffer(
-  result: TemplateResult,
+  result: unknown,
   options?: RenderOptions
 ): Promise<Buffer>;

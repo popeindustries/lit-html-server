@@ -1,10 +1,20 @@
 import { browserStreamTemplateRenderer } from './browser-stream-template-renderer';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
+import { isTemplateResult } from './is.js';
 import { promiseTemplateRenderer } from './promise-template-renderer.js';
 import { streamTemplateRenderer } from './node-stream-template-renderer.js';
 import { Template } from './template.js';
 import { TemplateResult } from './template-result.js';
+
+/**
+ * Default templateResult factory
+ *
+ * @param { unknown } value
+ * @returns { TemplateResult }
+ */
+// prettier-ignore
+const DEFAULT_TEMPLATE_FN = (value) => html`${value}`;
 
 const defaultTemplateProcessor = new DefaultTemplateProcessor();
 const defaultTemplateResultProcessor = new DefaultTemplateResultProcessor();
@@ -38,34 +48,55 @@ function html(strings, ...values) {
 /**
  * Render a template result to a Readable stream
  *
- * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { unknown } result - a template result returned from call to "html`...`"
  * @param { RenderOptions } [options]
  * @returns { import('stream').Readable | ReadableStream }
  */
 function renderToStream(result, options) {
-  return streamRenderer(result, defaultTemplateResultProcessor, options);
+  return streamRenderer(getRenderResult(result), defaultTemplateResultProcessor, options);
 }
 
 /**
  * Render a template result to a string resolving Promise.
  *
- * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { unknown } result - a template result returned from call to "html`...`"
  * @param { RenderOptions } [options]
  * @returns { Promise<string> }
  */
 function renderToString(result, options) {
-  return promiseTemplateRenderer(result, defaultTemplateResultProcessor, false, options);
+  return promiseTemplateRenderer(
+    getRenderResult(result),
+    defaultTemplateResultProcessor,
+    false,
+    options
+  );
 }
 
 /**
  * Render a template result to a Buffer resolving Promise.
  *
- * @param { TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { unknown } result - a template result returned from call to "html`...`"
  * @param { RenderOptions } [options]
  * @returns { Promise<Buffer> }
  */
 function renderToBuffer(result, options) {
-  return promiseTemplateRenderer(result, defaultTemplateResultProcessor, true, options);
+  return promiseTemplateRenderer(
+    getRenderResult(result),
+    defaultTemplateResultProcessor,
+    true,
+    options
+  );
+}
+
+/**
+ * Retrieve TemplateResult for render
+ *
+ * @param { unknown} result
+ * @returns { TemplateResult }
+ */
+function getRenderResult(result) {
+  // @ts-ignore
+  return !isTemplateResult(result) ? DEFAULT_TEMPLATE_FN(result) : result;
 }
 
 export {
@@ -84,13 +115,13 @@ export {
   nothing,
   unsafePrefixString
 } from './shared.js';
-export { isTemplateResult } from './is.js';
 export {
   defaultTemplateProcessor,
   DefaultTemplateProcessor,
   defaultTemplateResultProcessor,
   DefaultTemplateResultProcessor,
   html,
+  isTemplateResult,
   renderToBuffer,
   renderToStream,
   renderToString,
