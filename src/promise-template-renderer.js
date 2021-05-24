@@ -4,9 +4,9 @@ import { getProcessor } from './template-result-processor.js';
 /**
  * A factory for rendering a template result to a string resolving Promise
  *
- * @param { TemplateResult } result
+ * @param { _lit.TemplateResult } result
  * @param { boolean } [asBuffer]
- * @param { RenderOptions } [options]
+ * @param { _lit.RenderOptions } [options]
  */
 export function promiseTemplateRenderer(result, asBuffer = false, options) {
   return new Promise((resolve, reject) => {
@@ -17,6 +17,7 @@ export function promiseTemplateRenderer(result, asBuffer = false, options) {
 
     getProcessor(
       {
+        /** @param { Buffer } chunk */
         push(chunk) {
           if (chunk === null) {
             const concatBuffer = Buffer.concat(buffer, bufferLength);
@@ -27,6 +28,7 @@ export function promiseTemplateRenderer(result, asBuffer = false, options) {
           }
           return true;
         },
+        /** @param { Error } err */
         destroy(err) {
           buffer.length = stack.length = bufferLength = 0;
           // @ts-ignore

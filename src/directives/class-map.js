@@ -4,7 +4,7 @@ import { directive, isAttributePart } from '../shared.js';
  * Applies CSS classes, where'classInfo' keys are added as class names if values are truthy.
  * Only applies to 'class' attribute.
  *
- * @type { (classInfo: { [name: string]: string | boolean | number }) => (part: Part) => void }
+ * @type { (classInfo: { [name: string]: string | boolean | number }) => (part: _lit.Part) => void }
  */
 export const classMap = directive((classInfo) => (part) => {
   if (!isAttributePart(part) || part.name !== 'class') {

@@ -5,10 +5,10 @@ import { Buffer } from 'buffer';
 /**
  * Process "stack" and push chunks to "renderer"
  *
- * @param { TemplateResultRenderer } renderer
+ * @param { _lit.TemplateResultRenderer } renderer
  * @param { Array<unknown> } stack
  * @param { number } [highWaterMark] - byte length to buffer before pushing data
- * @param { RenderOptions } [options]
+ * @param { _lit.RenderOptions } [options]
  * @returns { () => void }
  */
 export function getProcessor(renderer, stack, highWaterMark = 0, options) {
@@ -126,9 +126,9 @@ export function getProcessor(renderer, stack, highWaterMark = 0, options) {
  * Retrieve next chunk from "result".
  * Adds nested TemplateResults to the stack if necessary.
  *
- * @param { TemplateResult } result
+ * @param { _lit.TemplateResult } result
  * @param { Array<unknown> } stack
- * @param { RenderOptions } [options]
+ * @param { _lit.RenderOptions } [options]
  */
 function getTemplateResultChunk(result, stack, options) {
   let chunk = result.readChunk(options);

@@ -9,7 +9,7 @@ import { TemplateResult } from './template-result.js';
  * Default templateResult factory
  *
  * @param { unknown } value
- * @returns { TemplateResult }
+ * @returns { _lit.TemplateResult }
  */
 // prettier-ignore
 const DEFAULT_TEMPLATE_FN = (value) => html`${value}`;
@@ -28,7 +28,7 @@ const streamRenderer =
  *
  * @param { TemplateStringsArray } strings
  * @param  { ...unknown } values
- * @returns { TemplateResult }
+ * @returns { _lit.TemplateResult }
  */
 function html(strings, ...values) {
   let template = templateCache.get(strings);
@@ -45,7 +45,7 @@ function html(strings, ...values) {
  * Render a template result to a Readable stream
  *
  * @param { unknown } result - a template result returned from call to "html`...`"
- * @param { RenderOptions } [options]
+ * @param { _lit.RenderOptions } [options]
  * @returns { import('stream').Readable | ReadableStream }
  */
 function renderToStream(result, options) {
@@ -56,7 +56,7 @@ function renderToStream(result, options) {
  * Render a template result to a string resolving Promise.
  *
  * @param { unknown } result - a template result returned from call to "html`...`"
- * @param { RenderOptions } [options]
+ * @param { _lit.RenderOptions } [options]
  * @returns { Promise<string> }
  */
 function renderToString(result, options) {
@@ -67,7 +67,7 @@ function renderToString(result, options) {
  * Render a template result to a Buffer resolving Promise.
  *
  * @param { unknown } result - a template result returned from call to "html`...`"
- * @param { RenderOptions } [options]
+ * @param { _lit.RenderOptions } [options]
  * @returns { Promise<Buffer> }
  */
 function renderToBuffer(result, options) {
@@ -78,7 +78,7 @@ function renderToBuffer(result, options) {
  * Retrieve TemplateResult for render
  *
  * @param { unknown} result
- * @returns { TemplateResult }
+ * @returns { _lit.TemplateResult }
  */
 function getRenderResult(result) {
   // @ts-ignore

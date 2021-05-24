@@ -35,7 +35,7 @@ export class Part {
    * Retrieve resolved string from passed "value"
    *
    * @param { any } value
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { any }
    */
   getValue(value, options) {
@@ -56,7 +56,7 @@ export class ChildPart extends Part {
    * Retrieve resolved value given passed "value"
    *
    * @param { any } value
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { any }
    */
   getValue(value, options) {
@@ -91,7 +91,7 @@ export class AttributePart extends Part {
    * even when responsible for multiple values.
    *
    * @param { Array<unknown> } values
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { Buffer | Promise<Buffer> }
    */
   getValue(values, options) {
@@ -180,7 +180,7 @@ export class BooleanAttributePart extends AttributePart {
    * Retrieve resolved string Buffer from passed "values".
    *
    * @param { Array<unknown> } values
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { Buffer | Promise<Buffer> }
    */
   getValue(values, options) {
@@ -208,7 +208,7 @@ export class PropertyAttributePart extends AttributePart {
    * Returns an empty string unless "options.serializePropertyAttributes=true"
    *
    * @param { Array<unknown> } values
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { Buffer | Promise<Buffer> }
    */
   getValue(values, options) {
@@ -236,7 +236,7 @@ export class EventAttributePart extends AttributePart {
    * so always returns an empty string.
    *
    * @param { Array<unknown> } values
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { Buffer }
    */
   getValue(values, options) {

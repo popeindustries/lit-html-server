@@ -6,7 +6,7 @@ export { isAttributePart, isDirective, isChildPart as isNodePart, isPrimitive } 
  * Determine whether "result" is a TemplateResult
  *
  * @param { unknown } result
- * @returns { result is TemplateResult }
+ * @returns { result is _lit.TemplateResult }
  */
 export function isTemplateResult(result) {
   // @ts-ignore

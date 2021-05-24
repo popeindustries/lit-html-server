@@ -4,8 +4,8 @@ import { Readable } from 'stream';
 /**
  * Factory for StreamTemplateRenderer instances
  *
- * @param { TemplateResult } result - a template result returned from call to "html`...`"
- * @param { RenderOptions } [options]
+ * @param { _lit.TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { _lit.RenderOptions } [options]
  * @returns { Readable }
  */
 export function streamTemplateRenderer(result, options) {
@@ -19,8 +19,8 @@ class StreamTemplateRenderer extends Readable {
   /**
    * Constructor
    *
-   * @param { TemplateResult } result - a template result returned from call to "html`...`"
-   * @param { RenderOptions } [options]
+   * @param { _lit.TemplateResult } result - a template result returned from call to "html`...`"
+   * @param { _lit.RenderOptions } [options]
    */
   constructor(result, options) {
     super({ autoDestroy: true });

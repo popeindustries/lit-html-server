@@ -13,7 +13,7 @@ export class TemplateResult {
   /**
    * Constructor
    *
-   * @param { Template } template
+   * @param { _lit.Template } template
    * @param { Array<unknown> } values
    */
   constructor(template, values) {
@@ -26,7 +26,7 @@ export class TemplateResult {
   /**
    * Consume template result content.
    *
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { unknown }
    */
   read(options) {
@@ -56,7 +56,7 @@ export class TemplateResult {
 
   /**
    * Consume template result content one chunk at a time.
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { unknown }
    */
   readChunk(options) {

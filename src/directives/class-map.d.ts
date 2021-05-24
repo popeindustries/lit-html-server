@@ -1,5 +1,3 @@
-import { Part } from '../index.js';
+import { Part } from '../index';
 
-export const classMap: (classInfo: {
-  [name: string]: string | boolean | number;
-}) => (part: Part) => void;
+export const classMap: (classInfo: { [name: string]: string | boolean | number }) => (part: Part) => void;

@@ -25,7 +25,7 @@ export class Template {
   constructor(strings) {
     /** @type { Array<Buffer | null> } */
     this.strings = [];
-    /** @type { Array<Part | null> } */
+    /** @type { Array<_lit.Part | null> } */
     this.parts = [];
 
     this._prepare(strings);
