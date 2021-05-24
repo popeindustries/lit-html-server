@@ -14,72 +14,60 @@
     "template render"
   ],
   "main": "index.js",
-  "module": "index.mjs",
+  "type": "module",
   "types": "index.d.ts",
   "browser": {
     "buffer": "./src/browser-buffer.js",
     "stream": "./src/browser-stream.js",
-    "./index.js": "./browser.mjs",
-    "./index.mjs": "./browser.mjs",
-    "./directives/async-append.js": "./directives/async-append.mjs",
-    "./directives/async-replace.js": "./directives/async-replace.mjs",
-    "./directives/cache.js": "./directives/cache.mjs",
-    "./directives/class-map.js": "./directives/class-map.mjs",
-    "./directives/guard.js": "./directives/guard.mjs",
-    "./directives/if-defined.js": "./directives/if-defined.mjs",
-    "./directives/repeat.js": "./directives/repeat.mjs",
-    "./directives/style-map.js": "./directives/style-map.mjs",
-    "./directives/unsafe-html.js": "./directives/unsafe-html.mjs",
-    "./directives/until.js": "./directives/until.mjs"
+    "./index.js": "./browser.js"
   },
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "license": "MIT",
   "engines": {
-    "node": ">=10"
+    "node": ">=12.2.0"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^11.1.0",
-    "@rollup/plugin-node-resolve": "^7.1.3",
-    "@types/node": "^13.11.1",
-    "autocannon": "^4.6.0",
-    "babel-eslint": "^10.1.0",
-    "chai": "^4.2.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-prettier": "^3.1.3",
-    "get-stream": "^5.1.0",
-    "husky": "^4.2.5",
-    "lint-staged": "^10.1.3",
-    "lit-html": "^1.2.1",
-    "mocha": "^7.1.1",
-    "prettier": "^2.0.4",
-    "puppeteer": "^2.1.1",
-    "rollup": "^2.6.1",
+    "@babel/core": "^7.14.0",
+    "@babel/eslint-parser": "^7.13.0",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@types/node": "^15.6.0",
+    "autocannon": "^7.3.0",
+    "chai": "^4.3.4",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "get-stream": "^6.0.1",
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "lit-html": "^2.0.0-rc.3",
+    "mocha": "^8.4.0",
+    "prettier": "^2.3.0",
+    "puppeteer": "^9.1.1",
+    "rollup": "^2.49.0",
     "send": "^0.17.1",
-    "typescript": "^3.8.3"
+    "typescript": "^4.2.4"
   },
   "scripts": {
     "build": "node ./scripts/build.js",
+    "clean": "git clean -x -f",
     "format": "prettier --write './{src,test}/**/*.{js,json}'",
-    "lint": "npm run typecheck && eslint './{src,test}/**/*.js'",
+    "lint": "npm run lint:src && npm run lint:types",
+    "lint:src": "eslint './{src,test}/**/*.js'",
+    "lint:types": "tsc --noEmit --skipLibCheck --project jsconfig.json",
     "perf": "node test/perf.js",
     "prepublishOnly": "npm run build",
     "test": "npm run build && npm run lint && npm run test:unit && npm run test:browser",
     "test:unit": "NODE_ENV=test mocha \"test/*-test.js\" --reporter spec --bail --timeout 2000",
     "test:browser": "node ./test/browser/cli.js",
-    "typecheck": "tsc --noEmit"
+    "prepare": "husky install"
   },
   "prettier": {
     "arrowParens": "always",
     "htmlWhitespaceSensitivity": "ignore",
-    "printWidth": 100,
-    "singleQuote": true
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "printWidth": 120,
+    "singleQuote": true,
+    "trailingComma": "all"
   },
   "lint-staged": {
     "*.js": [
