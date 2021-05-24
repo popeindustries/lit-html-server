@@ -1,6 +1,4 @@
-import { browserStreamTemplateRenderer } from './browser-stream-template-renderer';
-import { DefaultTemplateProcessor } from './default-template-processor.js';
-import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
+import { browserStreamTemplateRenderer } from './browser-stream-template-renderer.js';
 import { isTemplateResult } from './is.js';
 import { promiseTemplateRenderer } from './promise-template-renderer.js';
 import { streamTemplateRenderer } from './node-stream-template-renderer.js';
@@ -16,8 +14,6 @@ import { TemplateResult } from './template-result.js';
 // prettier-ignore
 const DEFAULT_TEMPLATE_FN = (value) => html`${value}`;
 
-const defaultTemplateProcessor = new DefaultTemplateProcessor();
-const defaultTemplateResultProcessor = new DefaultTemplateResultProcessor();
 const templateCache = new Map();
 const streamRenderer =
   typeof process !== 'undefined' &&
@@ -38,7 +34,7 @@ function html(strings, ...values) {
   let template = templateCache.get(strings);
 
   if (template === undefined) {
-    template = new Template(strings, defaultTemplateProcessor);
+    template = new Template(strings);
     templateCache.set(strings, template);
   }
 
@@ -53,7 +49,7 @@ function html(strings, ...values) {
  * @returns { import('stream').Readable | ReadableStream }
  */
 function renderToStream(result, options) {
-  return streamRenderer(getRenderResult(result), defaultTemplateResultProcessor, options);
+  return streamRenderer(getRenderResult(result), options);
 }
 
 /**
@@ -64,12 +60,7 @@ function renderToStream(result, options) {
  * @returns { Promise<string> }
  */
 function renderToString(result, options) {
-  return promiseTemplateRenderer(
-    getRenderResult(result),
-    defaultTemplateResultProcessor,
-    false,
-    options
-  );
+  return promiseTemplateRenderer(getRenderResult(result), false, options);
 }
 
 /**
@@ -80,12 +71,7 @@ function renderToString(result, options) {
  * @returns { Promise<Buffer> }
  */
 function renderToBuffer(result, options) {
-  return promiseTemplateRenderer(
-    getRenderResult(result),
-    defaultTemplateResultProcessor,
-    true,
-    options
-  );
+  return promiseTemplateRenderer(getRenderResult(result), true, options);
 }
 
 /**
@@ -103,23 +89,12 @@ export {
   AttributePart,
   BooleanAttributePart,
   EventAttributePart,
-  NodePart,
+  ChildPart,
   Part,
   PropertyAttributePart,
 } from './parts.js';
+export { directive, isAttributePart, isDirective, isChildPart, nothing, unsafePrefixString } from './shared.js';
 export {
-  directive,
-  isAttributePart,
-  isDirective,
-  isNodePart,
-  nothing,
-  unsafePrefixString,
-} from './shared.js';
-export {
-  defaultTemplateProcessor,
-  DefaultTemplateProcessor,
-  defaultTemplateResultProcessor,
-  DefaultTemplateResultProcessor,
   html,
   isTemplateResult,
   renderToBuffer,

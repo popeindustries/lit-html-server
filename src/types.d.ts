@@ -1,48 +1,4 @@
-interface TemplateProcessor {
-  handleAttributeExpressions: (
-    name: string,
-    strings: Array<Buffer>,
-    tagName: string
-  ) => AttributePart;
-  handleTextExpression: (tagName: string) => NodePart;
-}
-
 interface TemplateResultProcessor {
-  getProcessor(
-    renderer: TemplateResultRenderer,
-    stack: Array<unknown>,
-    highWaterMark?: number,
-    options?: RenderOptions
-  ): () => void;
-}
-
-interface TemplateResultRenderer {
-  push: (chunk: Buffer | null) => boolean;
-  destroy: (err: Error) => void;
-}
-
-/**
- * Class representing the default Template processor.
- * Exposes factory functions for generating Part instances to use for
- * resolving a template's dynamic values.
- */
-declare class DefaultTemplateProcessor {
-  /**
-   * Create part instance for dynamic attribute values
-   */
-  handleAttributeExpressions(name: string, strings?: Array<Buffer>): AttributePart;
-
-  /**
-   * Create part instance for dynamic text values
-   */
-  handleTextExpression(): NodePart;
-}
-
-/**
- * Class for the default TemplateResult processor
- * used by Promise/Stream TemplateRenderers.
- */
-declare class DefaultTemplateResultProcessor {
   /**
    * Process "stack" and push chunks to "renderer"
    */
@@ -50,7 +6,7 @@ declare class DefaultTemplateResultProcessor {
     renderer: TemplateResultRenderer,
     stack: Array<unknown>,
     highWaterMark?: number,
-    options?: RenderOptions
+    options?: RenderOptions,
   ): () => void;
 
   /**
@@ -58,6 +14,11 @@ declare class DefaultTemplateResultProcessor {
    * (Triggered on error)
    */
   destroy(stack: Array<unknown>): void;
+}
+
+interface TemplateResultRenderer {
+  push: (chunk: Buffer | null) => boolean;
+  destroy: (err: Error) => void;
 }
 
 /**
@@ -90,7 +51,7 @@ declare class DefaultTemplateResultProcessor {
 /**
  * A dynamic template part for text nodes
  */
-/* export */ declare class NodePart extends Part {}
+/* export */ declare class ChildPart extends Part {}
 
 /**
  * A dynamic template part for attributes.
@@ -200,9 +161,6 @@ declare class DefaultTemplateResultProcessor {
   serializePropertyAttributes: boolean;
 };
 
-/* export */ declare const defaultTemplateProcessor: DefaultTemplateProcessor;
-/* export */ declare const defaultTemplateResultProcessor: DefaultTemplateResultProcessor;
-
 /**
  * Define new directive for "fn".
  * The passed function should be a factory function,
@@ -221,9 +179,9 @@ declare class DefaultTemplateResultProcessor {
 /* export */ declare function isAttributePart(part: unknown): part is AttributePart;
 
 /**
- * Determine if "part" is a NodePart
+ * Determine if "part" is a ChildPart
  */
-/* export */ declare function isNodePart(part: unknown): part is NodePart;
+/* export */ declare function isChildPart(part: unknown): part is ChildPart;
 
 /**
  * Determine whether "result" is a TemplateResult
@@ -244,35 +202,20 @@ declare class DefaultTemplateResultProcessor {
  * Interprets a template literal as an HTML template that can be
  * rendered as a Readable stream or String
  */
-/* export */ declare function html(
-  strings: TemplateStringsArray,
-  ...values: Array<unknown>
-): TemplateResult;
-/* export */ declare function svg(
-  strings: TemplateStringsArray,
-  ...values: Array<unknown>
-): TemplateResult;
+/* export */ declare function html(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
+/* export */ declare function svg(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
 
 /**
  * Render a template result to a string resolving Promise.
  */
-/* export */ declare function renderToString(
-  result: unknown,
-  options?: RenderOptions
-): Promise<string>;
+/* export */ declare function renderToString(result: unknown, options?: RenderOptions): Promise<string>;
 
 /**
  * Render a template result to a Readable stream
  */
-/* export */ declare function renderToStream(
-  result: unknown,
-  options?: RenderOptions
-): import('stream').Readable;
+/* export */ declare function renderToStream(result: unknown, options?: RenderOptions): import('stream').Readable;
 
 /**
  * Render a template result to a Buffer resolving Promise.
  */
-/* export */ declare function renderToBuffer(
-  result: unknown,
-  options?: RenderOptions
-): Promise<Buffer>;
+/* export */ declare function renderToBuffer(result: unknown, options?: RenderOptions): Promise<Buffer>;

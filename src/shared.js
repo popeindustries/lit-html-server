@@ -17,11 +17,11 @@ export const unsafePrefixString = '__unsafe-lit-html-server-string__';
  * Determine if "part" is a NodePart
  *
  * @param { unknown } part
- * @returns { part is NodePart }
+ * @returns { part is ChildPart }
  */
-export function isNodePart(part) {
+export function isChildPart(part) {
   // @ts-ignore
-  return part && part.getValue !== undefined && !('name' in part);
+  return part !== undefined && part.getValue !== undefined && !('name' in part);
 }
 
 /**
@@ -32,7 +32,7 @@ export function isNodePart(part) {
  */
 export function isAttributePart(part) {
   // @ts-ignore
-  return part && part.getValue !== undefined && 'name' in part;
+  return part !== undefined && part.getValue !== undefined && 'name' in part;
 }
 
 /**

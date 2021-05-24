@@ -1,12 +1,4 @@
-import {
-  isArray,
-  isAsyncIterator,
-  isBuffer,
-  isObject,
-  isPrimitive,
-  isPromise,
-  isSyncIterator,
-} from './is.js';
+import { isArray, isAsyncIterator, isBuffer, isObject, isPrimitive, isPromise, isSyncIterator } from './is.js';
 import { isDirective, isTemplateResult } from './is.js';
 import { nothing, unsafePrefixString } from './shared.js';
 import { Buffer } from 'buffer';
@@ -59,7 +51,7 @@ export class Part {
 /**
  * A dynamic template part for text nodes
  */
-export class NodePart extends Part {
+export class ChildPart extends Part {
   /**
    * Retrieve resolved value given passed "value"
    *
@@ -112,7 +104,7 @@ export class AttributePart extends Part {
       let value = resolveAttributeValue(
         values[i],
         this,
-        options !== undefined ? options.serializePropertyAttributes : false
+        options !== undefined ? options.serializePropertyAttributes : false,
       );
 
       // Bail if 'nothing'
@@ -141,12 +133,13 @@ export class AttributePart extends Part {
             chunks[index] = value;
             // @ts-ignore
             chunkLength += value.length;
-          })
+          }),
         );
       } else if (isArray(value)) {
         for (const chunk of value) {
-          chunks.push(chunk);
-          chunkLength += chunk.length;
+          const buffer = /** @type { Buffer } */ (chunk);
+          chunks.push(buffer);
+          chunkLength += buffer.length;
         }
       }
     }
@@ -178,11 +171,7 @@ export class BooleanAttributePart extends AttributePart {
 
     this.nameAsBuffer = Buffer.from(this.name);
 
-    if (
-      strings.length !== 2 ||
-      strings[0] === EMPTY_STRING_BUFFER ||
-      strings[1] === EMPTY_STRING_BUFFER
-    ) {
+    if (strings.length !== 2 || strings[0] === EMPTY_STRING_BUFFER || strings[1] === EMPTY_STRING_BUFFER) {
       throw Error('Boolean attributes can only contain a single expression');
     }
   }
@@ -275,9 +264,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
   if (isPrimitive(value)) {
     const string = typeof value !== 'string' ? String(value) : value;
     // Escape if not prefixed with unsafePrefixString, otherwise strip prefix
-    return Buffer.from(
-      string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escape(string, 'attribute')
-    );
+    return Buffer.from(string.indexOf(unsafePrefixString) === 0 ? string.slice(33) : escape(string, 'attribute'));
   } else if (isBuffer(value)) {
     return value;
   } else if (serialiseObjectsAndArrays && (isObject(value) || isArray(value))) {
@@ -298,7 +285,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
         }
         values.push(value);
         return values;
-      }, [])
+      }, []),
     );
   } else {
     return Buffer.from(String(value));
@@ -309,7 +296,7 @@ function resolveAttributeValue(value, part, serialiseObjectsAndArrays = false) {
  * Resolve "value" to string Buffer if possible
  *
  * @param { unknown } value
- * @param { NodePart } part
+ * @param { ChildPart } part
  * @returns { any }
  */
 function resolveNodeValue(value, part) {
@@ -327,10 +314,7 @@ function resolveNodeValue(value, part) {
     return Buffer.from(
       string.indexOf(unsafePrefixString) === 0
         ? string.slice(33)
-        : escape(
-            string,
-            part.tagName === 'script' || part.tagName === 'style' ? part.tagName : 'text'
-          )
+        : escape(string, part.tagName === 'script' || part.tagName === 'style' ? part.tagName : 'text'),
     );
   } else if (isTemplateResult(value) || isBuffer(value)) {
     return value;
@@ -361,7 +345,7 @@ function resolveNodeValue(value, part) {
  * Resolve values of async "iterator"
  *
  * @param { AsyncIterable<unknown> } iterator
- * @param { NodePart } part
+ * @param { ChildPart } part
  * @returns { AsyncGenerator }
  */
 async function* resolveAsyncIteratorValue(iterator, part) {

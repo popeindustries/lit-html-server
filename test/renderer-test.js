@@ -1,9 +1,9 @@
 // Disable Prettier
 // @ts-nocheck
-const { html: h, renderToStream, renderToString } = require('../index.js');
-const { createAsyncIterable } = require('./utils.js');
-const { expect } = require('chai');
-const getStream = require('get-stream');
+import { html as h, renderToStream, renderToString } from '../src/index.js';
+import { createAsyncIterable } from './utils.js';
+import { expect } from 'chai';
+import getStream from 'get-stream';
 
 describe('Server template render', () => {
   describe('text', () => {
@@ -249,8 +249,7 @@ describe('Server template render', () => {
       expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
     it('should render a template with multiple Promise templates attribute', async () => {
-      const result = () =>
-        h`<div a="some ${Promise.resolve('text')} here ${Promise.resolve('too')}"></div>`;
+      const result = () => h`<div a="some ${Promise.resolve('text')} here ${Promise.resolve('too')}"></div>`;
       const expected = '<div a="some text here too"></div>';
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);

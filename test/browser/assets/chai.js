@@ -41,7 +41,7 @@
             r,
             e,
             n,
-            t
+            t,
           );
         }
         return n[i].exports;
@@ -238,15 +238,11 @@
 
             Object.defineProperty(Assertion, 'includeStack', {
               get: function () {
-                console.warn(
-                  'Assertion.includeStack is deprecated, use chai.config.includeStack instead.'
-                );
+                console.warn('Assertion.includeStack is deprecated, use chai.config.includeStack instead.');
                 return config.includeStack;
               },
               set: function (value) {
-                console.warn(
-                  'Assertion.includeStack is deprecated, use chai.config.includeStack instead.'
-                );
+                console.warn('Assertion.includeStack is deprecated, use chai.config.includeStack instead.');
                 config.includeStack = value;
               },
             });
@@ -301,14 +297,7 @@
              * @api private
              */
 
-            Assertion.prototype.assert = function (
-              expr,
-              msg,
-              negateMsg,
-              expected,
-              _actual,
-              showDiff
-            ) {
+            Assertion.prototype.assert = function (expr, msg, negateMsg, expected, _actual, showDiff) {
               var ok = util.test(this, arguments);
               if (false !== showDiff) showDiff = true;
               if (undefined === expected && undefined === _actual) showDiff = false;
@@ -324,7 +313,7 @@
                     expected: expected,
                     showDiff: showDiff,
                   },
-                  config.includeStack ? this.assert : flag(this, 'ssfi')
+                  config.includeStack ? this.assert : flag(this, 'ssfi'),
                 );
               }
             };
@@ -771,7 +760,7 @@
               this.assert(
                 type === _.type(obj).toLowerCase(),
                 'expected #{this} to be ' + article + type,
-                'expected #{this} not to be ' + article + type
+                'expected #{this} not to be ' + article + type,
               );
             }
 
@@ -955,11 +944,7 @@
 
                 case 'weakset':
                   if (isDeep) {
-                    throw new AssertionError(
-                      flagMsg + 'unable to use .deep.include with WeakSet',
-                      undefined,
-                      ssfi
-                    );
+                    throw new AssertionError(flagMsg + 'unable to use .deep.include with WeakSet', undefined, ssfi);
                   }
 
                   included = obj.has(val);
@@ -1004,7 +989,7 @@
                         objType +
                         ' given',
                       undefined,
-                      ssfi
+                      ssfi,
                     );
                   }
 
@@ -1047,7 +1032,7 @@
               this.assert(
                 included,
                 'expected #{this} to ' + descriptor + 'include ' + _.inspect(val),
-                'expected #{this} to not ' + descriptor + 'include ' + _.inspect(val)
+                'expected #{this} to not ' + descriptor + 'include ' + _.inspect(val),
               );
             }
 
@@ -1093,11 +1078,7 @@
              */
 
             Assertion.addProperty('ok', function () {
-              this.assert(
-                flag(this, 'object'),
-                'expected #{this} to be truthy',
-                'expected #{this} to be falsy'
-              );
+              this.assert(flag(this, 'object'), 'expected #{this} to be truthy', 'expected #{this} to be falsy');
             });
 
             /**
@@ -1131,7 +1112,7 @@
                 true === flag(this, 'object'),
                 'expected #{this} to be true',
                 'expected #{this} to be false',
-                flag(this, 'negate') ? false : true
+                flag(this, 'negate') ? false : true,
               );
             });
 
@@ -1166,7 +1147,7 @@
                 false === flag(this, 'object'),
                 'expected #{this} to be false',
                 'expected #{this} to be true',
-                flag(this, 'negate') ? true : false
+                flag(this, 'negate') ? true : false,
               );
             });
 
@@ -1197,7 +1178,7 @@
               this.assert(
                 null === flag(this, 'object'),
                 'expected #{this} to be null',
-                'expected #{this} not to be null'
+                'expected #{this} not to be null',
               );
             });
 
@@ -1228,7 +1209,7 @@
               this.assert(
                 undefined === flag(this, 'object'),
                 'expected #{this} to be undefined',
-                'expected #{this} not to be undefined'
+                'expected #{this} not to be undefined',
               );
             });
 
@@ -1259,7 +1240,7 @@
               this.assert(
                 _.isNaN(flag(this, 'object')),
                 'expected #{this} to be NaN',
-                'expected #{this} not to be NaN'
+                'expected #{this} not to be NaN',
               );
             });
 
@@ -1298,7 +1279,7 @@
               this.assert(
                 val !== null && val !== undefined,
                 'expected #{this} to exist',
-                'expected #{this} to not exist'
+                'expected #{this} to not exist',
               );
             });
 
@@ -1370,11 +1351,7 @@
                   break;
                 case 'weakmap':
                 case 'weakset':
-                  throw new AssertionError(
-                    flagMsg + '.empty was passed a weak collection',
-                    undefined,
-                    ssfi
-                  );
+                  throw new AssertionError(flagMsg + '.empty was passed a weak collection', undefined, ssfi);
                 case 'function':
                   var msg = flagMsg + '.empty was passed a function ' + _.getName(val);
                   throw new AssertionError(msg.trim(), undefined, ssfi);
@@ -1383,17 +1360,13 @@
                     throw new AssertionError(
                       flagMsg + '.empty was passed non-string primitive ' + _.inspect(val),
                       undefined,
-                      ssfi
+                      ssfi,
                     );
                   }
                   itemsCount = Object.keys(val).length;
               }
 
-              this.assert(
-                0 === itemsCount,
-                'expected #{this} to be empty',
-                'expected #{this} not to be empty'
-              );
+              this.assert(0 === itemsCount, 'expected #{this} to be empty', 'expected #{this} not to be empty');
             });
 
             /**
@@ -1432,7 +1405,7 @@
               this.assert(
                 'Arguments' === type,
                 'expected #{this} to be arguments but got ' + type,
-                'expected #{this} to not be arguments'
+                'expected #{this} to not be arguments',
               );
             }
 
@@ -1499,7 +1472,7 @@
                   'expected #{this} to not equal #{exp}',
                   val,
                   this._obj,
-                  true
+                  true,
                 );
               }
             }
@@ -1557,7 +1530,7 @@
                 'expected #{this} to not deeply equal #{exp}',
                 obj,
                 this._obj,
-                true
+                true,
               );
             }
 
@@ -1652,15 +1625,10 @@
                   'expected #{this} to have a ' + descriptor + ' above #{exp} but got #{act}',
                   'expected #{this} to not have a ' + descriptor + ' above #{exp}',
                   n,
-                  itemsCount
+                  itemsCount,
                 );
               } else {
-                this.assert(
-                  obj > n,
-                  'expected #{this} to be above #{exp}',
-                  'expected #{this} to be at most #{exp}',
-                  n
-                );
+                this.assert(obj > n, 'expected #{this} to be above #{exp}', 'expected #{this} to be at most #{exp}', n);
               }
             }
 
@@ -1755,14 +1723,14 @@
                   'expected #{this} to have a ' + descriptor + ' at least #{exp} but got #{act}',
                   'expected #{this} to have a ' + descriptor + ' below #{exp}',
                   n,
-                  itemsCount
+                  itemsCount,
                 );
               } else {
                 this.assert(
                   obj >= n,
                   'expected #{this} to be at least #{exp}',
                   'expected #{this} to be below #{exp}',
-                  n
+                  n,
                 );
               }
             }
@@ -1858,14 +1826,14 @@
                   'expected #{this} to have a ' + descriptor + ' below #{exp} but got #{act}',
                   'expected #{this} to not have a ' + descriptor + ' below #{exp}',
                   n,
-                  itemsCount
+                  itemsCount,
                 );
               } else {
                 this.assert(
                   obj < n,
                   'expected #{this} to be below #{exp}',
                   'expected #{this} to be at least #{exp}',
-                  n
+                  n,
                 );
               }
             }
@@ -1961,14 +1929,14 @@
                   'expected #{this} to have a ' + descriptor + ' at most #{exp} but got #{act}',
                   'expected #{this} to have a ' + descriptor + ' above #{exp}',
                   n,
-                  itemsCount
+                  itemsCount,
                 );
               } else {
                 this.assert(
                   obj <= n,
                   'expected #{this} to be at most #{exp}',
                   'expected #{this} to be above #{exp}',
-                  n
+                  n,
                 );
               }
             }
@@ -2040,16 +2008,9 @@
                 new Assertion(obj, flagMsg, ssfi, true).to.have.property('length');
               }
 
-              if (
-                !doLength &&
-                objType === 'date' &&
-                (startType !== 'date' || finishType !== 'date')
-              ) {
+              if (!doLength && objType === 'date' && (startType !== 'date' || finishType !== 'date')) {
                 errorMessage = msgPrefix + 'the arguments to within must be dates';
-              } else if (
-                (startType !== 'number' || finishType !== 'number') &&
-                (doLength || objType === 'number')
-              ) {
+              } else if ((startType !== 'number' || finishType !== 'number') && (doLength || objType === 'number')) {
                 errorMessage = msgPrefix + 'the arguments to within must be numbers';
               } else if (!doLength && objType !== 'date' && objType !== 'number') {
                 var printObj = objType === 'string' ? "'" + obj + "'" : obj;
@@ -2074,13 +2035,13 @@
                 this.assert(
                   itemsCount >= start && itemsCount <= finish,
                   'expected #{this} to have a ' + descriptor + ' within ' + range,
-                  'expected #{this} to not have a ' + descriptor + ' within ' + range
+                  'expected #{this} to not have a ' + descriptor + ' within ' + range,
                 );
               } else {
                 this.assert(
                   obj >= start && obj <= finish,
                   'expected #{this} to be within ' + range,
-                  'expected #{this} to not be within ' + range
+                  'expected #{this} to not be within ' + range,
                 );
               }
             });
@@ -2137,12 +2098,9 @@
                 if (err instanceof TypeError) {
                   flagMsg = flagMsg ? flagMsg + ': ' : '';
                   throw new AssertionError(
-                    flagMsg +
-                      'The instanceof assertion needs a constructor but ' +
-                      _.type(constructor) +
-                      ' was given.',
+                    flagMsg + 'The instanceof assertion needs a constructor but ' + _.type(constructor) + ' was given.',
                     undefined,
-                    ssfi
+                    ssfi,
                   );
                 }
                 throw err;
@@ -2156,7 +2114,7 @@
               this.assert(
                 isInstanceOf,
                 'expected #{this} to be an instance of ' + name,
-                'expected #{this} to not be an instance of ' + name
+                'expected #{this} to not be an instance of ' + name,
               );
             }
 
@@ -2292,7 +2250,7 @@
                   throw new AssertionError(
                     flagMsg + 'the argument to property must be a string when using nested syntax',
                     undefined,
-                    ssfi
+                    ssfi,
                   );
                 }
               } else {
@@ -2300,25 +2258,17 @@
                   throw new AssertionError(
                     flagMsg + 'the argument to property must be a string, number, or symbol',
                     undefined,
-                    ssfi
+                    ssfi,
                   );
                 }
               }
 
               if (isNested && isOwn) {
-                throw new AssertionError(
-                  flagMsg + 'The "nested" and "own" flags cannot be combined.',
-                  undefined,
-                  ssfi
-                );
+                throw new AssertionError(flagMsg + 'The "nested" and "own" flags cannot be combined.', undefined, ssfi);
               }
 
               if (obj === null || obj === undefined) {
-                throw new AssertionError(
-                  flagMsg + 'Target cannot be null or undefined.',
-                  undefined,
-                  ssfi
-                );
+                throw new AssertionError(flagMsg + 'Target cannot be null or undefined.', undefined, ssfi);
               }
 
               var isDeep = flag(this, 'deep'),
@@ -2346,20 +2296,17 @@
                 this.assert(
                   hasProperty,
                   'expected #{this} to have ' + descriptor + _.inspect(name),
-                  'expected #{this} to not have ' + descriptor + _.inspect(name)
+                  'expected #{this} to not have ' + descriptor + _.inspect(name),
                 );
               }
 
               if (arguments.length > 1) {
                 this.assert(
                   hasProperty && (isDeep ? _.eql(val, value) : val === value),
-                  'expected #{this} to have ' +
-                    descriptor +
-                    _.inspect(name) +
-                    ' of #{exp}, but got #{act}',
+                  'expected #{this} to have ' + descriptor + _.inspect(name) + ' of #{exp}, but got #{act}',
                   'expected #{this} to not have ' + descriptor + _.inspect(name) + ' of #{act}',
                   val,
-                  value
+                  value,
                 );
               }
 
@@ -2518,13 +2465,13 @@
                     _.inspect(descriptor),
                   descriptor,
                   actualDescriptor,
-                  true
+                  true,
                 );
               } else {
                 this.assert(
                   actualDescriptor,
                   'expected #{this} to have an own property descriptor for ' + _.inspect(name),
-                  'expected #{this} to not have an own property descriptor for ' + _.inspect(name)
+                  'expected #{this} to not have an own property descriptor for ' + _.inspect(name),
                 );
               }
               flag(this, 'object', actualDescriptor);
@@ -2620,7 +2567,7 @@
                 'expected #{this} to have a ' + descriptor + ' of #{exp} but got #{act}',
                 'expected #{this} to not have a ' + descriptor + ' of #{act}',
                 n,
-                itemsCount
+                itemsCount,
               );
             }
 
@@ -2657,11 +2604,7 @@
             function assertMatch(re, msg) {
               if (msg) flag(this, 'message', msg);
               var obj = flag(this, 'object');
-              this.assert(
-                re.exec(obj),
-                'expected #{this} to match ' + re,
-                'expected #{this} not to match ' + re
-              );
+              this.assert(re.exec(obj), 'expected #{this} to match ' + re, 'expected #{this} not to match ' + re);
             }
 
             Assertion.addMethod('match', assertMatch);
@@ -2702,7 +2645,7 @@
               this.assert(
                 ~obj.indexOf(str),
                 'expected #{this} to contain ' + _.inspect(str),
-                'expected #{this} to not contain ' + _.inspect(str)
+                'expected #{this} to not contain ' + _.inspect(str),
               );
             });
 
@@ -2936,7 +2879,7 @@
                 'expected #{this} to not ' + deepStr + str,
                 expected.slice(0).sort(_.compareByInspect),
                 actual.sort(_.compareByInspect),
-                true
+                true,
               );
             }
 
@@ -3157,7 +3100,7 @@
                     ? caughtErr.toString()
                     : typeof caughtErr === 'string'
                     ? caughtErr
-                    : caughtErr && _.checkError.getConstructorName(caughtErr)
+                    : caughtErr && _.checkError.getConstructorName(caughtErr),
                 );
               }
 
@@ -3175,19 +3118,15 @@
                       this.assert(
                         negate,
                         'expected #{this} to throw #{exp} but #{act} was thrown',
-                        'expected #{this} to not throw #{exp}' +
-                          (caughtErr && !negate ? ' but #{act} was thrown' : ''),
+                        'expected #{this} to not throw #{exp}' + (caughtErr && !negate ? ' but #{act} was thrown' : ''),
                         errorLike.toString(),
-                        caughtErr.toString()
+                        caughtErr.toString(),
                       );
                     }
                   }
                 }
 
-                var isCompatibleConstructor = _.checkError.compatibleConstructor(
-                  caughtErr,
-                  errorLike
-                );
+                var isCompatibleConstructor = _.checkError.compatibleConstructor(caughtErr, errorLike);
                 if (isCompatibleConstructor === negate) {
                   if (everyArgIsDefined && negate) {
                     errorLikeFail = true;
@@ -3195,14 +3134,13 @@
                     this.assert(
                       negate,
                       'expected #{this} to throw #{exp} but #{act} was thrown',
-                      'expected #{this} to not throw #{exp}' +
-                        (caughtErr ? ' but #{act} was thrown' : ''),
+                      'expected #{this} to not throw #{exp}' + (caughtErr ? ' but #{act} was thrown' : ''),
                       errorLike instanceof Error
                         ? errorLike.toString()
                         : errorLike && _.checkError.getConstructorName(errorLike),
                       caughtErr instanceof Error
                         ? caughtErr.toString()
-                        : caughtErr && _.checkError.getConstructorName(caughtErr)
+                        : caughtErr && _.checkError.getConstructorName(caughtErr),
                     );
                   }
                 }
@@ -3225,7 +3163,7 @@
                       'expected #{this} to throw error ' + placeholder + ' #{exp} but got #{act}',
                       'expected #{this} to throw error not ' + placeholder + ' #{exp}',
                       errMsgMatcher,
-                      _.checkError.getMessage(caughtErr)
+                      _.checkError.getMessage(caughtErr),
                     );
                   }
                 }
@@ -3236,14 +3174,13 @@
                 this.assert(
                   negate,
                   'expected #{this} to throw #{exp} but #{act} was thrown',
-                  'expected #{this} to not throw #{exp}' +
-                    (caughtErr ? ' but #{act} was thrown' : ''),
+                  'expected #{this} to not throw #{exp}' + (caughtErr ? ' but #{act} was thrown' : ''),
                   errorLike instanceof Error
                     ? errorLike.toString()
                     : errorLike && _.checkError.getConstructorName(errorLike),
                   caughtErr instanceof Error
                     ? caughtErr.toString()
-                    : caughtErr && _.checkError.getConstructorName(caughtErr)
+                    : caughtErr && _.checkError.getConstructorName(caughtErr),
                 );
               }
 
@@ -3323,13 +3260,12 @@
               if (msg) flag(this, 'message', msg);
               var obj = flag(this, 'object'),
                 itself = flag(this, 'itself'),
-                context =
-                  'function' === typeof obj && !itself ? obj.prototype[method] : obj[method];
+                context = 'function' === typeof obj && !itself ? obj.prototype[method] : obj[method];
 
               this.assert(
                 'function' === typeof context,
                 'expected #{this} to respond to ' + _.inspect(method),
-                'expected #{this} to not respond to ' + _.inspect(method)
+                'expected #{this} to not respond to ' + _.inspect(method),
               );
             }
 
@@ -3407,7 +3343,7 @@
                 'expected #{this} to satisfy ' + _.objDisplay(matcher),
                 'expected #{this} to not satisfy' + _.objDisplay(matcher),
                 flag(this, 'negate') ? false : true,
-                result
+                result,
               );
             }
 
@@ -3464,14 +3400,14 @@
                 throw new AssertionError(
                   flagMsg + 'the arguments to closeTo or approximately must be numbers',
                   undefined,
-                  ssfi
+                  ssfi,
                 );
               }
 
               this.assert(
                 Math.abs(obj - expected) <= delta,
                 'expected #{this} to be close to ' + expected + ' +/- ' + delta,
-                'expected #{this} not to be close to ' + expected + ' +/- ' + delta
+                'expected #{this} not to be close to ' + expected + ' +/- ' + delta,
               );
             }
 
@@ -3602,14 +3538,7 @@
 
               var cmp = flag(this, 'deep') ? _.eql : undefined;
 
-              this.assert(
-                isSubsetOf(subset, obj, cmp, contains, ordered),
-                failMsg,
-                failNegateMsg,
-                subset,
-                obj,
-                true
-              );
+              this.assert(isSubsetOf(subset, obj, cmp, contains, ordered), failMsg, failNegateMsg, subset, obj, true);
             });
 
             /**
@@ -3654,7 +3583,7 @@
                 'expected #{this} to be one of #{exp}',
                 'expected #{this} to not be one of #{exp}',
                 list,
-                expected
+                expected,
               );
             }
 
@@ -3786,7 +3715,7 @@
               this.assert(
                 initial !== final,
                 'expected ' + msgObj + ' to change',
-                'expected ' + msgObj + ' to not change'
+                'expected ' + msgObj + ' to not change',
               );
             }
 
@@ -3905,7 +3834,7 @@
               this.assert(
                 final - initial > 0,
                 'expected ' + msgObj + ' to increase',
-                'expected ' + msgObj + ' to not increase'
+                'expected ' + msgObj + ' to not increase',
               );
             }
 
@@ -4024,7 +3953,7 @@
               this.assert(
                 final - initial < 0,
                 'expected ' + msgObj + ' to decrease',
-                'expected ' + msgObj + ' to not decrease'
+                'expected ' + msgObj + ' to not decrease',
               );
             }
 
@@ -4116,7 +4045,7 @@
               this.assert(
                 expression,
                 'expected ' + msgObj + ' to ' + behavior + ' by ' + delta,
-                'expected ' + msgObj + ' to not ' + behavior + ' by ' + delta
+                'expected ' + msgObj + ' to not ' + behavior + ' by ' + delta,
               );
             }
 
@@ -4160,11 +4089,7 @@
 
               var isExtensible = obj === Object(obj) && Object.isExtensible(obj);
 
-              this.assert(
-                isExtensible,
-                'expected #{this} to be extensible',
-                'expected #{this} to not be extensible'
-              );
+              this.assert(isExtensible, 'expected #{this} to be extensible', 'expected #{this} to not be extensible');
             });
 
             /**
@@ -4205,11 +4130,7 @@
 
               var isSealed = obj === Object(obj) ? Object.isSealed(obj) : true;
 
-              this.assert(
-                isSealed,
-                'expected #{this} to be sealed',
-                'expected #{this} to not be sealed'
-              );
+              this.assert(isSealed, 'expected #{this} to be sealed', 'expected #{this} to not be sealed');
             });
 
             /**
@@ -4247,11 +4168,7 @@
 
               var isFrozen = obj === Object(obj) ? Object.isFrozen(obj) : true;
 
-              this.assert(
-                isFrozen,
-                'expected #{this} to be frozen',
-                'expected #{this} to not be frozen'
-              );
+              this.assert(isFrozen, 'expected #{this} to be frozen', 'expected #{this} to not be frozen');
             });
 
             /**
@@ -4309,7 +4226,7 @@
               this.assert(
                 typeof obj === 'number' && isFinite(obj),
                 'expected #{this} to be a finite number',
-                'expected #{this} to not be a finite number'
+                'expected #{this} to not be a finite number',
               );
             });
           };
@@ -4394,7 +4311,7 @@
                   expected: expected,
                   operator: operator,
                 },
-                assert.fail
+                assert.fail,
               );
             };
 
@@ -4462,7 +4379,7 @@
                 'expected #{this} to not equal #{act}',
                 exp,
                 act,
-                true
+                true,
               );
             };
 
@@ -4490,7 +4407,7 @@
                 'expected #{this} to equal #{act}',
                 exp,
                 act,
-                true
+                true,
               );
             };
 
@@ -5441,9 +5358,7 @@
              */
 
             assert.notDeepNestedInclude = function (exp, inc, msg) {
-              new Assertion(exp, msg, assert.notDeepNestedInclude, true).not.deep.nested.include(
-                inc
-              );
+              new Assertion(exp, msg, assert.notDeepNestedInclude, true).not.deep.nested.include(inc);
             };
 
             /**
@@ -5674,10 +5589,7 @@
              */
 
             assert.deepPropertyVal = function (obj, prop, val, msg) {
-              new Assertion(obj, msg, assert.deepPropertyVal, true).to.have.deep.property(
-                prop,
-                val
-              );
+              new Assertion(obj, msg, assert.deepPropertyVal, true).to.have.deep.property(prop, val);
             };
 
             /**
@@ -5700,10 +5612,7 @@
              */
 
             assert.notDeepPropertyVal = function (obj, prop, val, msg) {
-              new Assertion(obj, msg, assert.notDeepPropertyVal, true).to.not.have.deep.property(
-                prop,
-                val
-              );
+              new Assertion(obj, msg, assert.notDeepPropertyVal, true).to.not.have.deep.property(prop, val);
             };
 
             /**
@@ -5763,10 +5672,7 @@
              */
 
             assert.ownPropertyVal = function (obj, prop, value, msg) {
-              new Assertion(obj, msg, assert.ownPropertyVal, true).to.have.own.property(
-                prop,
-                value
-              );
+              new Assertion(obj, msg, assert.ownPropertyVal, true).to.have.own.property(prop, value);
             };
 
             /**
@@ -5788,10 +5694,7 @@
              */
 
             assert.notOwnPropertyVal = function (obj, prop, value, msg) {
-              new Assertion(obj, msg, assert.notOwnPropertyVal, true).to.not.have.own.property(
-                prop,
-                value
-              );
+              new Assertion(obj, msg, assert.notOwnPropertyVal, true).to.not.have.own.property(prop, value);
             };
 
             /**
@@ -5812,10 +5715,7 @@
              */
 
             assert.deepOwnPropertyVal = function (obj, prop, value, msg) {
-              new Assertion(obj, msg, assert.deepOwnPropertyVal, true).to.have.deep.own.property(
-                prop,
-                value
-              );
+              new Assertion(obj, msg, assert.deepOwnPropertyVal, true).to.have.deep.own.property(prop, value);
             };
 
             /**
@@ -5839,12 +5739,7 @@
              */
 
             assert.notDeepOwnPropertyVal = function (obj, prop, value, msg) {
-              new Assertion(
-                obj,
-                msg,
-                assert.notDeepOwnPropertyVal,
-                true
-              ).to.not.have.deep.own.property(prop, value);
+              new Assertion(obj, msg, assert.notDeepOwnPropertyVal, true).to.not.have.deep.own.property(prop, value);
             };
 
             /**
@@ -5886,9 +5781,7 @@
              */
 
             assert.notNestedProperty = function (obj, prop, msg) {
-              new Assertion(obj, msg, assert.notNestedProperty, true).to.not.have.nested.property(
-                prop
-              );
+              new Assertion(obj, msg, assert.notNestedProperty, true).to.not.have.nested.property(prop);
             };
 
             /**
@@ -5910,10 +5803,7 @@
              */
 
             assert.nestedPropertyVal = function (obj, prop, val, msg) {
-              new Assertion(obj, msg, assert.nestedPropertyVal, true).to.have.nested.property(
-                prop,
-                val
-              );
+              new Assertion(obj, msg, assert.nestedPropertyVal, true).to.have.nested.property(prop, val);
             };
 
             /**
@@ -5936,12 +5826,7 @@
              */
 
             assert.notNestedPropertyVal = function (obj, prop, val, msg) {
-              new Assertion(
-                obj,
-                msg,
-                assert.notNestedPropertyVal,
-                true
-              ).to.not.have.nested.property(prop, val);
+              new Assertion(obj, msg, assert.notNestedPropertyVal, true).to.not.have.nested.property(prop, val);
             };
 
             /**
@@ -5963,12 +5848,7 @@
              */
 
             assert.deepNestedPropertyVal = function (obj, prop, val, msg) {
-              new Assertion(
-                obj,
-                msg,
-                assert.deepNestedPropertyVal,
-                true
-              ).to.have.deep.nested.property(prop, val);
+              new Assertion(obj, msg, assert.deepNestedPropertyVal, true).to.have.deep.nested.property(prop, val);
             };
 
             /**
@@ -5992,12 +5872,10 @@
              */
 
             assert.notDeepNestedPropertyVal = function (obj, prop, val, msg) {
-              new Assertion(
-                obj,
-                msg,
-                assert.notDeepNestedPropertyVal,
-                true
-              ).to.not.have.deep.nested.property(prop, val);
+              new Assertion(obj, msg, assert.notDeepNestedPropertyVal, true).to.not.have.deep.nested.property(
+                prop,
+                val,
+              );
             };
 
             /**
@@ -6223,9 +6101,7 @@
              */
 
             assert.containsAllDeepKeys = function (obj, keys, msg) {
-              new Assertion(obj, msg, assert.containsAllDeepKeys, true).to.contain.all.deep.keys(
-                keys
-              );
+              new Assertion(obj, msg, assert.containsAllDeepKeys, true).to.contain.all.deep.keys(keys);
             };
 
             /**
@@ -6251,12 +6127,7 @@
              */
 
             assert.doesNotHaveAnyDeepKeys = function (obj, keys, msg) {
-              new Assertion(
-                obj,
-                msg,
-                assert.doesNotHaveAnyDeepKeys,
-                true
-              ).to.not.have.any.deep.keys(keys);
+              new Assertion(obj, msg, assert.doesNotHaveAnyDeepKeys, true).to.not.have.any.deep.keys(keys);
             };
 
             /**
@@ -6282,12 +6153,7 @@
              */
 
             assert.doesNotHaveAllDeepKeys = function (obj, keys, msg) {
-              new Assertion(
-                obj,
-                msg,
-                assert.doesNotHaveAllDeepKeys,
-                true
-              ).to.not.have.all.deep.keys(keys);
+              new Assertion(obj, msg, assert.doesNotHaveAllDeepKeys, true).to.not.have.all.deep.keys(keys);
             };
 
             /**
@@ -6327,10 +6193,7 @@
                 errorLike = null;
               }
 
-              var assertErr = new Assertion(fn, msg, assert.throws, true).to.throw(
-                errorLike,
-                errMsgMatcher
-              );
+              var assertErr = new Assertion(fn, msg, assert.throws, true).to.throw(errorLike, errMsgMatcher);
               return flag(assertErr, 'object');
             };
 
@@ -6369,10 +6232,7 @@
                 errorLike = null;
               }
 
-              new Assertion(fn, msg, assert.doesNotThrow, true).to.not.throw(
-                errorLike,
-                errMsgMatcher
-              );
+              new Assertion(fn, msg, assert.doesNotThrow, true).to.not.throw(errorLike, errMsgMatcher);
             };
 
             /**
@@ -6424,19 +6284,14 @@
                   throw new chai.AssertionError(
                     msg + 'Invalid operator "' + operator + '"',
                     undefined,
-                    assert.operator
+                    assert.operator,
                   );
               }
               var test = new Assertion(ok, msg, assert.operator, true);
               test.assert(
                 true === flag(test, 'object'),
                 'expected ' + util.inspect(val) + ' to be ' + operator + ' ' + util.inspect(val2),
-                'expected ' +
-                  util.inspect(val) +
-                  ' to not be ' +
-                  operator +
-                  ' ' +
-                  util.inspect(val2)
+                'expected ' + util.inspect(val) + ' to not be ' + operator + ' ' + util.inspect(val2),
               );
             };
 
@@ -6537,9 +6392,7 @@
              */
 
             assert.sameDeepMembers = function (set1, set2, msg) {
-              new Assertion(set1, msg, assert.sameDeepMembers, true).to.have.same.deep.members(
-                set2
-              );
+              new Assertion(set1, msg, assert.sameDeepMembers, true).to.have.same.deep.members(set2);
             };
 
             /**
@@ -6559,12 +6412,7 @@
              */
 
             assert.notSameDeepMembers = function (set1, set2, msg) {
-              new Assertion(
-                set1,
-                msg,
-                assert.notSameDeepMembers,
-                true
-              ).to.not.have.same.deep.members(set2);
+              new Assertion(set1, msg, assert.notSameDeepMembers, true).to.not.have.same.deep.members(set2);
             };
 
             /**
@@ -6584,12 +6432,7 @@
              */
 
             assert.sameOrderedMembers = function (set1, set2, msg) {
-              new Assertion(
-                set1,
-                msg,
-                assert.sameOrderedMembers,
-                true
-              ).to.have.same.ordered.members(set2);
+              new Assertion(set1, msg, assert.sameOrderedMembers, true).to.have.same.ordered.members(set2);
             };
 
             /**
@@ -6609,12 +6452,7 @@
              */
 
             assert.notSameOrderedMembers = function (set1, set2, msg) {
-              new Assertion(
-                set1,
-                msg,
-                assert.notSameOrderedMembers,
-                true
-              ).to.not.have.same.ordered.members(set2);
+              new Assertion(set1, msg, assert.notSameOrderedMembers, true).to.not.have.same.ordered.members(set2);
             };
 
             /**
@@ -6634,12 +6472,7 @@
              */
 
             assert.sameDeepOrderedMembers = function (set1, set2, msg) {
-              new Assertion(
-                set1,
-                msg,
-                assert.sameDeepOrderedMembers,
-                true
-              ).to.have.same.deep.ordered.members(set2);
+              new Assertion(set1, msg, assert.sameDeepOrderedMembers, true).to.have.same.deep.ordered.members(set2);
             };
 
             /**
@@ -6660,12 +6493,9 @@
              */
 
             assert.notSameDeepOrderedMembers = function (set1, set2, msg) {
-              new Assertion(
-                set1,
-                msg,
-                assert.notSameDeepOrderedMembers,
-                true
-              ).to.not.have.same.deep.ordered.members(set2);
+              new Assertion(set1, msg, assert.notSameDeepOrderedMembers, true).to.not.have.same.deep.ordered.members(
+                set2,
+              );
             };
 
             /**
@@ -6705,9 +6535,7 @@
              */
 
             assert.notIncludeMembers = function (superset, subset, msg) {
-              new Assertion(superset, msg, assert.notIncludeMembers, true).to.not.include.members(
-                subset
-              );
+              new Assertion(superset, msg, assert.notIncludeMembers, true).to.not.include.members(subset);
             };
 
             /**
@@ -6727,9 +6555,7 @@
              */
 
             assert.includeDeepMembers = function (superset, subset, msg) {
-              new Assertion(superset, msg, assert.includeDeepMembers, true).to.include.deep.members(
-                subset
-              );
+              new Assertion(superset, msg, assert.includeDeepMembers, true).to.include.deep.members(subset);
             };
 
             /**
@@ -6749,12 +6575,7 @@
              */
 
             assert.notIncludeDeepMembers = function (superset, subset, msg) {
-              new Assertion(
-                superset,
-                msg,
-                assert.notIncludeDeepMembers,
-                true
-              ).to.not.include.deep.members(subset);
+              new Assertion(superset, msg, assert.notIncludeDeepMembers, true).to.not.include.deep.members(subset);
             };
 
             /**
@@ -6775,12 +6596,7 @@
              */
 
             assert.includeOrderedMembers = function (superset, subset, msg) {
-              new Assertion(
-                superset,
-                msg,
-                assert.includeOrderedMembers,
-                true
-              ).to.include.ordered.members(subset);
+              new Assertion(superset, msg, assert.includeOrderedMembers, true).to.include.ordered.members(subset);
             };
 
             /**
@@ -6802,12 +6618,9 @@
              */
 
             assert.notIncludeOrderedMembers = function (superset, subset, msg) {
-              new Assertion(
-                superset,
-                msg,
-                assert.notIncludeOrderedMembers,
-                true
-              ).to.not.include.ordered.members(subset);
+              new Assertion(superset, msg, assert.notIncludeOrderedMembers, true).to.not.include.ordered.members(
+                subset,
+              );
             };
 
             /**
@@ -6828,12 +6641,9 @@
              */
 
             assert.includeDeepOrderedMembers = function (superset, subset, msg) {
-              new Assertion(
-                superset,
-                msg,
-                assert.includeDeepOrderedMembers,
-                true
-              ).to.include.deep.ordered.members(subset);
+              new Assertion(superset, msg, assert.includeDeepOrderedMembers, true).to.include.deep.ordered.members(
+                subset,
+              );
             };
 
             /**
@@ -6860,7 +6670,7 @@
                 superset,
                 msg,
                 assert.notIncludeDeepOrderedMembers,
-                true
+                true,
               ).to.not.include.deep.ordered.members(subset);
             };
 
@@ -6998,9 +6808,7 @@
                 prop = null;
               }
 
-              new Assertion(fn, msg, assert.changesButNotBy, true).to
-                .change(obj, prop)
-                .but.not.by(delta);
+              new Assertion(fn, msg, assert.changesButNotBy, true).to.change(obj, prop).but.not.by(delta);
             };
 
             /**
@@ -7086,10 +6894,7 @@
                 prop = null;
               }
 
-              return new Assertion(fn, msg, assert.doesNotIncrease, true).to.not.increase(
-                obj,
-                prop
-              );
+              return new Assertion(fn, msg, assert.doesNotIncrease, true).to.not.increase(obj, prop);
             };
 
             /**
@@ -7121,9 +6926,7 @@
                 prop = null;
               }
 
-              new Assertion(fn, msg, assert.increasesButNotBy, true).to
-                .increase(obj, prop)
-                .but.not.by(delta);
+              new Assertion(fn, msg, assert.increasesButNotBy, true).to.increase(obj, prop).but.not.by(delta);
             };
 
             /**
@@ -7209,10 +7012,7 @@
                 prop = null;
               }
 
-              return new Assertion(fn, msg, assert.doesNotDecrease, true).to.not.decrease(
-                obj,
-                prop
-              );
+              return new Assertion(fn, msg, assert.doesNotDecrease, true).to.not.decrease(obj, prop);
             };
 
             /**
@@ -7244,9 +7044,7 @@
                 prop = null;
               }
 
-              return new Assertion(fn, msg, assert.doesNotDecreaseBy, true).to.not
-                .decrease(obj, prop)
-                .by(delta);
+              return new Assertion(fn, msg, assert.doesNotDecreaseBy, true).to.not.decrease(obj, prop).by(delta);
             };
 
             /**
@@ -7278,9 +7076,7 @@
                 prop = null;
               }
 
-              new Assertion(fn, msg, assert.decreasesButNotBy, true).to
-                .decrease(obj, prop)
-                .but.not.by(delta);
+              new Assertion(fn, msg, assert.decreasesButNotBy, true).to.decrease(obj, prop).but.not.by(delta);
             };
 
             /*!
@@ -7491,13 +7287,13 @@
             (function alias(name, as) {
               assert[as] = assert[name];
               return alias;
-            })('isOk', 'ok')('isNotOk', 'notOk')('throws', 'throw')('throws', 'Throw')(
-              'isExtensible',
-              'extensible'
-            )('isNotExtensible', 'notExtensible')('isSealed', 'sealed')('isNotSealed', 'notSealed')(
-              'isFrozen',
-              'frozen'
-            )('isNotFrozen', 'notFrozen')('isEmpty', 'empty')('isNotEmpty', 'notEmpty');
+            })('isOk', 'ok')('isNotOk', 'notOk')('throws', 'throw')('throws', 'Throw')('isExtensible', 'extensible')(
+              'isNotExtensible',
+              'notExtensible',
+            )('isSealed', 'sealed')('isNotSealed', 'notSealed')('isFrozen', 'frozen')('isNotFrozen', 'notFrozen')(
+              'isEmpty',
+              'empty',
+            )('isNotEmpty', 'notEmpty');
           };
         },
         {},
@@ -7551,7 +7347,7 @@
                   expected: expected,
                   operator: operator,
                 },
-                chai.expect.fail
+                chai.expect.fail,
               );
             };
           };
@@ -7642,7 +7438,7 @@
                     expected: expected,
                     operator: operator,
                   },
-                  should.fail
+                  should.fail,
                 );
               };
 
@@ -8007,7 +7803,7 @@
                       assertionName +
                       '". Use "' +
                       assertionName +
-                      '.lengthOf" instead.'
+                      '.lengthOf" instead.',
                   );
                 }
 
@@ -8017,7 +7813,7 @@
                     '.length. See' +
                     ' docs for proper usage of "' +
                     assertionName +
-                    '".'
+                    '".',
                 );
               },
             });
@@ -8274,7 +8070,7 @@
               throw new AssertionError(
                 flagMsg + 'object tested must be ' + str + ', but ' + objType + ' given',
                 undefined,
-                ssfi
+                ssfi,
               );
             }
           };
@@ -8962,12 +8758,7 @@
 
               case 'string':
                 var simple =
-                  "'" +
-                  JSON.stringify(value)
-                    .replace(/^"|"$/g, '')
-                    .replace(/'/g, "\\'")
-                    .replace(/\\"/g, '"') +
-                  "'";
+                  "'" + JSON.stringify(value).replace(/^"|"$/g, '').replace(/'/g, "\\'").replace(/\\"/g, '"') + "'";
                 return ctx.stylize(simple, 'string');
 
               case 'number':
@@ -9108,14 +8899,7 @@
             }, 0);
 
             if (length > 60) {
-              return (
-                braces[0] +
-                (base === '' ? '' : base + '\n ') +
-                ' ' +
-                output.join(',\n  ') +
-                ' ' +
-                braces[1]
-              );
+              return braces[0] + (base === '' ? '' : base + '\n ') + ' ' + output.join(',\n  ') + ' ' + braces[1];
             }
 
             return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
@@ -9128,10 +8912,7 @@
           }
 
           function isArray(ar) {
-            return (
-              Array.isArray(ar) ||
-              (typeof ar === 'object' && objectToString(ar) === '[object Array]')
-            );
+            return Array.isArray(ar) || (typeof ar === 'object' && objectToString(ar) === '[object Array]');
           }
 
           function isRegExp(re) {
@@ -9210,9 +8991,7 @@
            */
 
           module.exports = function isProxyEnabled() {
-            return (
-              config.useProxy && typeof Proxy !== 'undefined' && typeof Reflect !== 'undefined'
-            );
+            return config.useProxy && typeof Proxy !== 'undefined' && typeof Reflect !== 'undefined';
           };
         },
         { '../config': 4 },
@@ -9597,7 +9376,7 @@
                         property +
                         '. See docs for proper usage of "' +
                         nonChainableMethodName +
-                        '".'
+                        '".',
                     );
                   }
 
@@ -9617,9 +9396,7 @@
                   });
 
                   if (suggestion !== null) {
-                    throw Error(
-                      'Invalid Chai property: ' + property + '. Did you mean "' + suggestion + '"?'
-                    );
+                    throw Error('Invalid Chai property: ' + property + '. Did you mean "' + suggestion + '"?');
                   } else {
                     throw Error('Invalid Chai property: ' + property);
                   }
@@ -9683,7 +9460,7 @@
                 memo[i][j] = Math.min(
                   memo[i - 1][j] + 1,
                   memo[i][j - 1] + 1,
-                  memo[i - 1][j - 1] + (ch === strB.charCodeAt(j - 1) ? 0 : 1)
+                  memo[i - 1][j - 1] + (ch === strB.charCodeAt(j - 1) ? 0 : 1),
                 );
               }
             }
@@ -9767,10 +9544,7 @@
             includeAll = arguments.length === 3 ? includeAll : true;
 
             for (var flag in flags) {
-              if (
-                includeAll ||
-                (flag !== 'object' && flag !== 'ssfi' && flag !== 'lockSsfi' && flag != 'message')
-              ) {
+              if (includeAll || (flag !== 'object' && flag !== 'ssfi' && flag !== 'lockSsfi' && flag != 'message')) {
                 object.__flags[flag] = flags[flag];
               }
             }
@@ -9954,10 +9728,7 @@
           function compatibleConstructor(thrown, errorLike) {
             if (errorLike instanceof Error) {
               // If `errorLike` is an instance of any error we compare their constructors
-              return (
-                thrown.constructor === errorLike.constructor ||
-                thrown instanceof errorLike.constructor
-              );
+              return thrown.constructor === errorLike.constructor || thrown instanceof errorLike.constructor;
             } else if (errorLike.prototype instanceof Error || errorLike === Error) {
               // If `errorLike` is a constructor that inherits from Error, we compare `thrown` to `errorLike` directly
               return thrown.constructor === errorLike || thrown instanceof errorLike;
@@ -10038,8 +9809,7 @@
               // If `err` is not an instance of Error it is an error constructor itself or another function.
               // If we've got a common function we get its name, otherwise we may need to create a new instance
               // of the error just in case it's a poorly-constructed error. Please see chaijs/chai/issues/45 to know more.
-              constructorName =
-                getFunctionName(errorLike).trim() || getFunctionName(new errorLike()); // eslint-disable-line new-cap
+              constructorName = getFunctionName(errorLike).trim() || getFunctionName(new errorLike()); // eslint-disable-line new-cap
             }
 
             return constructorName;
@@ -10233,24 +10003,15 @@
 */
           function extensiveDeepEqual(leftHandOperand, rightHandOperand, options) {
             options = options || {};
-            options.memoize =
-              options.memoize === false ? false : options.memoize || new MemoizeMap();
+            options.memoize = options.memoize === false ? false : options.memoize || new MemoizeMap();
             var comparator = options && options.comparator;
 
             // Check if a memoized result exists.
-            var memoizeResultLeft = memoizeCompare(
-              leftHandOperand,
-              rightHandOperand,
-              options.memoize
-            );
+            var memoizeResultLeft = memoizeCompare(leftHandOperand, rightHandOperand, options.memoize);
             if (memoizeResultLeft !== null) {
               return memoizeResultLeft;
             }
-            var memoizeResultRight = memoizeCompare(
-              rightHandOperand,
-              leftHandOperand,
-              options.memoize
-            );
+            var memoizeResultRight = memoizeCompare(rightHandOperand, leftHandOperand, options.memoize);
             if (memoizeResultRight !== null) {
               return memoizeResultRight;
             }
@@ -10281,22 +10042,12 @@
             // Temporarily set the operands in the memoize object to prevent blowing the stack
             memoizeSet(leftHandOperand, rightHandOperand, options.memoize, true);
 
-            var result = extensiveDeepEqualByType(
-              leftHandOperand,
-              rightHandOperand,
-              leftHandType,
-              options
-            );
+            var result = extensiveDeepEqualByType(leftHandOperand, rightHandOperand, leftHandType, options);
             memoizeSet(leftHandOperand, rightHandOperand, options.memoize, result);
             return result;
           }
 
-          function extensiveDeepEqualByType(
-            leftHandOperand,
-            rightHandOperand,
-            leftHandType,
-            options
-          ) {
+          function extensiveDeepEqualByType(leftHandOperand, rightHandOperand, leftHandType, options) {
             switch (leftHandType) {
               case 'String':
               case 'Number':
@@ -10331,14 +10082,10 @@
                 return iterableEqual(
                   new Uint8Array(leftHandOperand.buffer),
                   new Uint8Array(rightHandOperand.buffer),
-                  options
+                  options,
                 );
               case 'ArrayBuffer':
-                return iterableEqual(
-                  new Uint8Array(leftHandOperand),
-                  new Uint8Array(rightHandOperand),
-                  options
-                );
+                return iterableEqual(new Uint8Array(leftHandOperand), new Uint8Array(rightHandOperand), options);
               case 'Set':
                 return entriesEqual(leftHandOperand, rightHandOperand, options);
               case 'Map':
@@ -10424,11 +10171,7 @@
            */
 
           function generatorEqual(leftHandOperand, rightHandOperand, options) {
-            return iterableEqual(
-              getGeneratorEntries(leftHandOperand),
-              getGeneratorEntries(rightHandOperand),
-              options
-            );
+            return iterableEqual(getGeneratorEntries(leftHandOperand), getGeneratorEntries(rightHandOperand), options);
           }
 
           /*!
@@ -10510,9 +10253,7 @@
               return true;
             }
             for (var i = 0; i < length; i += 1) {
-              if (
-                deepEqual(leftHandOperand[keys[i]], rightHandOperand[keys[i]], options) === false
-              ) {
+              if (deepEqual(leftHandOperand[keys[i]], rightHandOperand[keys[i]], options) === false) {
                 return false;
               }
             }
@@ -10607,10 +10348,7 @@
             }
 
             var name = '';
-            if (
-              typeof Function.prototype.name === 'undefined' &&
-              typeof aFunc.name === 'undefined'
-            ) {
+            if (typeof Function.prototype.name === 'undefined' && typeof aFunc.name === 'undefined') {
               // Here we run a polyfill if Function does not support the `name` property and if aFunc.name is not defined
               var match = toString.call(aFunc).match(functionNameMatch);
               if (match) {
@@ -10831,8 +10569,7 @@
             var parsed = parsePath(path);
             var last = parsed[parsed.length - 1];
             var info = {
-              parent:
-                parsed.length > 1 ? internalGetPathValue(obj, parsed, parsed.length - 1) : obj,
+              parent: parsed.length > 1 ? internalGetPathValue(obj, parsed, parsed.length - 1) : obj,
               name: last.p || last.i,
               value: internalGetPathValue(obj, parsed),
             };
@@ -10956,18 +10693,12 @@
             var symbolToStringTagExists = symbolExists && typeof Symbol.toStringTag !== 'undefined';
             var setEntriesExists = setExists && typeof Set.prototype.entries === 'function';
             var mapEntriesExists = mapExists && typeof Map.prototype.entries === 'function';
-            var setIteratorPrototype =
-              setEntriesExists && Object.getPrototypeOf(new Set().entries());
-            var mapIteratorPrototype =
-              mapEntriesExists && Object.getPrototypeOf(new Map().entries());
-            var arrayIteratorExists =
-              symbolIteratorExists && typeof Array.prototype[Symbol.iterator] === 'function';
-            var arrayIteratorPrototype =
-              arrayIteratorExists && Object.getPrototypeOf([][Symbol.iterator]());
-            var stringIteratorExists =
-              symbolIteratorExists && typeof String.prototype[Symbol.iterator] === 'function';
-            var stringIteratorPrototype =
-              stringIteratorExists && Object.getPrototypeOf(''[Symbol.iterator]());
+            var setIteratorPrototype = setEntriesExists && Object.getPrototypeOf(new Set().entries());
+            var mapIteratorPrototype = mapEntriesExists && Object.getPrototypeOf(new Map().entries());
+            var arrayIteratorExists = symbolIteratorExists && typeof Array.prototype[Symbol.iterator] === 'function';
+            var arrayIteratorPrototype = arrayIteratorExists && Object.getPrototypeOf([][Symbol.iterator]());
+            var stringIteratorExists = symbolIteratorExists && typeof String.prototype[Symbol.iterator] === 'function';
+            var stringIteratorPrototype = stringIteratorExists && Object.getPrototypeOf(''[Symbol.iterator]());
             var toStringLeftSliceLength = 8;
             var toStringRightSliceLength = -1;
             /**
@@ -11036,10 +10767,7 @@
                * Post:
                *   array literal      x 22,479,650 ops/sec ±0.96% (81 runs sampled)
                */
-              if (
-                Array.isArray(obj) &&
-                (symbolToStringTagExists === false || !(Symbol.toStringTag in obj))
-              ) {
+              if (Array.isArray(obj) && (symbolToStringTagExists === false || !(Symbol.toStringTag in obj))) {
                 return 'Array';
               }
 
@@ -11087,10 +10815,7 @@
                    * Test: `Object.prototype.toString.call(navigator.mimeTypes)``
                    *  - IE <=10 === "[object MSMimeTypesCollection]"
                    */
-                  if (
-                    typeof window.navigator.mimeTypes === 'object' &&
-                    obj === window.navigator.mimeTypes
-                  ) {
+                  if (typeof window.navigator.mimeTypes === 'object' && obj === window.navigator.mimeTypes) {
                     return 'MimeTypeArray';
                   }
 
@@ -11100,17 +10825,13 @@
                    * Test: `Object.prototype.toString.call(navigator.plugins)``
                    *  - IE <=10 === "[object MSPluginsCollection]"
                    */
-                  if (
-                    typeof window.navigator.plugins === 'object' &&
-                    obj === window.navigator.plugins
-                  ) {
+                  if (typeof window.navigator.plugins === 'object' && obj === window.navigator.plugins) {
                     return 'PluginArray';
                   }
                 }
 
                 if (
-                  (typeof window.HTMLElement === 'function' ||
-                    typeof window.HTMLElement === 'object') &&
+                  (typeof window.HTMLElement === 'function' || typeof window.HTMLElement === 'object') &&
                   obj instanceof window.HTMLElement
                 ) {
                   /* ! Spec Conformance
@@ -11320,9 +11041,7 @@
                 return 'Object';
               }
 
-              return Object.prototype.toString
-                .call(obj)
-                .slice(toStringLeftSliceLength, toStringRightSliceLength);
+              return Object.prototype.toString.call(obj).slice(toStringLeftSliceLength, toStringRightSliceLength);
             }
 
             return typeDetect;
@@ -11332,6 +11051,6 @@
       ],
     },
     {},
-    [1]
+    [1],
   )(1);
 });

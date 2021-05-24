@@ -1,11 +1,4 @@
-import {
-  isArray,
-  isAsyncIterator,
-  isAttributePart,
-  isBuffer,
-  isPromise,
-  isTemplateResult,
-} from './is.js';
+import { isArray, isAsyncIterator, isAttributePart, isBuffer, isPromise, isTemplateResult } from './is.js';
 import { Buffer } from 'buffer';
 
 const EMPTY_STRING_BUFFER = Buffer.from('');
@@ -119,6 +112,7 @@ function reduce(buffer, chunks, chunk) {
     chunks.push(buffer, chunk);
     return EMPTY_STRING_BUFFER;
   } else if (isArray(chunk)) {
+    // @ts-ignore
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
   } else if (isPromise(chunk) || isAsyncIterator(chunk)) {
     chunks.push(buffer, chunk);

@@ -1,109 +1,96 @@
 // @ts-nocheck
-const {
+import {
   AttributePart,
   BooleanAttributePart,
+  ChildPart,
   EventAttributePart,
-  NodePart,
   PropertyAttributePart,
-} = require('../index.js');
-const { directive, nothing, unsafePrefixString } = require('../shared.js');
-const { createAsyncIterable } = require('./utils.js');
-const { expect } = require('chai');
+} from '../src/index.js';
+import { directive, nothing, unsafePrefixString } from '../src/shared.js';
+import { createAsyncIterable } from './utils.js';
+import { expect } from 'chai';
 
 describe('Parts', () => {
-  describe('NodePart', () => {
+  describe('ChildPart', () => {
     it('should resolve a string value', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue('text').toString()).to.equal('text');
     });
     it('should resolve and escape a string value', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue('<text>').toString()).to.equal('&lt;text&gt;');
     });
     it('should resolve and not escape a string value with unsafe prefix', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue(`${unsafePrefixString}<text>`).toString()).to.equal('<text>');
     });
     it('should resolve and escape a string value for script tag', () => {
-      const part = new NodePart('script');
+      const part = new ChildPart('script');
       expect(part.getValue("const t = '<script>alert(' + foo + ')</script>';").toString()).to.equal(
-        "const t = '<script>alert(' + foo + ')<\\/script>';"
+        "const t = '<script>alert(' + foo + ')<\\/script>';",
       );
     });
     it('should resolve a number value', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue(1).toString()).to.equal('1');
     });
     it('should resolve a boolean value', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue(true).toString()).to.equal('true');
     });
     it('should resolve a null value', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue(null).toString()).to.equal('null');
     });
     it('should resolve an undefined value', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue(undefined).toString()).to.equal('');
     });
     it('should resolve an array value', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue([1, 2, 3]).map((v) => v.toString())).to.deep.equal(['1', '2', '3']);
     });
     it('should resolve an nested array value', () => {
-      const part = new NodePart();
-      expect(part.getValue([1, 2, [3, [4, 5]]]).map((v) => v.toString())).to.deep.equal([
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-      ]);
+      const part = new ChildPart();
+      expect(part.getValue([1, 2, [3, [4, 5]]]).map((v) => v.toString())).to.deep.equal(['1', '2', '3', '4', '5']);
     });
     it('should resolve a sync iterator value', () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const array = ['hello ', 'world'];
-      expect(part.getValue(array[Symbol.iterator]()).map((v) => v.toString())).to.deep.equal([
-        'hello ',
-        'world',
-      ]);
+      expect(part.getValue(array[Symbol.iterator]()).map((v) => v.toString())).to.deep.equal(['hello ', 'world']);
     });
     it('should resolve a string Promise value', async () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const promise = Promise.resolve('text');
       expect((await part.getValue(promise)).toString()).to.equal('text');
     });
     it('should resolve a number Promise value', async () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const promise = Promise.resolve(1);
       expect((await part.getValue(promise)).toString()).to.equal('1');
     });
     it('should resolve a boolean Promise value', async () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const promise = Promise.resolve(true);
       expect((await part.getValue(promise)).toString()).to.equal('true');
     });
     it('should resolve a null Promise value', async () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const promise = Promise.resolve(null);
       expect((await part.getValue(promise)).toString()).to.equal('null');
     });
     it('should resolve an undefined Promise value', async () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const promise = Promise.resolve(undefined);
       expect((await part.getValue(promise)).toString()).to.equal('');
     });
     it('should resolve an array Promise value', async () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const promise = Promise.resolve([1, 2, 3]);
-      expect((await part.getValue(promise)).map((v) => v.toString())).to.deep.equal([
-        '1',
-        '2',
-        '3',
-      ]);
+      expect((await part.getValue(promise)).map((v) => v.toString())).to.deep.equal(['1', '2', '3']);
     });
     it('should handle Promise errors', async () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const promise = Promise.reject(Error('errored!'));
       try {
         const result = await part.getValue(promise);
@@ -113,7 +100,7 @@ describe('Parts', () => {
       }
     });
     it('should resolve an async iterator value', async () => {
-      const part = new NodePart();
+      const part = new ChildPart();
       const iterator = createAsyncIterable(['some', ' text']);
       let result = '';
       for await (const value of part.getValue(iterator)) {
@@ -125,14 +112,14 @@ describe('Parts', () => {
       const d = directive(() => (part) => {
         part.setValue('directive');
       });
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue(d()).toString()).to.equal('directive');
     });
     it('should resolve a directive value returning "nothing"', () => {
       const d = directive(() => (part) => {
         part.setValue(nothing);
       });
-      const part = new NodePart();
+      const part = new ChildPart();
       expect(part.getValue(d()).toString()).to.equal('');
     });
   });
@@ -202,9 +189,7 @@ describe('Parts', () => {
     });
     it('should resolve an undefined Promise value', async () => {
       const part = new AttributePart('a', [Buffer.from(''), Buffer.from('')]);
-      expect((await part.getValue([Promise.resolve(undefined)])).toString()).to.equal(
-        'a="undefined"'
-      );
+      expect((await part.getValue([Promise.resolve(undefined)])).toString()).to.equal('a="undefined"');
     });
     it('should handle Promise errors', async () => {
       try {
@@ -263,27 +248,21 @@ describe('Parts', () => {
     });
     it('should resolve primitive values if options.serializePropertyAttributes', () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
-      expect(part.getValue(['text'], { serializePropertyAttributes: true }).toString()).to.equal(
-        '.a="text"'
-      );
-      expect(part.getValue([1], { serializePropertyAttributes: true }).toString()).to.equal(
-        '.a="1"'
-      );
-      expect(part.getValue([false], { serializePropertyAttributes: true }).toString()).to.equal(
-        '.a="false"'
-      );
+      expect(part.getValue(['text'], { serializePropertyAttributes: true }).toString()).to.equal('.a="text"');
+      expect(part.getValue([1], { serializePropertyAttributes: true }).toString()).to.equal('.a="1"');
+      expect(part.getValue([false], { serializePropertyAttributes: true }).toString()).to.equal('.a="false"');
     });
     it('should resolve array value if options.serializePropertyAttributes', () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
-      expect(
-        part.getValue([['some', 'text']], { serializePropertyAttributes: true }).toString()
-      ).to.equal('.a="[&quot;some&quot;,&quot;text&quot;]"');
+      expect(part.getValue([['some', 'text']], { serializePropertyAttributes: true }).toString()).to.equal(
+        '.a="[&quot;some&quot;,&quot;text&quot;]"',
+      );
     });
     it('should resolve object value if options.serializePropertyAttributes', () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
-      expect(
-        part.getValue([{ some: 'text' }], { serializePropertyAttributes: true }).toString()
-      ).to.equal('.a="{&quot;some&quot;:&quot;text&quot;}"');
+      expect(part.getValue([{ some: 'text' }], { serializePropertyAttributes: true }).toString()).to.equal(
+        '.a="{&quot;some&quot;:&quot;text&quot;}"',
+      );
     });
     it('should resolve primitive Promise values if options.serializePropertyAttributes', async () => {
       const part = new PropertyAttributePart('a', [Buffer.from(''), Buffer.from('')]);
@@ -292,21 +271,21 @@ describe('Parts', () => {
           await part.getValue([Promise.resolve('text')], {
             serializePropertyAttributes: true,
           })
-        ).toString()
+        ).toString(),
       ).to.equal('.a="text"');
       expect(
         (
           await part.getValue([Promise.resolve(1)], {
             serializePropertyAttributes: true,
           })
-        ).toString()
+        ).toString(),
       ).to.equal('.a="1"');
       expect(
         (
           await part.getValue([Promise.resolve(false)], {
             serializePropertyAttributes: true,
           })
-        ).toString()
+        ).toString(),
       ).to.equal('.a="false"');
     });
     it('should resolve object Promise value if options.serializePropertyAttributes', async () => {
@@ -316,7 +295,7 @@ describe('Parts', () => {
           await part.getValue([Promise.resolve({ some: 'text' })], {
             serializePropertyAttributes: true,
           })
-        ).toString()
+        ).toString(),
       ).to.equal('.a="{&quot;some&quot;:&quot;text&quot;}"');
     });
   });

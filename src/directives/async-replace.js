@@ -1,11 +1,11 @@
-import { directive, isNodePart } from '../shared.js';
+import { directive, isChildPart } from '../shared.js';
 
 /**
  * Render items of an AsyncIterable, replacing previous items as they are resolved.
  * Not possible to render more than once in a server context, so only the first item is rendered.
  */
 export const asyncReplace = directive((value, mapper) => (part) => {
-  if (!isNodePart(part)) {
+  if (!isChildPart(part)) {
     throw Error('The `asyncReplace` directive can only be used in text nodes');
   }
 
@@ -19,6 +19,6 @@ export const asyncReplace = directive((value, mapper) => (part) => {
       }
 
       return value;
-    })
+    }),
   );
 });

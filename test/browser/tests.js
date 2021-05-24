@@ -266,8 +266,7 @@ describe('Browser template render', () => {
       expect(await getStream(renderToStream(result()))).to.equal(expected);
     });
     it('should not render a template with multiple Promise templates attribute', async () => {
-      const result = () =>
-        h`<div a="some ${Promise.resolve(h`text`)} here ${Promise.resolve(h`too`)}"></div>`;
+      const result = () => h`<div a="some ${Promise.resolve(h`text`)} here ${Promise.resolve(h`too`)}"></div>`;
       const expected = '<div a="some [object Object] here [object Object]"></div>';
       expect(await renderToString(result())).to.equal(expected);
       expect(await getStream(renderToStream(result()))).to.equal(expected);

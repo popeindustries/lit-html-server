@@ -5,9 +5,7 @@ const path = require('path');
 const args = process.argv.slice(2);
 const async = args.includes('async');
 const buffer = args.includes('buffer');
-const url = `http://localhost:3000?${async ? 'async' : ''}${
-  buffer ? `${async ? '&' : ''}buffer` : ''
-}`;
+const url = `http://localhost:3000?${async ? 'async' : ''}${buffer ? `${async ? '&' : ''}buffer` : ''}`;
 
 const child = fork(path.resolve(__dirname, './server.js'), { silent: false });
 
@@ -33,7 +31,7 @@ function stress() {
           return reject(err);
         }
         resolve(results);
-      }
+      },
     );
     autocannon.track(instance, { renderProgressBar: true });
   });

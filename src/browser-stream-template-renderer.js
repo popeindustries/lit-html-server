@@ -1,13 +1,14 @@
 /* global ReadableStream */
+import { getProcessor } from './template-result-processor.js';
+
 /**
  * A custom Readable stream factory for rendering a template result to a stream
  *
  * @param { TemplateResult } result - a template result returned from call to "html`...`"
- * @param { TemplateResultProcessor } processor
  * @param { RenderOptions } [options]
  * @returns { ReadableStream }
  */
-export function browserStreamTemplateRenderer(result, processor, options) {
+export function browserStreamTemplateRenderer(result, options) {
   if (typeof ReadableStream === 'undefined') {
     throw Error('ReadableStream not supported on this platform');
   }
@@ -15,15 +16,14 @@ export function browserStreamTemplateRenderer(result, processor, options) {
     throw Error('TextEncoder not supported on this platform');
   }
 
-  return new ReadableStream({
-    // @ts-ignore
-    process: null,
+  /** @type { UnderlyingSource & { process: (() => void) }} */
+  const underlyingSource = {
+    process: () => {},
     start(controller) {
       const encoder = new TextEncoder();
-      const underlyingSource = this;
       let stack = [result];
 
-      this.process = processor.getProcessor(
+      this.process = getProcessor(
         {
           push(chunk) {
             if (chunk === null) {
@@ -37,18 +37,19 @@ export function browserStreamTemplateRenderer(result, processor, options) {
           },
           destroy(err) {
             controller.error(err);
-            underlyingSource.process = undefined;
             // @ts-ignore
             stack = undefined;
           },
         },
         stack,
         16384,
-        options
+        options,
       );
     },
     pull() {
       this.process();
     },
-  });
+  };
+
+  return new ReadableStream(underlyingSource);
 }

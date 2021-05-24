@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer';
 
-export { isAttributePart, isDirective, isNodePart, isPrimitive } from './shared.js';
+export { isAttributePart, isDirective, isChildPart as isNodePart, isPrimitive } from './shared.js';
 
 /**
  * Determine whether "result" is a TemplateResult
@@ -10,7 +10,7 @@ export { isAttributePart, isDirective, isNodePart, isPrimitive } from './shared.
  */
 export function isTemplateResult(result) {
   // @ts-ignore
-  return result && typeof result.template !== 'undefined' && typeof result.values !== 'undefined';
+  return result != null && typeof result.template !== 'undefined' && typeof result.values !== 'undefined';
 }
 
 /**
@@ -86,7 +86,7 @@ export function isBuffer(value) {
  * Determine if "value" is an Array
  *
  * @param { unknown } value
- * @returns { value is Array }
+ * @returns { value is Array<unknown> }
  */
 export function isArray(value) {
   return Array.isArray(value);
