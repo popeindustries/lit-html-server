@@ -78,14 +78,7 @@ function getRenderResult(result) {
   return !isTemplateResult(result) ? DEFAULT_TEMPLATE_FN(result) : result;
 }
 
-export {
-  AttributePart,
-  BooleanAttributePart,
-  EventAttributePart,
-  ChildPart,
-  Part,
-  PropertyAttributePart,
-} from './parts.js';
+export { AttributePart, BooleanAttributePart, ChildPart, ElementPart, EventPart, Part, PropertyPart } from './parts.js';
 export { directive, isAttributePart, isDirective, isChildPart, nothing, unsafePrefixString } from './shared.js';
 export {
   html,

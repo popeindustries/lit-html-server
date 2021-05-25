@@ -202,7 +202,7 @@ export class BooleanAttributePart extends AttributePart {
  * A dynamic template part for property attributes.
  * Property attributes are prefixed with "."
  */
-export class PropertyAttributePart extends AttributePart {
+export class PropertyPart extends AttributePart {
   /**
    * Retrieve resolved string Buffer from passed "values".
    * Returns an empty string unless "options.serializePropertyAttributes=true"
@@ -229,7 +229,7 @@ export class PropertyAttributePart extends AttributePart {
  * A dynamic template part for event attributes.
  * Event attributes are prefixed with "@"
  */
-export class EventAttributePart extends AttributePart {
+export class EventPart extends AttributePart {
   /**
    * Retrieve resolved string Buffer from passed "values".
    * Event bindings have no server-side representation,
@@ -243,6 +243,11 @@ export class EventAttributePart extends AttributePart {
     return EMPTY_STRING_BUFFER;
   }
 }
+
+/**
+ * A dynamic template part for accessing element instances.
+ */
+export class ElementPart extends EventPart {}
 
 /**
  * Resolve "value" to string if possible

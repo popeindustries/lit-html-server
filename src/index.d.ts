@@ -24,7 +24,7 @@ interface TemplateResultRenderer {
 /**
  * Base class interface for Node/Attribute parts
  */
-export declare class Part {
+export class Part {
   tagName: string;
   _value: unknown;
 
@@ -51,13 +51,13 @@ export declare class Part {
 /**
  * A dynamic template part for text nodes
  */
-export declare class ChildPart extends Part {}
+export class ChildPart extends Part {}
 
 /**
  * A dynamic template part for attributes.
  * Unlike text nodes, attributes may contain multiple strings and parts.
  */
-export declare class AttributePart extends Part {
+export class AttributePart extends Part {
   name: string;
   strings: Array<Buffer>;
   length: number;
@@ -76,7 +76,7 @@ export declare class AttributePart extends Part {
  * A dynamic template part for boolean attributes.
  * Boolean attributes are prefixed with "?"
  */
-export declare class BooleanAttributePart extends AttributePart {
+export class BooleanAttributePart extends AttributePart {
   nameAsBuffer: Buffer;
 }
 
@@ -84,7 +84,7 @@ export declare class BooleanAttributePart extends AttributePart {
  * A dynamic template part for property attributes.
  * Property attributes are prefixed with "."
  */
-export declare class PropertyAttributePart extends AttributePart {
+export class PropertyPart extends AttributePart {
   /**
    * Retrieve resolved string Buffer from passed "values".
    * Properties have no server-side representation (unless RenderOptions.serializePropertyAttributes),
@@ -97,7 +97,19 @@ export declare class PropertyAttributePart extends AttributePart {
  * A dynamic template part for event attributes.
  * Event attributes are prefixed with "@"
  */
-export declare class EventAttributePart extends AttributePart {
+export class EventPart extends AttributePart {
+  /**
+   * Retrieve resolved string Buffer from passed "values".
+   * Event bindings have no server-side representation,
+   * so always returns an empty string.
+   */
+  getValue(values: Array<unknown>, options?: RenderOptions): Buffer;
+}
+
+/**
+ * A dynamic template part for accessing element instances.
+ */
+export class ElementPart extends AttributePart {
   /**
    * Retrieve resolved string Buffer from passed "values".
    * Event bindings have no server-side representation,
@@ -109,7 +121,7 @@ export declare class EventAttributePart extends AttributePart {
 /**
  * A class for consuming the combined static and dynamic parts of a lit-html Template.
  */
-export declare class TemplateResult {
+export class TemplateResult {
   template: Template;
   values: ReadonlyArray<unknown>;
   id: number;
@@ -134,13 +146,13 @@ export declare class TemplateResult {
 /**
  * A class for consuming the combined static and dynamic parts of a lit-html svg Template.
  */
-export declare class SVGTemplateResult extends TemplateResult {}
+export class SVGTemplateResult extends TemplateResult {}
 
 /**
  * A cacheable Template that stores the "strings" and "parts" associated with a
  * tagged template literal invoked with "html`...`".
  */
-export declare class Template {
+export class Template {
   strings: Array<Buffer | null>;
   parts: Array<Part | null>;
 
@@ -157,7 +169,7 @@ export declare class Template {
   _prepare(strings: TemplateStringsArray, processor: TemplateProcessor): void;
 }
 
-export declare type RenderOptions = {
+export type RenderOptions = {
   serializePropertyAttributes: boolean;
 };
 
@@ -166,58 +178,58 @@ export declare type RenderOptions = {
  * The passed function should be a factory function,
  * and must return a function that will eventually be called with a Part instance
  */
-export declare function directive<F extends (...args: Array<any>) => object>(f: F): F;
+export function directive<F extends (...args: Array<any>) => object>(f: F): F;
 
 /**
  * Determine if "fn" is a directive function
  */
-export declare function isDirective(fn: unknown): fn is Function;
+export function isDirective(fn: unknown): fn is Function;
 
 /**
  * Determine if "part" is an AttributePart
  */
-export declare function isAttributePart(part: unknown): part is AttributePart;
+export function isAttributePart(part: unknown): part is AttributePart;
 
 /**
  * Determine if "part" is a ChildPart
  */
-export declare function isChildPart(part: unknown): part is ChildPart;
+export function isChildPart(part: unknown): part is ChildPart;
 
 /**
  * Determine whether "result" is a TemplateResult
  */
-export declare function isTemplateResult(result: unknown): result is TemplateResult;
+export function isTemplateResult(result: unknown): result is TemplateResult;
 
 /**
  * A value for parts that signals a Part to clear its content
  */
-export declare const nothing: string;
+export const nothing: string;
 /**
  * A prefix value for strings that should not be escaped
  */
-export declare const unsafePrefixString: string;
-export declare const templateCache: Map<TemplateStringsArray, Template>;
+export const unsafePrefixString: string;
+export const templateCache: Map<TemplateStringsArray, Template>;
 
 /**
  * Interprets a template literal as an HTML template that can be
  * rendered as a Readable stream or String
  */
-export declare function html(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
-export declare function svg(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
+export function html(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
+export function svg(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
 
 /**
  * Render a template result to a string resolving Promise.
  */
-export declare function renderToString(result: unknown, options?: RenderOptions): Promise<string>;
+export function renderToString(result: unknown, options?: RenderOptions): Promise<string>;
 
 /**
  * Render a template result to a Readable stream
  */
-export declare function renderToStream(result: unknown, options?: RenderOptions): import('stream').Readable;
+export function renderToStream(result: unknown, options?: RenderOptions): import('stream').Readable;
 
 /**
  * Render a template result to a Buffer resolving Promise.
  */
-export declare function renderToBuffer(result: unknown, options?: RenderOptions): Promise<Buffer>;
+export function renderToBuffer(result: unknown, options?: RenderOptions): Promise<Buffer>;
 
 export as namespace _lit;

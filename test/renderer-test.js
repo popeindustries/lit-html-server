@@ -205,6 +205,12 @@ describe('Server template render', () => {
       expect(await renderToString(result())).to.equal(expected);
       expect(await streamAsPromise(renderToStream(result()))).to.equal(expected);
     });
+    it('should render a template with element attribute', async () => {
+      const result = () => h`<div ${function () {}}></div>`;
+      const expected = '<div ></div>';
+      expect(await renderToString(result())).to.equal(expected);
+      expect(await streamAsPromise(renderToStream(result()))).to.equal(expected);
+    });
     it('should render a template with event attribute', async () => {
       const result = () => h`<div @a="${'some event'}"></div>`;
       const expected = '<div ></div>';

@@ -1,4 +1,4 @@
-import { AttributePart, BooleanAttributePart, ChildPart, EventAttributePart, PropertyAttributePart } from './parts.js';
+import { AttributePart, BooleanAttributePart, ChildPart, EventPart, PropertyPart } from './parts.js';
 import { Buffer } from 'buffer';
 
 const EMPTY_STRING_BUFFER = Buffer.from('');
@@ -100,6 +100,8 @@ export class Template {
           } else {
             part = handleAttributeExpressions(name, [EMPTY_STRING_BUFFER, EMPTY_STRING_BUFFER], tagName);
           }
+        } else {
+          part = handleAttributeExpressions('@', [EMPTY_STRING_BUFFER, EMPTY_STRING_BUFFER], tagName);
         }
       } else {
         part = handleTextExpression(tagName);
@@ -191,9 +193,9 @@ function handleAttributeExpressions(name, strings = [], tagName) {
   const prefix = name[0];
 
   if (prefix === '.') {
-    return new PropertyAttributePart(name.slice(1), strings, tagName);
+    return new PropertyPart(name.slice(1), strings, tagName);
   } else if (prefix === '@') {
-    return new EventAttributePart(name.slice(1), strings, tagName);
+    return new EventPart(name.slice(1), strings, tagName);
   } else if (prefix === '?') {
     return new BooleanAttributePart(name.slice(1), strings, tagName);
   }
