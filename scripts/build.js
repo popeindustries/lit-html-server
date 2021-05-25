@@ -1,130 +1,64 @@
 // @ts-nocheck
 
-const commonjs = require('@rollup/plugin-commonjs');
-const fs = require('fs');
-const path = require('path');
-const resolve = require('@rollup/plugin-node-resolve');
-const { rollup } = require('rollup');
+import esbuild from 'esbuild';
+import fs from 'fs';
+import path from 'path';
+
+const IMPORT_MAP = {
+  './node-stream-template-renderer.js': './src/browser-stream-template-renderer.js',
+  buffer: './src/browser-buffer.js',
+  stream: './src/browser-stream.js',
+};
+
+(async function main() {
+  await esbuild.build({
+    bundle: true,
+    entryPoints: ['./src/shared.js'],
+    format: 'esm',
+    target: 'es2020',
+    platform: 'browser',
+    outfile: 'shared.js',
+  });
+
+  await esbuild.build({
+    bundle: true,
+    entryPoints: ['./src/index.js'],
+    external: ['*/shared.js'],
+    format: 'esm',
+    target: 'node13.2',
+    platform: 'node',
+    outfile: 'index.js',
+  });
+
+  await esbuild.build({
+    bundle: true,
+    entryPoints: ['./src/index.js'],
+    external: ['*/shared.js'],
+    format: 'esm',
+    target: 'es2020',
+    platform: 'browser',
+    outfile: 'browser.js',
+    plugins: [
+      {
+        name: 'browser-rewrite-import',
+        setup(build) {
+          build.onResolve({ filter: /.*/ }, function (args) {
+            if (args.path in IMPORT_MAP) {
+              return { path: path.resolve(IMPORT_MAP[args.path]) };
+            }
+          });
+        },
+      },
+    ],
+  });
+})();
+
+fs.copyFileSync(path.resolve('src/index.d.ts'), path.resolve('index.d.ts'));
 
 if (!fs.existsSync(path.resolve('directives'))) {
   fs.mkdirSync(path.resolve('directives'));
 }
 
-const plugins = [commonjs(), resolve({ preferBuiltins: true })];
-const input = {
-  external: (id) => id === 'buffer' || id === 'stream' || path.basename(id) === 'shared.js',
-  input: 'src/index.js',
-  plugins
-};
-const tasks = [
-  [
-    input,
-    {
-      file: 'index.js',
-      format: 'cjs'
-    }
-  ],
-  [
-    input,
-    {
-      file: 'index.mjs',
-      format: 'esm'
-    },
-    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs')
-  ],
-  [
-    {
-      external: (id) => path.basename(id) === 'shared.js',
-      input: 'src/index.js',
-      plugins: [commonjs(), resolve({ mainFields: ['browser', 'module', 'main'] })]
-    },
-    {
-      file: 'browser.mjs',
-      format: 'esm'
-    },
-    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs')
-  ],
-  [
-    {
-      input: 'src/shared.js',
-      plugins
-    },
-    {
-      file: 'shared.mjs',
-      format: 'esm'
-    }
-  ],
-  [
-    {
-      input: 'src/shared.js',
-      plugins
-    },
-    {
-      file: 'shared.js',
-      format: 'cjs'
-    }
-  ],
-  ...configDirectives('cjs', '.js', true),
-  ...configDirectives('esm', '.mjs')
-];
-
-(async function() {
-  for (const [inputOptions, outputOptions, preWrite] of tasks) {
-    const bundle = await rollup(inputOptions);
-    const { output } = await bundle.generate(outputOptions);
-    for (const chunkOrAsset of output) {
-      let content = chunkOrAsset.isAsset ? chunkOrAsset.source : chunkOrAsset.code;
-      if (preWrite) {
-        content = preWrite(content);
-      }
-      write(path.resolve(outputOptions.file), content);
-    }
-  }
-  write(
-    path.resolve('index.d.ts'),
-    fs.readFileSync(path.resolve('src/types.d.ts'), 'utf8').replace(/\/\* export \*\//g, 'export')
-  );
-})();
-
-function configDirectives(format, extension, moveTypes) {
-  const config = [];
-  const dir = path.resolve('src/directives');
-  const directives = fs.readdirSync(dir);
-  const preWrite = (content) => content.replace('../shared.js', '../shared.mjs');
-
-  for (const directive of directives) {
-    const input = path.join(dir, directive);
-    let filename = path.join('directives', directive);
-
-    if (path.extname(directive) === '.js') {
-      if (extension === '.mjs') {
-        filename = filename.replace('.js', '.mjs');
-      }
-
-      config.push([
-        {
-          external: (id) => id !== input,
-          input,
-          plugins
-        },
-        {
-          file: filename,
-          format
-        },
-        extension === '.mjs' ? preWrite : undefined
-      ]);
-    } else if (path.extname(directive) === '.ts' && moveTypes) {
-      fs.copyFileSync(input, path.resolve(filename));
-    }
-  }
-
-  return config;
-}
-
-function write(filepath, content) {
-  const dir = path.dirname(filepath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-  fs.writeFileSync(filepath, content);
+for (const basePath of fs.readdirSync(path.resolve('src/directives'))) {
+  fs.copyFileSync(path.resolve('src/directives', basePath), path.resolve('directives', basePath));
 }

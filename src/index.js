@@ -1,4 +1,3 @@
-import { browserStreamTemplateRenderer } from './browser-stream-template-renderer.js';
 import { isTemplateResult } from './is.js';
 import { promiseTemplateRenderer } from './promise-template-renderer.js';
 import { streamTemplateRenderer } from './node-stream-template-renderer.js';
@@ -15,12 +14,6 @@ import { TemplateResult } from './template-result.js';
 const DEFAULT_TEMPLATE_FN = (value) => html`${value}`;
 
 const templateCache = new Map();
-const streamRenderer =
-  typeof process !== 'undefined' &&
-  typeof process.versions !== 'undefined' &&
-  typeof process.versions.node !== 'undefined'
-    ? streamTemplateRenderer
-    : browserStreamTemplateRenderer;
 
 /**
  * Interprets a template literal as an HTML template that can be
@@ -49,7 +42,7 @@ function html(strings, ...values) {
  * @returns { import('stream').Readable | ReadableStream }
  */
 function renderToStream(result, options) {
-  return streamRenderer(getRenderResult(result), options);
+  return streamTemplateRenderer(getRenderResult(result), options);
 }
 
 /**

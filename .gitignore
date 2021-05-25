@@ -4,8 +4,6 @@ node_modules
 .DS_Store
 /index.d.ts
 /index.js
-/index.mjs
-/browser.mjs
+/browser.js
 /shared.js
-/shared.mjs
 /directives/

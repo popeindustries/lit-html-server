@@ -17,7 +17,7 @@ export function promiseTemplateRenderer(result, asBuffer = false, options) {
 
     getProcessor(
       {
-        /** @param { Buffer } chunk */
+        /** @param { Buffer | null } chunk */
         push(chunk) {
           if (chunk === null) {
             const concatBuffer = Buffer.concat(buffer, bufferLength);

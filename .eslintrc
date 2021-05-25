@@ -5,21 +5,19 @@
     "node": true
   },
   "extends": ["eslint:recommended", "prettier"],
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaVersion": 2017,
+    "ecmaVersion": 2020,
     "sourceType": "module",
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
-    }
+    },
+    "requireConfigFile": false
   },
   "plugins": ["prettier"],
   "rules": {
     "no-console": "off",
     "no-unused-vars": ["error", { "args": "none", "ignoreRestSiblings": true }],
-    "sort-imports": [
-      "warn",
-      { "ignoreCase": true, "memberSyntaxSortOrder": ["none", "all", "multiple", "single"] }
-    ]
+    "sort-imports": ["warn", { "ignoreCase": true, "memberSyntaxSortOrder": ["none", "all", "multiple", "single"] }]
   }
 }

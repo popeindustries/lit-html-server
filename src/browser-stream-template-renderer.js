@@ -8,7 +8,7 @@ import { getProcessor } from './template-result-processor.js';
  * @param { _lit.RenderOptions } [options]
  * @returns { ReadableStream }
  */
-export function browserStreamTemplateRenderer(result, options) {
+export function streamTemplateRenderer(result, options) {
   if (typeof ReadableStream === 'undefined') {
     throw Error('ReadableStream not supported on this platform');
   }
@@ -25,7 +25,7 @@ export function browserStreamTemplateRenderer(result, options) {
 
       this.process = getProcessor(
         {
-          /** @param { Buffer } chunk */
+          /** @param { Buffer | null } chunk */
           push(chunk) {
             if (chunk === null) {
               controller.close();

@@ -1,7 +1,7 @@
 /* global chai */
 /* eslint no-constant-condition:0 no-async-promise-executor:0 */
 // @ts-nocheck
-import { html as h, renderToStream, renderToString } from '../../browser.mjs';
+import { html as h, renderToStream, renderToString } from '../../browser.js';
 
 const { expect } = chai;
 
