@@ -1,11 +1,4 @@
-import {
-  isArray,
-  isAsyncIterator,
-  isAttributePart,
-  isBuffer,
-  isPromise,
-  isTemplateResult,
-} from './is.js';
+import { isArray, isAsyncIterator, isAttributePart, isBuffer, isPromise, isTemplateResult } from './is.js';
 import { Buffer } from 'buffer';
 
 const EMPTY_STRING_BUFFER = Buffer.from('');
@@ -20,7 +13,7 @@ export class TemplateResult {
   /**
    * Constructor
    *
-   * @param { Template } template
+   * @param { _lit.Template } template
    * @param { Array<unknown> } values
    */
   constructor(template, values) {
@@ -33,7 +26,7 @@ export class TemplateResult {
   /**
    * Consume template result content.
    *
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { unknown }
    */
   read(options) {
@@ -63,7 +56,7 @@ export class TemplateResult {
 
   /**
    * Consume template result content one chunk at a time.
-   * @param { RenderOptions } [options]
+   * @param { _lit.RenderOptions } [options]
    * @returns { unknown }
    */
   readChunk(options) {
@@ -119,6 +112,7 @@ function reduce(buffer, chunks, chunk) {
     chunks.push(buffer, chunk);
     return EMPTY_STRING_BUFFER;
   } else if (isArray(chunk)) {
+    // @ts-ignore
     return chunk.reduce((buffer, chunk) => reduce(buffer, chunks, chunk), buffer);
   } else if (isPromise(chunk) || isAsyncIterator(chunk)) {
     chunks.push(buffer, chunk);

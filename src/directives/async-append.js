@@ -1,10 +1,10 @@
-import { directive, isNodePart } from '../shared.js';
+import { directive, isChildPart } from '../shared.js';
 
 /**
  * Render items of an AsyncIterable
  */
 export const asyncAppend = directive((value, mapper) => (part) => {
-  if (!isNodePart(part)) {
+  if (!isChildPart(part)) {
     throw Error('The `asyncAppend` directive can only be used in text nodes');
   }
 

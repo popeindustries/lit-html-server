@@ -1,5 +1,5 @@
+import { AttributePart, BooleanAttributePart, ChildPart, EventPart, PropertyPart } from './parts.js';
 import { Buffer } from 'buffer';
-import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
 const EMPTY_STRING_BUFFER = Buffer.from('');
 const RE_QUOTE = /"[^"]*|'[^']*$/;
@@ -8,6 +8,9 @@ const RE_TAG_NAME = /[a-zA-Z0-9._-]/;
 const TAG_OPEN = 1;
 const TAG_CLOSED = 0;
 const TAG_NONE = -1;
+
+const lastAttributeNameRegex =
+  /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F "'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
 
 /**
  * A cacheable Template that stores the "strings" and "parts" associated with a
@@ -18,15 +21,14 @@ export class Template {
    * Create Template instance
    *
    * @param { TemplateStringsArray } strings
-   * @param { TemplateProcessor } processor
    */
-  constructor(strings, processor) {
+  constructor(strings) {
     /** @type { Array<Buffer | null> } */
     this.strings = [];
-    /** @type { Array<Part | null> } */
+    /** @type { Array<_lit.Part | null> } */
     this.parts = [];
 
-    this._prepare(strings, processor);
+    this._prepare(strings);
   }
 
   /**
@@ -35,9 +37,8 @@ export class Template {
    * based on lit-html syntax.
    *
    * @param { TemplateStringsArray } strings
-   * @param { TemplateProcessor } processor
    */
-  _prepare(strings, processor) {
+  _prepare(strings) {
     const endIndex = strings.length - 1;
     let attributeMode = false;
     let nextString = strings[0];
@@ -95,17 +96,15 @@ export class Template {
               }
             }
 
-            part = processor.handleAttributeExpressions(name, attributeStrings, tagName);
+            part = handleAttributeExpressions(name, attributeStrings, tagName);
           } else {
-            part = processor.handleAttributeExpressions(
-              name,
-              [EMPTY_STRING_BUFFER, EMPTY_STRING_BUFFER],
-              tagName
-            );
+            part = handleAttributeExpressions(name, [EMPTY_STRING_BUFFER, EMPTY_STRING_BUFFER], tagName);
           }
+        } else {
+          part = handleAttributeExpressions('@', [EMPTY_STRING_BUFFER, EMPTY_STRING_BUFFER], tagName);
         }
       } else {
-        part = processor.handleTextExpression(tagName);
+        part = handleTextExpression(tagName);
       }
 
       this.strings.push(Buffer.from(string));
@@ -180,4 +179,36 @@ function getTagName(string, tagState, tagStateIndex) {
   }
 
   return tagName;
+}
+
+/**
+ * Create part instance for dynamic attribute values
+ *
+ * @param { string } name
+ * @param { Array<Buffer> } strings
+ * @param { string } tagName
+ * @returns { AttributePart }
+ */
+function handleAttributeExpressions(name, strings = [], tagName) {
+  const prefix = name[0];
+
+  if (prefix === '.') {
+    return new PropertyPart(name.slice(1), strings, tagName);
+  } else if (prefix === '@') {
+    return new EventPart(name.slice(1), strings, tagName);
+  } else if (prefix === '?') {
+    return new BooleanAttributePart(name.slice(1), strings, tagName);
+  }
+
+  return new AttributePart(name, strings, tagName);
+}
+
+/**
+ * Create part instance for dynamic text values
+ *
+ * @param { string } tagName
+ * @returns { ChildPart }
+ */
+function handleTextExpression(tagName) {
+  return new ChildPart(tagName);
 }

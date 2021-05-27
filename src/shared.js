@@ -17,22 +17,22 @@ export const unsafePrefixString = '__unsafe-lit-html-server-string__';
  * Determine if "part" is a NodePart
  *
  * @param { unknown } part
- * @returns { part is NodePart }
+ * @returns { part is _lit.ChildPart }
  */
-export function isNodePart(part) {
+export function isChildPart(part) {
   // @ts-ignore
-  return part && part.getValue !== undefined && !('name' in part);
+  return part !== undefined && part.getValue !== undefined && !('name' in part);
 }
 
 /**
  * Determine if "part" is an AttributePart
  *
  * @param { unknown } part
- * @returns { part is AttributePart }
+ * @returns { part is _lit.AttributePart }
  */
 export function isAttributePart(part) {
   // @ts-ignore
-  return part && part.getValue !== undefined && 'name' in part;
+  return part !== undefined && part.getValue !== undefined && 'name' in part;
 }
 
 /**
@@ -63,8 +63,8 @@ export function isDirective(fn) {
  * The passed function should be a factory function,
  * and must return a function that will eventually be called with a Part instance
  *
- * @param { (...args: Array<unknown>) => (part: Part) => void } fn
- * @returns { (...args: Array<unknown>) => (part: Part) => void }
+ * @param { (...args: Array<unknown>) => (part: _lit.Part) => void } fn
+ * @returns { (...args: Array<unknown>) => (part: _lit.Part) => void }
  */
 export function directive(fn) {
   return function directive(...args) {

@@ -1,3 +1,3 @@
-import { Part } from '../index.js';
+import { Part } from '../index';
 
 export const guard: (value: unknown, fn: () => unknown) => (part: Part) => void;

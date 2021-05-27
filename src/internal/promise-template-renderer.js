@@ -1,22 +1,23 @@
 import { Buffer } from 'buffer';
+import { getProcessor } from './template-result-processor.js';
 
 /**
  * A factory for rendering a template result to a string resolving Promise
  *
- * @param { TemplateResult } result
- * @param { TemplateResultProcessor } processor
+ * @param { _lit.TemplateResult } result
  * @param { boolean } [asBuffer]
- * @param { RenderOptions } [options]
+ * @param { _lit.RenderOptions } [options]
  */
-export function promiseTemplateRenderer(result, processor, asBuffer = false, options) {
+export function promiseTemplateRenderer(result, asBuffer = false, options) {
   return new Promise((resolve, reject) => {
     let stack = [result];
     /** @type { Array<Buffer> } */
     let buffer = [];
     let bufferLength = 0;
 
-    processor.getProcessor(
+    getProcessor(
       {
+        /** @param { Buffer | null } chunk */
         push(chunk) {
           if (chunk === null) {
             const concatBuffer = Buffer.concat(buffer, bufferLength);
@@ -27,6 +28,7 @@ export function promiseTemplateRenderer(result, processor, asBuffer = false, opt
           }
           return true;
         },
+        /** @param { Error } err */
         destroy(err) {
           buffer.length = stack.length = bufferLength = 0;
           // @ts-ignore
@@ -38,7 +40,7 @@ export function promiseTemplateRenderer(result, processor, asBuffer = false, opt
       },
       stack,
       0,
-      options
+      options,
     )();
   });
 }

@@ -1,13 +1,14 @@
 /* global ReadableStream */
+import { getProcessor } from './template-result-processor.js';
+
 /**
  * A custom Readable stream factory for rendering a template result to a stream
  *
- * @param { TemplateResult } result - a template result returned from call to "html`...`"
- * @param { TemplateResultProcessor } processor
- * @param { RenderOptions } [options]
+ * @param { _lit.TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { _lit.RenderOptions } [options]
  * @returns { ReadableStream }
  */
-export function browserStreamTemplateRenderer(result, processor, options) {
+export function streamTemplateRenderer(result, options) {
   if (typeof ReadableStream === 'undefined') {
     throw Error('ReadableStream not supported on this platform');
   }
@@ -15,16 +16,16 @@ export function browserStreamTemplateRenderer(result, processor, options) {
     throw Error('TextEncoder not supported on this platform');
   }
 
-  return new ReadableStream({
-    // @ts-ignore
-    process: null,
+  /** @type { UnderlyingSource & { process: (() => void) }} */
+  const underlyingSource = {
+    process: () => {},
     start(controller) {
       const encoder = new TextEncoder();
-      const underlyingSource = this;
       let stack = [result];
 
-      this.process = processor.getProcessor(
+      this.process = getProcessor(
         {
+          /** @param { Buffer | null } chunk */
           push(chunk) {
             if (chunk === null) {
               controller.close();
@@ -35,20 +36,22 @@ export function browserStreamTemplateRenderer(result, processor, options) {
             // Pause processing (return "false") if stream is full
             return controller.desiredSize != null ? controller.desiredSize > 0 : true;
           },
+          /** @param { Error } err */
           destroy(err) {
             controller.error(err);
-            underlyingSource.process = undefined;
             // @ts-ignore
             stack = undefined;
           },
         },
         stack,
         16384,
-        options
+        options,
       );
     },
     pull() {
       this.process();
     },
-  });
+  };
+
+  return new ReadableStream(underlyingSource);
 }

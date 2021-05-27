@@ -1,17 +1,17 @@
 // @ts-nocheck
-const { directive, html: h, renderToString: render } = require('../index.js');
-const { asyncAppend } = require('../directives/async-append.js');
-const { asyncReplace } = require('../directives/async-replace.js');
-const { cache } = require('../directives/cache.js');
-const { classMap } = require('../directives/class-map.js');
-const { createAsyncIterable } = require('./utils.js');
-const { expect } = require('chai');
-const { guard } = require('../directives/guard.js');
-const { ifDefined } = require('../directives/if-defined.js');
-const { repeat } = require('../directives/repeat.js');
-const { styleMap } = require('../directives/style-map.js');
-const { unsafeHTML } = require('../directives/unsafe-html.js');
-const { until } = require('../directives/until.js');
+import { directive, html as h, renderToString as render } from '../src/index.js';
+import { asyncAppend } from '../src/directives/async-append.js';
+import { asyncReplace } from '../src/directives/async-replace.js';
+import { cache } from '../src/directives/cache.js';
+import { classMap } from '../src/directives/class-map.js';
+import { createAsyncIterable } from './utils.js';
+import { expect } from 'chai';
+import { guard } from '../src/directives/guard.js';
+import { ifDefined } from '../src/directives/if-defined.js';
+import { repeat } from '../src/directives/repeat.js';
+import { styleMap } from '../src/directives/style-map.js';
+import { unsafeHTML } from '../src/directives/unsafe-html.js';
+import { until } from '../src/directives/until.js';
 
 describe('directives', () => {
   describe('asyncAppend', () => {
@@ -145,9 +145,7 @@ describe('directives', () => {
         color: 'red',
         border: '1px solid black',
       })}"></div>`;
-      expect(await render(result)).to.equal(
-        '<div style="color: red; border: 1px solid black"></div>'
-      );
+      expect(await render(result)).to.equal('<div style="color: red; border: 1px solid black"></div>');
     });
   });
 

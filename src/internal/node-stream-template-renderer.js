@@ -1,15 +1,15 @@
+import { getProcessor } from './template-result-processor.js';
 import { Readable } from 'stream';
 
 /**
  * Factory for StreamTemplateRenderer instances
  *
- * @param { TemplateResult } result - a template result returned from call to "html`...`"
- * @param { TemplateResultProcessor } processor
- * @param { RenderOptions } [options]
+ * @param { _lit.TemplateResult } result - a template result returned from call to "html`...`"
+ * @param { _lit.RenderOptions } [options]
  * @returns { Readable }
  */
-export function streamTemplateRenderer(result, processor, options) {
-  return new StreamTemplateRenderer(result, processor, options);
+export function streamTemplateRenderer(result, options) {
+  return new StreamTemplateRenderer(result, options);
 }
 
 /**
@@ -19,15 +19,14 @@ class StreamTemplateRenderer extends Readable {
   /**
    * Constructor
    *
-   * @param { TemplateResult } result - a template result returned from call to "html`...`"
-   * @param { TemplateResultProcessor } processor
-   * @param { RenderOptions } [options]
+   * @param { _lit.TemplateResult } result - a template result returned from call to "html`...`"
+   * @param { _lit.RenderOptions } [options]
    */
-  constructor(result, processor, options) {
+  constructor(result, options) {
     super({ autoDestroy: true });
 
     this.stack = [result];
-    this.process = processor.getProcessor(this, this.stack, 16384, options);
+    this.process = getProcessor(this, this.stack, 16384, options);
   }
 
   /**

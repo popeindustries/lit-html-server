@@ -1,15 +1,10 @@
-const autocannon = require('autocannon');
-const { fork } = require('child_process');
-const path = require('path');
+import autocannon from 'autocannon';
+import { fileURLToPath } from 'url';
+import { fork } from 'child_process';
+import path from 'path';
 
-const args = process.argv.slice(2);
-const async = args.includes('async');
-const buffer = args.includes('buffer');
-const url = `http://localhost:3000?${async ? 'async' : ''}${
-  buffer ? `${async ? '&' : ''}buffer` : ''
-}`;
-
-const child = fork(path.resolve(__dirname, './server.js'), { silent: false });
+const url = `http://localhost:3000`;
+const child = fork(path.resolve(path.dirname(fileURLToPath(import.meta.url)), './server.js'), { silent: false });
 
 (async () => {
   await stress();
@@ -18,7 +13,6 @@ const child = fork(path.resolve(__dirname, './server.js'), { silent: false });
 })();
 
 function stress() {
-  console.log(`Stress testing with async:${async} and buffer:${buffer}\n`);
   return new Promise((resolve, reject) => {
     const instance = autocannon(
       {
@@ -33,7 +27,7 @@ function stress() {
           return reject(err);
         }
         resolve(results);
-      }
+      },
     );
     autocannon.track(instance, { renderProgressBar: true });
   });

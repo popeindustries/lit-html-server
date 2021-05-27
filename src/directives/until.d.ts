@@ -1,3 +1,3 @@
-import { Part } from '../index.js';
+import { Part } from '../index';
 
 export const until: (...args: Array<unknown>) => (part: Part) => void;

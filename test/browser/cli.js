@@ -1,10 +1,10 @@
 // @ts-nocheck
-const chalk = require('chalk');
-const fs = require('fs');
-const http = require('http');
-const path = require('path');
-const puppeteer = require('puppeteer');
-const send = require('send');
+import chalk from 'chalk';
+import fs from 'fs';
+import http from 'http';
+import path from 'path';
+import puppeteer from 'puppeteer';
+import send from 'send';
 
 const PORT = 8080;
 const TIMEOUT = 1 * 60 * 1000;
@@ -46,7 +46,7 @@ async function startServer() {
       let pathname = new URL(req.url, 'http://localhost').pathname;
       if (pathname === '/') {
         pathname = '/index.html';
-      } else if (pathname === '/browser.mjs' || pathname === '/shared.mjs') {
+      } else if (pathname.startsWith('/node_modules') || pathname === '/browser.js' || pathname === '/shared.js') {
         pathname = `../..${pathname}`;
       } else if (pathname === '/results' && req.method === 'POST') {
         return parseResults(req);
