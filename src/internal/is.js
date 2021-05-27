@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer';
 
-export { isAttributePart, isDirective, isChildPart as isNodePart, isPrimitive } from './shared.js';
+export { isAttributePart, isDirective, isChildPart as isNodePart, isPrimitive } from '../shared.js';
 
 /**
  * Determine whether "result" is a TemplateResult

@@ -1,8 +1,8 @@
-import { isTemplateResult } from './is.js';
-import { promiseTemplateRenderer } from './promise-template-renderer.js';
-import { streamTemplateRenderer } from './node-stream-template-renderer.js';
-import { Template } from './template.js';
-import { TemplateResult } from './template-result.js';
+import { isTemplateResult } from './internal/is.js';
+import { promiseTemplateRenderer } from './internal/promise-template-renderer.js';
+import { streamTemplateRenderer } from './internal/node-stream-template-renderer.js';
+import { Template } from './internal/template.js';
+import { TemplateResult } from './internal/template-result.js';
 
 /**
  * Default templateResult factory
@@ -78,7 +78,15 @@ function getRenderResult(result) {
   return !isTemplateResult(result) ? DEFAULT_TEMPLATE_FN(result) : result;
 }
 
-export { AttributePart, BooleanAttributePart, ChildPart, ElementPart, EventPart, Part, PropertyPart } from './parts.js';
+export {
+  AttributePart,
+  BooleanAttributePart,
+  ChildPart,
+  ElementPart,
+  EventPart,
+  Part,
+  PropertyPart,
+} from './internal/parts.js';
 export { directive, isAttributePart, isDirective, isChildPart, nothing, unsafePrefixString } from './shared.js';
 export {
   html,

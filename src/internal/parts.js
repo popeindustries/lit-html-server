@@ -1,6 +1,6 @@
 import { isArray, isAsyncIterator, isBuffer, isObject, isPrimitive, isPromise, isSyncIterator } from './is.js';
 import { isDirective, isTemplateResult } from './is.js';
-import { nothing, unsafePrefixString } from './shared.js';
+import { nothing, unsafePrefixString } from '../shared.js';
 import { Buffer } from 'buffer';
 import { escape } from './escape.js';
 

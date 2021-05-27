@@ -1,235 +1,171 @@
-interface TemplateResultProcessor {
-  /**
-   * Process "stack" and push chunks to "renderer"
-   */
-  getProcessor(
-    renderer: TemplateResultRenderer,
-    stack: Array<unknown>,
-    highWaterMark?: number,
-    options?: RenderOptions,
-  ): () => void;
+declare const HTML_RESULT = 1;
+declare const SVG_RESULT = 2;
 
-  /**
-   * Permanently destroy all remaining TemplateResults in "stack".
-   * (Triggered on error)
-   */
-  destroy(stack: Array<unknown>): void;
-}
-
-interface TemplateResultRenderer {
-  push: (chunk: Buffer | null) => boolean;
-  destroy: (err: Error) => void;
-}
+declare type ResultType = typeof HTML_RESULT | typeof SVG_RESULT;
 
 /**
- * Base class interface for Node/Attribute parts
+ * The return type of the template tag functions
  */
-export class Part {
+/* export  */ declare type TemplateResult<T extends ResultType = ResultType> = {
+  _$litType$: T;
+  strings: TemplateStringsArray;
+  values: unknown[];
+};
+/* export  */ declare type HTMLTemplateResult = TemplateResult<typeof HTML_RESULT>;
+/* export  */ declare type SVGTemplateResult = TemplateResult<typeof SVG_RESULT>;
+
+/**
+ * A cacheable Template that stores the "strings" and "parts" associated with a
+ * tagged template literal invoked with "html`...`".
+ */
+/* export  */ declare class Template {
+  strings: Array<Buffer | null>;
+  protected parts: Array<Part | null>;
+  constructor(strings: TemplateStringsArray, processor: TemplateProcessor);
+  protected _prepare(strings: TemplateStringsArray, processor: TemplateProcessor): void;
+}
+
+/* export type { ChildPart, AttributePart, PropertyPart, BooleanAttributePart, EventPart, ElementPart }; */
+/**
+ * A dynamic template part for text nodes
+ */
+declare class ChildPart {
   tagName: string;
-  _value: unknown;
-
+  readonly type = 2;
+  protected _value: unknown;
   constructor(tagName: string);
-
+  /**
+   * Retrieve resolved string from passed `value`
+   */
+  getValue(value: unknown, options?: RenderOptions): unknown;
   /**
    * Store the current value.
    * Used by directives to temporarily transfer value
    * (value will be deleted after reading).
    */
   setValue(value: unknown): void;
-
-  /**
-   * Retrieve resolved string from passed "value"
-   */
-  getValue(value: unknown, options?: RenderOptions): unknown;
-
   /**
    * No-op
    */
   commit(): void;
 }
-
-/**
- * A dynamic template part for text nodes
- */
-export class ChildPart extends Part {}
-
 /**
  * A dynamic template part for attributes.
  * Unlike text nodes, attributes may contain multiple strings and parts.
  */
-export class AttributePart extends Part {
-  name: string;
+declare class AttributePart {
   strings: Array<Buffer>;
-  length: number;
-  prefix: Buffer;
-  suffix: Buffer;
-
+  tagName: string;
+  readonly name: string;
+  readonly type: 1 | 3 | 4 | 5 | 6;
+  protected length: number;
+  protected prefix: Buffer;
+  protected suffix: Buffer;
+  protected _value: unknown;
   constructor(name: string, strings: Array<Buffer>, tagName: string);
-
   /*
-   * Retrieve resolved string from passed "value"
+   * Retrieve resolved string from passed `value`
    */
   getValue(values: Array<unknown>, options?: RenderOptions): Buffer | Promise<Buffer>;
+  /**
+   * Store the current value.
+   * Used by directives to temporarily transfer value (value will be deleted after reading).
+   */
+  setValue(value: unknown): void;
+  /**
+   * No-op
+   */
+  commit(): void;
 }
-
-/**
- * A dynamic template part for boolean attributes.
- * Boolean attributes are prefixed with "?"
- */
-export class BooleanAttributePart extends AttributePart {
-  nameAsBuffer: Buffer;
-}
-
 /**
  * A dynamic template part for property attributes.
  * Property attributes are prefixed with "."
  */
-export class PropertyPart extends AttributePart {
+declare class PropertyPart extends AttributePart {
+  readonly type = 3;
   /**
-   * Retrieve resolved string Buffer from passed "values".
-   * Properties have no server-side representation (unless RenderOptions.serializePropertyAttributes),
-   * so always returns an empty string.
+   * Retrieve resolved string Buffer from passed `values`.
+   * Properties have no server-side representation unless `RenderOptions.serializePropertyAttributes`
    */
   getValue(values: Array<unknown>, options?: RenderOptions): Buffer | Promise<Buffer>;
 }
-
+/**
+ * A dynamic template part for boolean attributes.
+ * Boolean attributes are prefixed with "?"
+ */
+declare class BooleanAttributePart extends AttributePart {
+  readonly type = 4;
+  protected nameAsBuffer: Buffer;
+}
 /**
  * A dynamic template part for event attributes.
  * Event attributes are prefixed with "@"
  */
-export class EventPart extends AttributePart {
+declare class EventPart extends AttributePart {
+  readonly type = 5;
   /**
-   * Retrieve resolved string Buffer from passed "values".
-   * Event bindings have no server-side representation,
-   * so always returns an empty string.
+   * Retrieve resolved string Buffer from passed `values`.
+   * Event bindings have no server-side representation, so always returns an empty string.
    */
   getValue(values: Array<unknown>, options?: RenderOptions): Buffer;
 }
-
 /**
  * A dynamic template part for accessing element instances.
  */
-export class ElementPart extends AttributePart {
+declare class ElementPart extends AttributePart {
+  readonly type = 6;
   /**
-   * Retrieve resolved string Buffer from passed "values".
-   * Event bindings have no server-side representation,
-   * so always returns an empty string.
+   * Retrieve resolved string Buffer from passed `values`.
+   * Element bindings have no server-side representation, so always returns an empty string.
    */
   getValue(values: Array<unknown>, options?: RenderOptions): Buffer;
 }
+/* export  */ declare type Part =
+  | ChildPart
+  | AttributePart
+  | PropertyPart
+  | BooleanAttributePart
+  | ElementPart
+  | EventPart;
 
 /**
- * A class for consuming the combined static and dynamic parts of a lit-html Template.
+ * Interprets a template literal as an HTML template that can be
+ * rendered as a Readable stream, string, or Buffer
  */
-export class TemplateResult {
-  template: Template;
-  values: ReadonlyArray<unknown>;
-  id: number;
-  index: number;
-
-  /**
-   * Constructor
-   */
-  constructor(template: Template, values: Array<unknown>);
-
-  /**
-   * Consume template result content.
-   */
-  read(options?: RenderOptions): unknown;
-
-  /**
-   * Consume template result content one chunk at a time.
-   */
-  readChunk(options?: RenderOptions): unknown;
-}
+/* export  */ declare const html: (strings: TemplateStringsArray, ...values: unknown[]) => TemplateResult<HTML_RESULT>;
+/**
+ * Interprets a template literal as a SVG template that can be
+ * rendered as a Readable stream, string, or Buffer
+ */
+/* export  */ declare const svg: (strings: TemplateStringsArray, ...values: unknown[]) => TemplateResult<SVG_RESULT>;
 
 /**
- * A class for consuming the combined static and dynamic parts of a lit-html svg Template.
+ * A sentinel value that signals that a value was handled by a directive and
+ * should not be written
  */
-export class SVGTemplateResult extends TemplateResult {}
+/* export  */ declare const noChange: unique symbol;
+/**
+ * A sentinel value that signals a ChildPart to fully clear its content
+ */
+/* export  */ declare const nothing: unique symbol;
 
 /**
- * A cacheable Template that stores the "strings" and "parts" associated with a
- * tagged template literal invoked with "html`...`".
+ * Options supported by template render functions
  */
-export class Template {
-  strings: Array<Buffer | null>;
-  parts: Array<Part | null>;
-
-  /**
-   * Create Template instance
-   */
-  constructor(strings: TemplateStringsArray, processor: TemplateProcessor);
-
-  /**
-   * Prepare the template's static strings,
-   * and create Part instances for the dynamic values,
-   * based on lit-html syntax.
-   */
-  _prepare(strings: TemplateStringsArray, processor: TemplateProcessor): void;
-}
-
-export type RenderOptions = {
+/* export  */ type RenderOptions = {
+  /** JSON serialize property attributes (default `false`) */
   serializePropertyAttributes: boolean;
 };
 
 /**
- * Define new directive for "fn".
- * The passed function should be a factory function,
- * and must return a function that will eventually be called with a Part instance
+ * Renders a value, usually a TemplateResult, to a string resolving Promise
  */
-export function directive<F extends (...args: Array<any>) => object>(f: F): F;
-
+/* export  */ function renderToString(value: unknown, options?: RenderOptions): Promise<string>;
 /**
- * Determine if "fn" is a directive function
+ * Renders a value, usually a lit-html TemplateResult, to a Readable stream
  */
-export function isDirective(fn: unknown): fn is Function;
-
+/* export  */ function renderToStream(value: unknown, options?: RenderOptions): import('stream').Readable;
 /**
- * Determine if "part" is an AttributePart
+ * Renders a value, usually a lit-html TemplateResult, to a Buffer resolving Promise
  */
-export function isAttributePart(part: unknown): part is AttributePart;
-
-/**
- * Determine if "part" is a ChildPart
- */
-export function isChildPart(part: unknown): part is ChildPart;
-
-/**
- * Determine whether "result" is a TemplateResult
- */
-export function isTemplateResult(result: unknown): result is TemplateResult;
-
-/**
- * A value for parts that signals a Part to clear its content
- */
-export const nothing: string;
-/**
- * A prefix value for strings that should not be escaped
- */
-export const unsafePrefixString: string;
-export const templateCache: Map<TemplateStringsArray, Template>;
-
-/**
- * Interprets a template literal as an HTML template that can be
- * rendered as a Readable stream or String
- */
-export function html(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
-export function svg(strings: TemplateStringsArray, ...values: Array<unknown>): TemplateResult;
-
-/**
- * Render a template result to a string resolving Promise.
- */
-export function renderToString(result: unknown, options?: RenderOptions): Promise<string>;
-
-/**
- * Render a template result to a Readable stream
- */
-export function renderToStream(result: unknown, options?: RenderOptions): import('stream').Readable;
-
-/**
- * Render a template result to a Buffer resolving Promise.
- */
-export function renderToBuffer(result: unknown, options?: RenderOptions): Promise<Buffer>;
-
-export as namespace _lit;
+/* export  */ function renderToBuffer(value: unknown, options?: RenderOptions): Promise<Buffer>;
