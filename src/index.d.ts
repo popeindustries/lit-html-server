@@ -7,7 +7,7 @@ declare type ResultType = typeof HTML_RESULT | typeof SVG_RESULT;
  * The return type of the template tag functions
  */
 /* export  */ declare type TemplateResult<T extends ResultType = ResultType> = {
-  _$litType$: T;
+  _type: T;
   strings: TemplateStringsArray;
   values: unknown[];
 };

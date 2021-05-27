@@ -18,7 +18,7 @@
     | typeof PartType.PROPERTY
     | typeof PartType.BOOLEAN_ATTRIBUTE
     | typeof PartType.EVENT;
-  readonly strings?: ReadonlyArray<string>;
+  readonly strings: ReadonlyArray<string>;
   readonly name: string;
   readonly tagName: string;
 }
@@ -32,7 +32,7 @@
 }
 /* export */ declare type DirectiveParameters<C extends Directive> = Parameters<C['render']>;
 /* export */ interface DirectiveResult<C extends DirectiveClass = DirectiveClass> {
-  _$litDirective$: C;
+  _type: C;
   values: DirectiveParameters<InstanceType<C>>;
 }
 /* export */ declare const directive: <C extends DirectiveClass>(
