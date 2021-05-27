@@ -1,33 +1,16 @@
-'use strict';
-
-const { html, renderToStream, renderToString } = require('../index.js');
-const http = require('http');
+import { html, renderToStream } from '../index.js';
+import http from 'http';
 
 http
   .createServer((req, res) => {
     const data = {
-      async: /async/.test(req.url),
       title: new Date().toISOString(),
       isTrue: Math.random() > 0.5,
       number: Math.random() * 100,
     };
     res.writeHead(200);
-    if (/buffer/.test(req.url)) {
-      renderToString(template(data)).then((html) => {
-        res.end(html);
-      });
-    } else {
-      const stream = renderToStream(template(data));
-      stream.on('readable', () => {
-        let chunk;
-        while (null !== (chunk = stream.read())) {
-          res.write(chunk);
-        }
-      });
-      stream.on('end', () => {
-        res.end();
-      });
-    }
+    const stream = renderToStream(template(data));
+    stream.pipe(res);
   })
   .listen(3000);
 
@@ -82,7 +65,7 @@ function template(data) {
 }
 
 function nestedTemplate(data) {
-  const t = html`
+  return html`
     <p>
       Lorem ipsum ${data.number} sit amet, consectetur adipiscing elit. Nunc molestie lacus eget ipsum pellentesque,
       quis ullamcorper enim semper.
@@ -92,16 +75,4 @@ function nestedTemplate(data) {
       quis ullamcorper enim semper.
     </p>
   `;
-  if (data.async) {
-    return wait(t);
-  }
-  return t;
-}
-
-function wait(template) {
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(template);
-    }, 50);
-  });
 }
