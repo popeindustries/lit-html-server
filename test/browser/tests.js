@@ -1,7 +1,8 @@
 /* global chai */
 /* eslint no-constant-condition:0 no-async-promise-executor:0 */
 // @ts-nocheck
-import { html as h, renderToStream, renderToString } from '../../browser.mjs';
+import { html as h, renderToStream, renderToString } from '@popeindustries/lit-html-server';
+import '@popeindustries/lit-html-server/directives/until.js';
 
 const { expect } = chai;
 
