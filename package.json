@@ -85,7 +85,7 @@
   "repository": "https://github.com/popeindustries/lit-html-server.git",
   "license": "MIT",
   "engines": {
-    "node": ">=12.2"
+    "node": ">=14"
   },
   "dependencies": {
   },
