@@ -31,10 +31,55 @@
       "import": "./index.mjs",
       "require": "./index.js"
     },
-    "./directives/*.js": {
-      "browser": "./directives/*.mjs",
-      "import": "./directives/*.mjs",
-      "require": "./directives/*.js"
+    "./directives/async-append.js": {
+      "browser": "./directives/async-append.mjs",
+      "import": "./directives/async-append.mjs",
+      "require": "./directives/async-append.js"
+    },
+    "./directives/async-replace.js": {
+      "browser": "./directives/async-replace.mjs",
+      "import": "./directives/async-replace.mjs",
+      "require": "./directives/async-replace.js"
+    },
+    "./directives/cache.js": {
+      "browser": "./directives/cache.mjs",
+      "import": "./directives/cache.mjs",
+      "require": "./directives/cache.js"
+    },
+    "./directives/class-map.js": {
+      "browser": "./directives/class-map.mjs",
+      "import": "./directives/class-map.mjs",
+      "require": "./directives/class-map.js"
+    },
+    "./directives/guard.js": {
+      "browser": "./directives/guard.mjs",
+      "import": "./directives/guard.mjs",
+      "require": "./directives/guard.js"
+    },
+    "./directives/if-defined.js": {
+      "browser": "./directives/if-defined.mjs",
+      "import": "./directives/if-defined.mjs",
+      "require": "./directives/if-defined.js"
+    },
+    "./directives/repeat.js": {
+      "browser": "./directives/repeat.mjs",
+      "import": "./directives/repeat.mjs",
+      "require": "./directives/repeat.js"
+    },
+    "./directives/style-map.js": {
+      "browser": "./directives/style-map.mjs",
+      "import": "./directives/style-map.mjs",
+      "require": "./directives/style-map.js"
+    },
+    "./directives/unsafe-html.js": {
+      "browser": "./directives/unsafe-html.mjs",
+      "import": "./directives/unsafe-html.mjs",
+      "require": "./directives/unsafe-html.js"
+    },
+    "./directives/until.js": {
+      "browser": "./directives/until.mjs",
+      "import": "./directives/until.mjs",
+      "require": "./directives/until.js"
     }
   },
   "repository": "https://github.com/popeindustries/lit-html-server.git",
