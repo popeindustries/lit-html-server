@@ -2,5 +2,5 @@ scripts
 test
 src
 .*
-package-lock.json
+pnpm-lock.yaml
 tsconfig.json
