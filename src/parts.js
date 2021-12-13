@@ -9,7 +9,7 @@ import {
 } from './is.js';
 import { isDirective, isTemplateResult } from './is.js';
 import { nothing, unsafePrefixString } from './shared.js';
-import { Buffer } from 'buffer';
+import { Buffer } from '#buffer';
 import { escape } from './escape.js';
 
 const EMPTY_STRING_BUFFER = Buffer.from('');

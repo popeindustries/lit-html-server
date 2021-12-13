@@ -6,7 +6,7 @@ import {
   isPromise,
   isTemplateResult,
 } from './is.js';
-import { Buffer } from 'buffer';
+import { Buffer } from '#buffer';
 
 const EMPTY_STRING_BUFFER = Buffer.from('');
 

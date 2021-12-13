@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer';
+import { Buffer } from '#buffer';
 
 /**
  * A factory for rendering a template result to a string resolving Promise

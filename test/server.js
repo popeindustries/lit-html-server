@@ -65,9 +65,7 @@ function template(data) {
             ac. Cras luctus, sem vel finibus vehicula, mauris tellus iaculis orci, sit amet sodales
             velit augue non felis. Nullam vehicula gravida justo non lacinia.
           </p>
-          <p>
-            ${nestedTemplate(data)}
-          </p>
+          <p>${nestedTemplate(data)}</p>
           <p>
             Mauris lobortis, nisl vitae hendrerit vulputate, est lacus efficitur ipsum, nec blandit
             nisi diam in dolor. Proin ${JSON.stringify(data)} laoreet nisi a vulputate. Praesent non
@@ -79,9 +77,7 @@ function template(data) {
             amet urna vel accumsan. Cras luctus in lorem ac tempor. Sed ullamcorper consectetur
             ligula sed malesuada.
           </p>
-          <p .prop="${data.title}" ?visible="${data.isTrue}">
-            ${nestedTemplate(data)}
-          </p>
+          <p .prop="${data.title}" ?visible="${data.isTrue}">${nestedTemplate(data)}</p>
         </main>
       </body>
     </html>

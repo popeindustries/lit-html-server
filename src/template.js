@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer';
+import { Buffer } from '#buffer';
 import { lastAttributeNameRegex } from 'lit-html/lib/template.js';
 
 const EMPTY_STRING_BUFFER = Buffer.from('');

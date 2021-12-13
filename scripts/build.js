@@ -3,72 +3,83 @@
 const commonjs = require('@rollup/plugin-commonjs');
 const fs = require('fs');
 const path = require('path');
-const resolve = require('@rollup/plugin-node-resolve');
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const { rollup } = require('rollup');
 
 if (!fs.existsSync(path.resolve('directives'))) {
   fs.mkdirSync(path.resolve('directives'));
 }
 
-const plugins = [commonjs(), resolve({ preferBuiltins: true })];
+const plugins = [
+  commonjs(),
+  nodeResolve({
+    exportConditions: ['browser', 'import', 'require', 'default'],
+    preferBuiltins: true,
+  }),
+];
 const input = {
-  external: (id) => id === 'buffer' || id === 'stream' || path.basename(id) === 'shared.js',
+  external: (id) => id === '#buffer' || id === '#stream' || path.basename(id) === 'shared.js',
   input: 'src/index.js',
-  plugins
+  plugins,
 };
 const tasks = [
   [
     input,
     {
       file: 'index.js',
-      format: 'cjs'
-    }
+      format: 'cjs',
+    },
+    (content) => content.replace(/(#)(buffer|stream)/g, '$2'),
   ],
   [
     input,
     {
       file: 'index.mjs',
-      format: 'esm'
+      format: 'esm',
     },
-    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs')
+    (content) =>
+      content.replace(/\.\/shared\.js/g, './shared.mjs').replace(/(#)(buffer|stream)/g, '$2'),
   ],
   [
     {
       external: (id) => path.basename(id) === 'shared.js',
       input: 'src/index.js',
-      plugins: [commonjs(), resolve({ mainFields: ['browser', 'module', 'main'] })]
+      plugins: [
+        commonjs(),
+        nodeResolve({ exportConditions: ['browser', 'import', 'require', 'default'] }),
+      ],
     },
     {
       file: 'browser.mjs',
-      format: 'esm'
+      format: 'esm',
     },
-    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs')
+    (content) => content.replace(/\.\/shared\.js/g, './shared.mjs'),
   ],
   [
     {
       input: 'src/shared.js',
-      plugins
+      plugins,
     },
     {
       file: 'shared.mjs',
-      format: 'esm'
-    }
+      format: 'esm',
+    },
   ],
   [
     {
       input: 'src/shared.js',
-      plugins
+      plugins,
     },
     {
       file: 'shared.js',
-      format: 'cjs'
-    }
+      format: 'cjs',
+    },
   ],
   ...configDirectives('cjs', '.js', true),
-  ...configDirectives('esm', '.mjs')
+  ...configDirectives('esm', '.mjs'),
 ];
 
-(async function() {
+(async function () {
   for (const [inputOptions, outputOptions, preWrite] of tasks) {
     const bundle = await rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
@@ -105,13 +116,13 @@ function configDirectives(format, extension, moveTypes) {
         {
           external: (id) => id !== input,
           input,
-          plugins
+          plugins,
         },
         {
           file: filename,
-          format
+          format,
         },
-        extension === '.mjs' ? preWrite : undefined
+        extension === '.mjs' ? preWrite : undefined,
       ]);
     } else if (path.extname(directive) === '.ts' && moveTypes) {
       fs.copyFileSync(input, path.resolve(filename));

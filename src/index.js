@@ -1,4 +1,4 @@
-import { browserStreamTemplateRenderer } from './browser-stream-template-renderer';
+import { browserStreamTemplateRenderer } from './browser-stream-template-renderer.js';
 import { DefaultTemplateProcessor } from './default-template-processor.js';
 import { DefaultTemplateResultProcessor } from './default-template-result-processor.js';
 import { isTemplateResult } from './is.js';

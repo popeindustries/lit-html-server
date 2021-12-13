@@ -2,33 +2,45 @@ name: test
 
 on: push
 
+env:
+  CI: true
+  PNPM_CACHE_FOLDER: .pnpm-store
+  HUSKY: 0 # Bypass husky commit hook for CI
+
 jobs:
   build_deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: ['10', '12', '13']
+        node: ['12', '14', '16']
     name: Install, build, and test (Node ${{ matrix.node }})
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-        
+        uses: actions/checkout@v2
+
+      - name: 'Cache pnpm modules'
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.PNPM_CACHE_FOLDER }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: 'Install pnpm 6'
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.x
+
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Cache node_modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: node-${{ matrix.node }}-${{ hashFiles('**/package-lock.json') }} # Cache key based on Node version + hashed package-lock.json contents
+      - name: 'Configure pnpm'
+        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
 
       - name: Install
-        run: npm install
-
-      - name: Build
-        run: npm run build
+        run: pnpm --frozen-lockfile install
 
       - name: Test
-        run: npm run test
+        run: pnpm run test

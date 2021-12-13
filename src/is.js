@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer';
+import { Buffer } from '#buffer';
 
 export { isAttributePart, isDirective, isNodePart, isPrimitive } from './shared.js';
 
