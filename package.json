@@ -29,57 +29,68 @@
     ".": {
       "browser": "./browser.mjs",
       "import": "./index.mjs",
-      "require": "./index.js"
+      "require": "./index.js",
+      "types": "./index.d.ts"
     },
     "./directives/async-append.js": {
       "browser": "./directives/async-append.mjs",
       "import": "./directives/async-append.mjs",
-      "require": "./directives/async-append.js"
+      "require": "./directives/async-append.js",
+      "types": "./directives/async-append.d.ts"
     },
     "./directives/async-replace.js": {
       "browser": "./directives/async-replace.mjs",
       "import": "./directives/async-replace.mjs",
-      "require": "./directives/async-replace.js"
+      "require": "./directives/async-append.js",
+      "types": "./directives/async-append.d.ts"
     },
     "./directives/cache.js": {
       "browser": "./directives/cache.mjs",
       "import": "./directives/cache.mjs",
-      "require": "./directives/cache.js"
+      "require": "./directives/cache.js",
+      "types": "./directives/cache.d.ts"
     },
     "./directives/class-map.js": {
       "browser": "./directives/class-map.mjs",
       "import": "./directives/class-map.mjs",
-      "require": "./directives/class-map.js"
+      "require": "./directives/class-map.js",
+      "types": "./directives/class-map.d.ts"
     },
     "./directives/guard.js": {
       "browser": "./directives/guard.mjs",
       "import": "./directives/guard.mjs",
-      "require": "./directives/guard.js"
+      "require": "./directives/guard.js",
+      "types": "./directives/guard.d.ts"
     },
     "./directives/if-defined.js": {
       "browser": "./directives/if-defined.mjs",
       "import": "./directives/if-defined.mjs",
-      "require": "./directives/if-defined.js"
+      "require": "./directives/if-defined.js",
+      "types": "./directives/if-defined.d.ts"
     },
     "./directives/repeat.js": {
       "browser": "./directives/repeat.mjs",
       "import": "./directives/repeat.mjs",
-      "require": "./directives/repeat.js"
+      "require": "./directives/repeat.js",
+      "types": "./directives/repeat.d.ts"
     },
     "./directives/style-map.js": {
       "browser": "./directives/style-map.mjs",
       "import": "./directives/style-map.mjs",
-      "require": "./directives/style-map.js"
+      "require": "./directives/style-map.js",
+      "types": "./directives/style-map.d.ts"
     },
     "./directives/unsafe-html.js": {
       "browser": "./directives/unsafe-html.mjs",
       "import": "./directives/unsafe-html.mjs",
-      "require": "./directives/unsafe-html.js"
+      "require": "./directives/unsafe-html.js",
+      "types": "./directives/unsafe-html.d.ts"
     },
     "./directives/until.js": {
       "browser": "./directives/until.mjs",
       "import": "./directives/until.mjs",
-      "require": "./directives/until.js"
+      "require": "./directives/until.js",
+      "types": "./directives/until.d.ts"
     }
   },
   "repository": "https://github.com/popeindustries/lit-html-server.git",
@@ -87,28 +98,26 @@
   "engines": {
     "node": ">=14"
   },
-  "dependencies": {
-  },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.0.6",
-    "@types/node": "^16.11.12",
-    "autocannon": "^7.5.0",
-    "chai": "^4.3.4",
-    "chalk": "^5.0.0",
-    "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.3.0",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@types/node": "^18.0.0",
+    "autocannon": "^7.9.0",
+    "chai": "^4.3.6",
+    "chalk": "^5.0.1",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "get-stream": "^6.0.1",
-    "husky": "^7.0.4",
-    "lint-staged": "^12.1.2",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.1",
     "lit-html": "^1.4.1",
-    "mocha": "^9.1.3",
-    "prettier": "^2.5.1",
-    "puppeteer": "^13.0.0",
-    "rollup": "^2.61.1",
-    "send": "^0.17.2",
-    "typescript": "^4.5.3"
+    "mocha": "^10.0.0",
+    "prettier": "^2.7.1",
+    "puppeteer": "^14.4.0",
+    "rollup": "^2.75.6",
+    "send": "^0.18.0",
+    "typescript": "^4.7.3"
   },
   "scripts": {
     "build": "node ./scripts/build.js",
