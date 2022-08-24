@@ -1,5 +1,5 @@
-[![NPM Version](https://img.shields.io/npm/v/@popeindustries/lit-html-server.svg?style=flat)](https://npmjs.org/package/@popeindustries/lit-html-server)
-[![Build Status](https://img.shields.io/github/workflow/status/popeindustries/lit-html-server/test/master)](https://github.com/popeindustries/lit-html-server/actions)
+> **Warning**
+> Moved to [`@popeindustries/lit`](https://github.com/popeindustries/lit)
 
 # lit-html-server
 
